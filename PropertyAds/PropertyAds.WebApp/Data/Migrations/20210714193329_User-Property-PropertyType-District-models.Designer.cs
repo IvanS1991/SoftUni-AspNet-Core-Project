@@ -9,7 +9,7 @@ using PropertyAds.WebApp.Data;
 
 namespace PropertyAds.WebApp.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(PropertyAdsDbContext))]
     [Migration("20210714193329_User-Property-PropertyType-District-models")]
     partial class UserPropertyPropertyTypeDistrictmodels
     {
