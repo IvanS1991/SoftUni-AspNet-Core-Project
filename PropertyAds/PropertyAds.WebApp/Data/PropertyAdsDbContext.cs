@@ -4,9 +4,9 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data.Models;
 
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class PropertyAdsDbContext : IdentityDbContext<User>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public PropertyAdsDbContext(DbContextOptions<PropertyAdsDbContext> options)
             : base(options) { }
 
         public override DbSet<User> Users { get; set; }
