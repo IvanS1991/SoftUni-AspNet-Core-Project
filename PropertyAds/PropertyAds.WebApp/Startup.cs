@@ -23,7 +23,7 @@ namespace PropertyAds.WebApp
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.SetupIdentity();
             services.AddControllersWithViews();
-            services.UseTransientServices();
+            services.AddTransientServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

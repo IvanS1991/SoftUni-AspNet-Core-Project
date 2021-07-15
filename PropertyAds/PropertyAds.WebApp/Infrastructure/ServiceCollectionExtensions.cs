@@ -15,7 +15,7 @@ namespace PropertyAds.WebApp.Infrastructure
                 options.SignIn.RequireConfirmedAccount = false;
         }
 
-        public static IServiceCollection UseTransientServices(this IServiceCollection services)
+        public static IServiceCollection AddTransientServices(this IServiceCollection services)
         {
             services
                 .AddTransient<IDistrictData, DistrictData>()
