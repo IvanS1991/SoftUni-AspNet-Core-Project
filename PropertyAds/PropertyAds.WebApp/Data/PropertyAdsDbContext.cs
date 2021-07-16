@@ -17,6 +17,8 @@
 
         public DbSet<District> Districts { get; set; }
 
+        public DbSet<PropertyAggregate> PropertyAggregates { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Property>()
@@ -26,6 +28,9 @@
             builder.Entity<Property>()
                 .Property(x => x.Area)
                 .HasColumnType("decimal(8,2)");
+
+            builder.Entity<PropertyAggregate>()
+                .HasKey(x => new { x.DistrictId, x.PropertyTypeId });
 
             base.OnModelCreating(builder);
         }
