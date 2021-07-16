@@ -19,6 +19,11 @@
 
         public async Task Create(PropertyType propertyType)
         {
+            if (await this.Exists(propertyType.Name))
+            {
+                return;
+            }
+
             await this.db.PropertyTypes.AddAsync(propertyType);
             await this.db.SaveChangesAsync();
         }

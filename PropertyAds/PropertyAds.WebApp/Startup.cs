@@ -42,6 +42,7 @@ namespace PropertyAds.WebApp
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.MigrateDatabase();
 
             app.UseRouting();
 

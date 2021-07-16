@@ -19,6 +19,11 @@
 
         public async Task Create(District district)
         {
+            if (await this.Exists(district.Name))
+            {
+                return;
+            }
+
             await this.db.Districts.AddAsync(district);
             await this.db.SaveChangesAsync();
         }
