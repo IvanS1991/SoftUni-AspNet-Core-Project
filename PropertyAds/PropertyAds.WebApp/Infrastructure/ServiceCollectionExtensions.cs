@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using PropertyAds.WebApp.Data;
-using PropertyAds.WebApp.Data.Models;
-using PropertyAds.WebApp.Services;
-
-namespace PropertyAds.WebApp.Infrastructure
+﻿namespace PropertyAds.WebApp.Infrastructure
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using PropertyAds.WebApp.Data;
+    using PropertyAds.WebApp.Data.Models;
+    using PropertyAds.WebApp.Services;
+
     public static class ServiceCollectionExtensions
     {
         private static void ConfigureIdentityOptions(IdentityOptions options)
