@@ -24,14 +24,30 @@
             this.districtData = districtData;
         }
 
+        public async Task<PropertyAggregate> Create(PropertyAggregate propertyAggregate)
+        {
+            var result = await this.db.PropertyAggregates.AddAsync(propertyAggregate);
+            await this.db.SaveChangesAsync();
+
+            return result.Entity;
+        }
+
         public async Task Populate()
         {
             var results = await this.scraper.Scrape();
 
             foreach (var result in results)
             {
-                await this.propertyTypeData.Create(new PropertyType { Name = result.PropertyTypeName });
-                await this.districtData.Create(new District { Name = result.DistrictName });
+                var propertyType = await this.propertyTypeData.Create(new PropertyType { Name = result.PropertyTypeName });
+                var district = await this.districtData.Create(new District { Name = result.DistrictName });
+
+                await this.Create(new PropertyAggregate
+                {
+                    PropertyTypeId = propertyType.Id,
+                    DistrictId = district.Id,
+                    AveragePrice = result.AveragePrice,
+                    AveragePricePerSqM = result.AveragePricePerSqM
+                });
             }
         }
     }
