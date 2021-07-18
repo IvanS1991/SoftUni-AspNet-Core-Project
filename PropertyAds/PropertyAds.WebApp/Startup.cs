@@ -42,6 +42,9 @@ namespace PropertyAds.WebApp
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseMigrations();
+            app.UseDatabasePopulation(
+                this.Configuration.GetSection("Timeouts").GetValue<int>("DatabasePopulate"));
 
             app.UseRouting();
 

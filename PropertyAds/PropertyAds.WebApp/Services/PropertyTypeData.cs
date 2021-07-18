@@ -3,9 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
-    using PropertyAds.WebApp.Models.PropertyType;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class PropertyTypeData : IPropertyTypeData
@@ -17,10 +15,19 @@
             this.db = db;
         }
 
-        public async Task Create(PropertyType propertyType)
+        public async Task<PropertyType> Create(PropertyType propertyType)
         {
-            await this.db.PropertyTypes.AddAsync(propertyType);
+            var existingPropertyType = await this.GetByName(propertyType.Name);
+
+            if (await this.Exists(propertyType.Name))
+            {
+                return existingPropertyType;
+            }
+
+            var result = await this.db.PropertyTypes.AddAsync(propertyType);
             await this.db.SaveChangesAsync();
+
+            return result.Entity;
         }
 
         public Task<bool> Exists(string propertyTypeName)
@@ -29,10 +36,15 @@
                 .AnyAsync(x => x.Name == propertyTypeName);
         }
 
-        public Task<List<PropertyTypeViewModel>> GetAll()
+        public Task<PropertyType> GetByName(string propertyTypeName)
         {
             return this.db.PropertyTypes
-                .Select(x => new PropertyTypeViewModel { })
+                .FirstOrDefaultAsync(x => x.Name == propertyTypeName);
+        }
+
+        public Task<List<PropertyType>> GetAll()
+        {
+            return this.db.PropertyTypes
                 .ToListAsync();
         }
     }

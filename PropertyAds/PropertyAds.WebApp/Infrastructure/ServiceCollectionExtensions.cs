@@ -4,6 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using PropertyAds.Scraper;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Services;
@@ -20,7 +21,9 @@
             services
                 .AddTransient<IDistrictData, DistrictData>()
                 .AddTransient<IPropertyTypeData, PropertyTypeData>()
-                .AddTransient<IPropertyData, PropertyData>();
+                .AddTransient<IPropertyData, PropertyData>()
+                .AddTransient<IPropertyAggregateScraper, ImotBgScraper>()
+                .AddTransient<IPropertyAggregateData, PropertyAggregateData>();
 
             return services;
         }

@@ -3,7 +3,6 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
-    using PropertyAds.WebApp.Models.Property;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,10 +17,12 @@
             this.db = db;
         }
 
-        public async Task Create(Property property)
+        public async Task<Property> Create(Property property)
         {
-            await this.db.Properties.AddAsync(property);
+            var result = await this.db.Properties.AddAsync(property);
             await this.db.SaveChangesAsync();
+
+            return result.Entity;
         }
 
         public Task Update(Property property)
@@ -29,19 +30,17 @@
             throw new NotImplementedException();
         }
 
-        public Task<List<PropertySummaryViewModel>> GetList()
+        public Task<List<Property>> GetList()
         {
             return this.db.Properties
-                .Select(x => new PropertySummaryViewModel { })
                 .ToListAsync();
         }
 
-        public Task<List<PropertySummaryViewModel>> GetList(int limit, int offset)
+        public Task<List<Property>> GetList(int limit, int offset)
         {
             return this.db.Properties
                 .Skip(offset)
                 .Take(limit)
-                .Select(x => new PropertySummaryViewModel { })
                 .ToListAsync();
         }
     }

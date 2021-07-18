@@ -3,9 +3,8 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
-    using PropertyAds.WebApp.Models.District;
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class DistrictData : IDistrictData
@@ -17,10 +16,19 @@
             this.db = db;
         }
 
-        public async Task Create(District district)
+        public async Task<District> Create(District district)
         {
-            await this.db.Districts.AddAsync(district);
+            var existingDistrict = await this.GetByName(district.Name);
+
+            if (existingDistrict != null)
+            {
+                return existingDistrict;
+            }
+
+            var result = await this.db.Districts.AddAsync(district);
             await this.db.SaveChangesAsync();
+
+            return result.Entity;
         }
 
         public Task<bool> Exists(string districtName)
@@ -29,10 +37,15 @@
                 .AnyAsync(x => x.Name == districtName);
         }
 
-        public Task<List<DistrictViewModel>> GetAll()
+        public Task<District> GetByName(string districtName)
         {
             return this.db.Districts
-                .Select(x => new DistrictViewModel { })
+                .FirstOrDefaultAsync(x => x.Name == districtName);
+        }
+
+        public Task<List<District>> GetAll()
+        {
+            return this.db.Districts
                 .ToListAsync();
         }
     }
