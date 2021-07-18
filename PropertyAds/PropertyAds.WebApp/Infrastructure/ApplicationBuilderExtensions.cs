@@ -5,25 +5,18 @@
     using Microsoft.Extensions.DependencyInjection;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Services;
-    using System.Threading.Tasks;
-    using System.Timers;
 
     public static class ApplicationBuilderExtensions
     {
-        private static async Task OnDatabasePopulate(IApplicationBuilder app)
+        public static IApplicationBuilder UseDatabasePopulation(this IApplicationBuilder app, int? populateInterval)
         {
-            var propertyAggregateData = app.ApplicationServices.GetService<IPropertyAggregateData>();
+            if (populateInterval != null && populateInterval > 0)
+            {
+                var servicesScope = app.ApplicationServices.CreateScope();
+                var propertyAggregateData = servicesScope.ServiceProvider.GetService<IPropertyAggregateData>();
 
-            await propertyAggregateData.Populate();
-        }
-
-        public static IApplicationBuilder UseDatabasePopulation(this IApplicationBuilder app, int populateInterval)
-        {
-            var timer = new Timer(populateInterval);
-
-            timer.Elapsed += async (sender, e) => await OnDatabasePopulate(app);
-            timer.AutoReset = true;
-            timer.Enabled = true;
+                propertyAggregateData.RunPopulateTask((int)populateInterval);
+            }
 
             return app;
         }
