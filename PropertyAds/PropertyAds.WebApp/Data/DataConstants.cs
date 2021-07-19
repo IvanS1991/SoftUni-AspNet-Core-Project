@@ -14,7 +14,7 @@
         public const int PropertyAreaMinValue = 0;
         public const int PropertyAreaMaxValue = 1000;
 
-        public const int PropertyFloorMinValue = 0;
+        public const int PropertyFloorMinValue = 1;
         public const int PropertyFloorMaxValue = 100;
 
         public const int PropertyYearMinValue = 1980;
