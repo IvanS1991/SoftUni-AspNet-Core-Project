@@ -11,9 +11,9 @@
         [Required]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        public decimal Price { get; set; }
+        public int Price { get; set; }
 
-        public decimal Area { get; set; }
+        public int Area { get; set; }
 
         public int Floor { get; set; }
 

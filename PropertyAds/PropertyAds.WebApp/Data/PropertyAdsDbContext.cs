@@ -21,14 +21,6 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Property>()
-                .Property(x => x.Price)
-                .HasColumnType("money");
-
-            builder.Entity<Property>()
-                .Property(x => x.Area)
-                .HasColumnType("decimal(8,2)");
-
             builder.Entity<PropertyAggregate>()
                 .HasKey(x => new { x.DistrictId, x.PropertyTypeId });
 
