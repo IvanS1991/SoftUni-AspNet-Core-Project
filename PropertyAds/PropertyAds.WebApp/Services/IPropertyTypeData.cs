@@ -8,7 +8,7 @@
     {
         Task<PropertyType> Create(PropertyType propertyType);
 
-        Task<bool> Exists(string propertyTypeName);
+        Task<bool> Exists(string query);
 
         Task<PropertyType> GetByName(string propertyTypeName);
 

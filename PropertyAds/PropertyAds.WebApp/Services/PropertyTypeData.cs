@@ -4,6 +4,7 @@
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class PropertyTypeData : IPropertyTypeData
@@ -30,10 +31,10 @@
             return result.Entity;
         }
 
-        public Task<bool> Exists(string propertyTypeName)
+        public Task<bool> Exists(string query)
         {
             return this.db.PropertyTypes
-                .AnyAsync(x => x.Name == propertyTypeName);
+                .AnyAsync(x => x.Name == query || x.Id == query);
         }
 
         public Task<PropertyType> GetByName(string propertyTypeName)
@@ -45,6 +46,7 @@
         public Task<List<PropertyType>> GetAll()
         {
             return this.db.PropertyTypes
+                .OrderBy(x => x.SortRank)
                 .ToListAsync();
         }
     }

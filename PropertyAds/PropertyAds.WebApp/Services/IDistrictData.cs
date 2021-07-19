@@ -8,7 +8,7 @@
     {
         Task<District> Create(District district);
 
-        Task<bool> Exists(string districtName);
+        Task<bool> Exists(string query);
 
         Task<District> GetByName(string districtName);
 

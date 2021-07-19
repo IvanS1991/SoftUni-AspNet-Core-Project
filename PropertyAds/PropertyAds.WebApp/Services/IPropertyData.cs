@@ -12,6 +12,8 @@
 
         Task<List<Property>> GetList();
 
+        Task<List<Property>> GetList(int limit);
+
         Task<List<Property>> GetList(int limit, int offset);
     }
 }
