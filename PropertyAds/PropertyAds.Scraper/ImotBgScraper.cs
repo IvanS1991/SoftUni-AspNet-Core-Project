@@ -3,11 +3,10 @@
     using PropertyAds.Scraper.Core;
     using PropertyAds.Scraper.Models;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class ImotBgScraper : HTMLScraper<List<PropertyAggregateDTO>>, IPropertyAggregateScraper
+    public class ImotBgScraper : HTMLScraper<PropertyAggregatesDTO>, IPropertyAggregateScraper
     {
         private readonly string URL = "https://www.imot.bg/pcgi/imot.cgi?act=14";
         private HTMLDocument document;
@@ -17,10 +16,8 @@
             return Task.FromResult<object>(null);
         }
 
-        protected override async Task<List<PropertyAggregateDTO>> GetResults()
+        protected override async Task<PropertyAggregatesDTO> GetResults()
         {
-            List<PropertyAggregateDTO> result = new List<PropertyAggregateDTO>();
-
             var propertyTypeElements = (await this.document
                 .FindAllAsync(x => x.ByQuery(".tabStatHead")))
                     .Take(3)
@@ -28,6 +25,13 @@
             var tableRows = (await this.document
                 .FindAllAsync(x => x.ByQuery(".tabStat tr")))
                     .Skip(2);
+
+            PropertyAggregatesDTO result = new PropertyAggregatesDTO();
+
+            for (int i = 0; i < propertyTypeElements.Length; i++)
+            {
+                result.PropertyTypeSortRank.Add(propertyTypeElements[i].InnerText, i);
+            }
 
             foreach (var row in tableRows)
             {
@@ -65,7 +69,7 @@
                         }
                     }
 
-                    result.Add(propertyAggregate);
+                    result.Aggregates.Add(propertyAggregate);
                 }
             }
 
