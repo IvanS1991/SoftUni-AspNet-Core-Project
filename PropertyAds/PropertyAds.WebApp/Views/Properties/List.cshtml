@@ -1,0 +1,12 @@
+﻿@model IEnumerable<PropertySummaryViewModel>
+
+@foreach (var summary in Model)
+{
+    <div class="card" @@class="col-4">
+        <img class="card-img-top" src="@summary.ImageSrc" alt="@summary.DistrictName - @summary.PropertyTypeName">
+        <div class="card-body">
+            <p class="card-text">@summary.Description</p>
+            <a href="#" class="card-link">Виж повече...</a>
+        </div>
+    </div>
+} 
