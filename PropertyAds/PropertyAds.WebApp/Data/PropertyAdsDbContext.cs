@@ -19,6 +19,8 @@
 
         public DbSet<PropertyAggregate> PropertyAggregates { get; set; }
 
+        public DbSet<PropertyImage> PropertyImages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<PropertyAggregate>()

@@ -1,6 +1,7 @@
 ﻿namespace PropertyAds.WebApp.Data.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using static PropertyAds.WebApp.Data.DataConstants;
@@ -43,5 +44,7 @@
         public string DistrictId { get; set; }
 
         public District District { get; set; }
+
+        public ICollection<PropertyImage> Images { get; set; } = new HashSet<PropertyImage>();
     }
 }
