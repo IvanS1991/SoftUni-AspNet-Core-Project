@@ -23,7 +23,14 @@
             PropertyAreaMinValue,
             PropertyAreaMaxValue,
             ErrorMessage = RangeError)]
-        public int Area { get; set; }
+        public decimal Area { get; set; }
+
+        [Display(Name = "Използваема площ")]
+        [Range(
+            PropertyAreaMinValue,
+            PropertyAreaMaxValue,
+            ErrorMessage = RangeError)]
+        public decimal UsableArea { get; set; }
 
         [Display(Name = "Етаж")]
         [Range(

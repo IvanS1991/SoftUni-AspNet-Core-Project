@@ -1,4 +1,4 @@
-﻿namespace PropertyAds.WebApp.Controllers
+namespace PropertyAds.WebApp.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using PropertyAds.WebApp.Data.Models;
@@ -86,6 +86,13 @@
                 this.ModelState.AddModelError(
                     nameof(Property.DistrictId),
                     FloorGreaterThanTotalError);
+            }
+
+            if (propertyModel.Area < propertyModel.UsableArea)
+            {
+                this.ModelState.AddModelError(
+                    nameof(Property.UsableArea),
+                    UsableAreaGreaterThanArea);
             }
 
             if (!this.ModelState.IsValid)

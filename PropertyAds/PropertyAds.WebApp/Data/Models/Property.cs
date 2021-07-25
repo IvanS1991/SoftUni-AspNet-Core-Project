@@ -13,7 +13,9 @@
 
         public int Price { get; set; }
 
-        public int Area { get; set; }
+        public decimal Area { get; set; }
+
+        public decimal UsableArea { get; set; }
 
         public int Floor { get; set; }
 
@@ -29,6 +31,7 @@
 
         public int VisitedCount { get; set; } = 0;
 
+        [Required]
         public string OwnerId { get; set; }
 
         public User Owner { get; set; }
