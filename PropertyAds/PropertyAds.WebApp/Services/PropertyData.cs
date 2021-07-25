@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
+    using PropertyAds.WebApp.Models.Property;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -19,6 +20,37 @@
         {
             this.db = db;
             this.userData = userData;
+        }
+
+        private static PropertyServiceModel MapToServiceModel(Property property)
+        {
+            return new PropertyServiceModel
+            {
+                Id = property.Id,
+                Price = property.Price,
+                Area = property.Area,
+                UsableArea = property.UsableArea,
+                Floor = property.Floor,
+                TotalFloors = property.TotalFloors,
+                Year = property.Year,
+                Description = property.Description,
+                CreatedOn = property.CreatedOn,
+                VisitedCount = property.VisitedCount,
+                Owner = property.Owner.Email,
+                Type = property.Type.Name,
+                District = property.District.Name,
+                ImageIds = property.Images.Select(x => x.Id)
+            };
+        }
+
+        private Task<Property> FindById(string id)
+        {
+            return this.db.Properties
+                .Include(x => x.Owner)
+                .Include(x => x.Type)
+                .Include(x => x.District)
+                .Include(x => x.Images)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Property> Create(Property property)
@@ -38,21 +70,23 @@
             await this.db.SaveChangesAsync();
         }
 
-        public Task<List<Property>> GetList()
+        public Task<List<PropertyServiceModel>> GetList()
         {
             return this.GetList(0);
         }
 
-        public Task<List<Property>> GetList(int limit)
+        public Task<List<PropertyServiceModel>> GetList(int limit)
         {
             return this.GetList(limit, 0);
         }
 
-        public Task<List<Property>> GetList(int limit, int offset)
+        public Task<List<PropertyServiceModel>> GetList(int limit, int offset)
         {
             var queryable = this.db.Properties
-                .Include(x => x.District)
+                .Include(x => x.Owner)
                 .Include(x => x.Type)
+                .Include(x => x.District)
+                .Include(x => x.Images)
                 .Skip(offset);
 
             if (limit > 0)
@@ -61,21 +95,21 @@
             }
 
             return queryable
+                .Select(x => MapToServiceModel(x))
                 .ToListAsync();
         }
 
-        public Task<Property> Find(string query)
+        public async Task<PropertyServiceModel> Find(string query)
         {
-            return this.db.Properties
-                .Include(x => x.District)
-                .Include(x => x.Type)
-                .Include(x => x.Owner)
+            var property = await this.db.Properties
                 .FirstOrDefaultAsync(x => x.Id == query);
+
+            return MapToServiceModel(property);
         }
 
-        public async Task<Property> VisitProperty(string id)
+        public async Task<PropertyServiceModel> VisitProperty(string id)
         {
-            var property = await this.Find(id);
+            var property = await this.FindById(id);
 
             if (property == null)
             {
@@ -86,7 +120,7 @@
 
             await this.Update(property);
 
-            return property;
+            return MapToServiceModel(property);
         }
     }
 }

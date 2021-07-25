@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PropertyAds.WebApp.Models.Property
+﻿namespace PropertyAds.WebApp.Models.Property
 {
-    public class PropertyDetailsViewModel
+    using System;
+    using System.Collections.Generic;
+
+    public class PropertyServiceModel
     {
         public string Id { get; set; }
 
-        public string Price { get; set; }
+        public int Price { get; set; }
 
         public decimal Area { get; set; }
 
@@ -25,7 +25,7 @@ namespace PropertyAds.WebApp.Models.Property
 
         public int VisitedCount { get; set; }
 
-        public string OwnerName { get; set; }
+        public string Owner { get; set; }
 
         public string Type { get; set; }
 

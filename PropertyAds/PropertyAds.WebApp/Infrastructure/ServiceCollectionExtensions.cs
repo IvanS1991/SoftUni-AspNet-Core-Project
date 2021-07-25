@@ -24,7 +24,8 @@
                 .AddTransient<IPropertyData, PropertyData>()
                 .AddTransient<IPropertyAggregateScraper, ImotBgScraper>()
                 .AddTransient<IPropertyAggregateData, PropertyAggregateData>()
-                .AddTransient<IUserData, UserData>();
+                .AddTransient<IUserData, UserData>()
+                .AddTransient<IPropertyImageData, PropertyImageData>();
 
             return services;
         }

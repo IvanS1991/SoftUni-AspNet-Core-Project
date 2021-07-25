@@ -1,6 +1,7 @@
 ﻿namespace PropertyAds.WebApp.Services
 {
     using PropertyAds.WebApp.Data.Models;
+    using PropertyAds.WebApp.Models.Property;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -8,16 +9,16 @@
     {
         Task<Property> Create(Property property);
 
-        Task<Property> Find(string query);
+        Task<PropertyServiceModel> Find(string query);
 
-        Task<Property> VisitProperty(string id);
+        Task<PropertyServiceModel> VisitProperty(string id);
 
         Task Update(Property property);
 
-        Task<List<Property>> GetList();
+        Task<List<PropertyServiceModel>> GetList();
 
-        Task<List<Property>> GetList(int limit);
+        Task<List<PropertyServiceModel>> GetList(int limit);
 
-        Task<List<Property>> GetList(int limit, int offset);
+        Task<List<PropertyServiceModel>> GetList(int limit, int offset);
     }
 }

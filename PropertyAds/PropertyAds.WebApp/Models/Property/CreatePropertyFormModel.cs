@@ -1,5 +1,6 @@
 ﻿namespace PropertyAds.WebApp.Models.Property
 {
+    using Microsoft.AspNetCore.Http;
     using PropertyAds.WebApp.Models.District;
     using PropertyAds.WebApp.Models.PropertyType;
     using System;
@@ -71,6 +72,9 @@
             ErrorMessage = RequiredError)]
         [Display(Name = "Квартал")]
         public string DistrictId { get; set; }
+
+        [Display(Name = "Снимки")]
+        public IFormFileCollection Images { get; set; }
 
         public IEnumerable<PropertyTypeViewModel> Types { get; set; }
 

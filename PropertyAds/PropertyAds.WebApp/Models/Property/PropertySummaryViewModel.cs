@@ -12,6 +12,6 @@
 
         public string PropertyTypeName { get; set; }
 
-        public string ImageSrc { get; set; }
+        public string ImageId { get; set; }
     }
 }
