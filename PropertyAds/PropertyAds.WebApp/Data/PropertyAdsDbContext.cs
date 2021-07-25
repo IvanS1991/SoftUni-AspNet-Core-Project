@@ -21,16 +21,21 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Property>()
-                .Property(x => x.Price)
-                .HasColumnType("money");
+            builder.Entity<PropertyAggregate>()
+                .HasKey(x => new { x.DistrictId, x.PropertyTypeId });
 
             builder.Entity<Property>()
                 .Property(x => x.Area)
-                .HasColumnType("decimal(8,2)");
+                .HasColumnType("decimal(6, 2)");
 
-            builder.Entity<PropertyAggregate>()
-                .HasKey(x => new { x.DistrictId, x.PropertyTypeId });
+            builder.Entity<Property>()
+                .Property(x => x.UsableArea)
+                .HasColumnType("decimal(6, 2)");
+
+            builder.Entity<Property>()
+                .HasOne(x => x.Owner)
+                .WithMany(x => x.Properties)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

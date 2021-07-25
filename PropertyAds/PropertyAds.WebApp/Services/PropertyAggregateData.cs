@@ -56,19 +56,22 @@
 
         public async Task Populate()
         {
-            var results = await this.scraper.Scrape();
+            var result = await this.scraper.Scrape();
 
-            foreach (var result in results)
+            foreach (var aggregate in result.Aggregates)
             {
-                var propertyType = await this.propertyTypeData.Create(new PropertyType { Name = result.PropertyTypeName });
-                var district = await this.districtData.Create(new District { Name = result.DistrictName });
+                var propertyType = await this.propertyTypeData.Create(new PropertyType {
+                    Name = aggregate.PropertyTypeName,
+                    SortRank = result.PropertyTypeSortRank.GetValueOrDefault(aggregate.PropertyTypeName)
+                });
+                var district = await this.districtData.Create(new District { Name = aggregate.DistrictName });
 
                 await this.Create(new PropertyAggregate
                 {
                     PropertyTypeId = propertyType.Id,
                     DistrictId = district.Id,
-                    AveragePrice = result.AveragePrice,
-                    AveragePricePerSqM = result.AveragePricePerSqM
+                    AveragePrice = aggregate.AveragePrice,
+                    AveragePricePerSqM = aggregate.AveragePricePerSqM
                 });
             }
         }
@@ -107,8 +110,9 @@
             var queryable = this.db.PropertyAggregates
                 .Include(x => x.PropertyType)
                 .Include(x => x.District)
-                .OrderBy(x => x.District.Name)
-                .ThenBy(x => x.PropertyType.Name)
+                .OrderByDescending(x => x.AveragePrice)
+                .ThenBy(x => x.District.Name)
+                .ThenBy(x => x.PropertyType.SortRank)
                 .Skip(offset);
 
             if (limit > 0)

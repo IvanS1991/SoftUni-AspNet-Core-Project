@@ -31,10 +31,10 @@
             return result.Entity;
         }
 
-        public Task<bool> Exists(string districtName)
+        public Task<bool> Exists(string query)
         {
             return this.db.Districts
-                .AnyAsync(x => x.Name == districtName);
+                .AnyAsync(x => x.Name == query || x.Id == query);
         }
 
         public Task<District> GetByName(string districtName)

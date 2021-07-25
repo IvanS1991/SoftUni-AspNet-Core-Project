@@ -15,5 +15,7 @@
         [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; set; }
+
+        public int SortRank { get; set; }
     }
 }

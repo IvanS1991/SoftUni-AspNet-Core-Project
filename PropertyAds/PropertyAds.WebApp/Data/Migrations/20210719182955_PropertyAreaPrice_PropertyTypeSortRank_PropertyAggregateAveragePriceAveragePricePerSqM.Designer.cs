@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PropertyAds.WebApp.Data;
 
 namespace PropertyAds.WebApp.Data.Migrations
 {
     [DbContext(typeof(PropertyAdsDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210719182955_PropertyAreaPrice_PropertyTypeSortRank_PropertyAggregateAveragePriceAveragePricePerSqM")]
+    partial class PropertyAreaPrice_PropertyTypeSortRank_PropertyAggregateAveragePriceAveragePricePerSqM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,8 +176,8 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("Area")
-                        .HasColumnType("decimal(6,2)");
+                    b.Property<int>("Area")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -192,7 +194,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OwnerId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Price")
@@ -203,9 +204,6 @@ namespace PropertyAds.WebApp.Data.Migrations
 
                     b.Property<string>("TypeId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("UsableArea")
-                        .HasColumnType("decimal(6,2)");
 
                     b.Property<int>("VisitedCount")
                         .HasColumnType("int");
@@ -386,10 +384,8 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .HasForeignKey("DistrictId");
 
                     b.HasOne("PropertyAds.WebApp.Data.Models.User", "Owner")
-                        .WithMany("Properties")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
 
                     b.HasOne("PropertyAds.WebApp.Data.Models.PropertyType", "Type")
                         .WithMany()
@@ -419,11 +415,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.Navigation("District");
 
                     b.Navigation("PropertyType");
-                });
-
-            modelBuilder.Entity("PropertyAds.WebApp.Data.Models.User", b =>
-                {
-                    b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618
         }

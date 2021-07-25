@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PropertyAds.WebApp.Data.Models
+﻿namespace PropertyAds.WebApp.Data.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class PropertyAggregate
     {
         [Key]
@@ -16,8 +16,8 @@ namespace PropertyAds.WebApp.Data.Models
 
         public PropertyType PropertyType { get; set; }
 
-        public int AveragePrice { get; set; }
+        public int? AveragePrice { get; set; }
 
-        public int AveragePricePerSqM { get; set; }
+        public int? AveragePricePerSqM { get; set; }
     }
 }

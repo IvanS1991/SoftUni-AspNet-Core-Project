@@ -11,37 +11,82 @@
     public class PropertyData : IPropertyData
     {
         private readonly PropertyAdsDbContext db;
+        private readonly IUserData userData;
 
-        public PropertyData(PropertyAdsDbContext db)
+        public PropertyData(
+            PropertyAdsDbContext db,
+            IUserData userData)
         {
             this.db = db;
+            this.userData = userData;
         }
 
         public async Task<Property> Create(Property property)
         {
+            property.CreatedOn = DateTime.UtcNow;
+            property.OwnerId = this.userData.GetCurrentUserId();
+
             var result = await this.db.Properties.AddAsync(property);
             await this.db.SaveChangesAsync();
 
             return result.Entity;
         }
 
-        public Task Update(Property property)
+        public async Task Update(Property property)
         {
-            throw new NotImplementedException();
+            this.db.Properties.Update(property);
+            await this.db.SaveChangesAsync();
         }
 
         public Task<List<Property>> GetList()
         {
-            return this.db.Properties
-                .ToListAsync();
+            return this.GetList(0);
+        }
+
+        public Task<List<Property>> GetList(int limit)
+        {
+            return this.GetList(limit, 0);
         }
 
         public Task<List<Property>> GetList(int limit, int offset)
         {
-            return this.db.Properties
-                .Skip(offset)
-                .Take(limit)
+            var queryable = this.db.Properties
+                .Include(x => x.District)
+                .Include(x => x.Type)
+                .Skip(offset);
+
+            if (limit > 0)
+            {
+                queryable = queryable.Take(limit);
+            }
+
+            return queryable
                 .ToListAsync();
+        }
+
+        public Task<Property> Find(string query)
+        {
+            return this.db.Properties
+                .Include(x => x.District)
+                .Include(x => x.Type)
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == query);
+        }
+
+        public async Task<Property> VisitProperty(string id)
+        {
+            var property = await this.Find(id);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            property.VisitedCount += 1;
+
+            await this.Update(property);
+
+            return property;
         }
     }
 }
