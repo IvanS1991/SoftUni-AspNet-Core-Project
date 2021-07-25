@@ -6,7 +6,7 @@ namespace PropertyAds.WebApp.Models.Property
     {
         public string Id { get; set; }
 
-        public int Price { get; set; }
+        public string Price { get; set; }
 
         public decimal Area { get; set; }
 

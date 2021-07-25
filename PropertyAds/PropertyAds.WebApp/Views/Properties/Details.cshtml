@@ -15,7 +15,7 @@
                 </tr>
                 <tr>
                     <th class="col-6" scope="row">Година на строеж</th>
-                    <td class="col-6">@Model.Year</td>
+                    <td class="col-6">@Model.Year г.</td>
                 </tr>
                 <tr>
                     <th class="col-6" scope="row">Публикуван на</th>
@@ -30,7 +30,9 @@
     </section>
     <section class="col-md-6">
         <div class="row">
-            <p>@Model.Description</p>
+            <h2 class="col-md-12 text-center mb-2">@Model.Price</h2>
+            <hr />
+            <p class="col-md-12">@Model.Description</p>
         </div>
     </section>
 </div>

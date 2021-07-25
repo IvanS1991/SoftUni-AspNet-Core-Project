@@ -6,6 +6,7 @@
         <div class="card col-md-4 mb-1 mt-1">
             <img class="card-img-top" src="@summary.ImageSrc" alt="@summary.DistrictName - @summary.PropertyTypeName">
             <div class="card-body">
+                <h2 class="text-center">@summary.Price</h2>
                 <p class="card-text text-truncate">@summary.Description</p>
                 <a class="card-link" asp-controller="Properties" asp-action="Details" asp-route-id="@summary.Id">Виж повече...</a>
             </div>

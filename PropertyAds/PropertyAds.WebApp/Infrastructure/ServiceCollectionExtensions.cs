@@ -29,6 +29,14 @@
             return services;
         }
 
+        public static IServiceCollection AddScopedServices(this IServiceCollection services)
+        {
+            services
+                .AddScoped<IDataFormatter, DataFormatter>();
+
+            return services;
+        }
+
         public static IServiceCollection SetupIdentity(this IServiceCollection services)
         {
             services.AddDefaultIdentity<User>(ConfigureIdentityOptions)

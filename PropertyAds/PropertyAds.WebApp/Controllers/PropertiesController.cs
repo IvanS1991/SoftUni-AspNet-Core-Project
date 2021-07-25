@@ -17,15 +17,18 @@
         private readonly IPropertyData propertyData;
         private readonly IPropertyTypeData propertyTypeData;
         private readonly IDistrictData districtData;
+        private readonly IDataFormatter dataFormatter;
 
         public PropertiesController(
             IPropertyData propertyData,
             IPropertyTypeData propertyTypeData,
-            IDistrictData districtData)
+            IDistrictData districtData,
+            IDataFormatter dataFormatter)
         {
             this.propertyData = propertyData;
             this.propertyTypeData = propertyTypeData;
             this.districtData = districtData;
+            this.dataFormatter = dataFormatter;
         }
 
         private async Task<IEnumerable<PropertyTypeViewModel>> GetPropertyTypesList()
@@ -131,7 +134,7 @@
                 .Select(x => new PropertySummaryViewModel
                 {
                     Id = x.Id,
-                    Price = x.Price,
+                    Price = this.dataFormatter.FormatCurrency(x.Price),
                     Description = x.Description,
                     PropertyTypeName = x.Type.Name,
                     DistrictName = x.District.Name,
@@ -146,7 +149,7 @@
 
             return View(new PropertyDetailsViewModel {
                 Id = property.Id,
-                Price = property.Price,
+                Price = this.dataFormatter.FormatCurrency(property.Price),
                 Area = property.Area,
                 UsableArea = property.UsableArea,
                 Floor = property.Floor,
