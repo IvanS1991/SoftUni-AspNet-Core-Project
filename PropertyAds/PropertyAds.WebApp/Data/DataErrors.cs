@@ -9,5 +9,6 @@
         public const string PropertyTypeNotFoundError = "Типа имот не съществува.";
         public const string DistrictNotFoundError = "Кварталът не съществува.";
         public const string FloorGreaterThanTotalError = "Етажът трябва да е по-малък от общия брой етажи.";
+        public const string UsableAreaGreaterThanArea = "Използваемата площ трябва да е по-малка или равна на общата площ.";
     }
 }

@@ -1,5 +1,6 @@
 ﻿@model CreatePropertyFormModel
 
+<h1 class="text-center mb-5">Създай обява</h1>
 <form class="col-sm-12 col-lg-8 offset-lg-2" method="post">
     <div class="form-row">
         <div class="form-group col-md-6">
@@ -24,12 +25,17 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label asp-for="Area"></label>
             <input asp-for="Area" class="form-control" />
             <span asp-validation-for="Area" class="small text-danger"></span>
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
+            <label asp-for="UsableArea"></label>
+            <input asp-for="UsableArea" class="form-control" />
+            <span asp-validation-for="UsableArea" class="small text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
             <label asp-for="Price"></label>
             <input asp-for="Price" class="form-control" />
             <span asp-validation-for="Price" class="small text-danger"></span>
@@ -59,5 +65,5 @@
             <span asp-validation-for="Description" class="small text-danger"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Sign in</button>
+    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5">Създай</button>
 </form>

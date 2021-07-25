@@ -32,9 +32,10 @@
             return result.Entity;
         }
 
-        public Task Update(Property property)
+        public async Task Update(Property property)
         {
-            throw new NotImplementedException();
+            this.db.Properties.Update(property);
+            await this.db.SaveChangesAsync();
         }
 
         public Task<List<Property>> GetList()
@@ -61,6 +62,31 @@
 
             return queryable
                 .ToListAsync();
+        }
+
+        public Task<Property> Find(string query)
+        {
+            return this.db.Properties
+                .Include(x => x.District)
+                .Include(x => x.Type)
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == query);
+        }
+
+        public async Task<Property> VisitProperty(string id)
+        {
+            var property = await this.Find(id);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            property.VisitedCount += 1;
+
+            await this.Update(property);
+
+            return property;
         }
     }
 }

@@ -1,0 +1,36 @@
+﻿@model PropertyDetailsViewModel
+
+<h1 class="text-center mb-5">@Model.Type - @Model.District</h1>
+<div class="row">
+    <section class="col-md-6">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th class="col-6" scope="row">Използваема / обща площ</th>
+                    <td class="col-6">@Model.UsableArea кв.м. / @Model.Area кв.м.</td>
+                </tr>
+                <tr>
+                    <th class="col-6" scope="row">Етаж</th>
+                    <td class="col-6">@Model.Floor от @Model.TotalFloors</td>
+                </tr>
+                <tr>
+                    <th class="col-6" scope="row">Година на строеж</th>
+                    <td class="col-6">@Model.Year</td>
+                </tr>
+                <tr>
+                    <th class="col-6" scope="row">Публикуван на</th>
+                    <td class="col-6">@Model.CreatedOn</td>
+                </tr>
+                <tr>
+                    <th class="col-6" scope="row">Преглеждания</th>
+                    <td class="col-6">@Model.VisitedCount</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section class="col-md-6">
+        <div class="row">
+            <p>@Model.Description</p>
+        </div>
+    </section>
+</div>

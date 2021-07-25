@@ -1,5 +1,6 @@
-namespace PropertyAds.WebApp.Controllers
+﻿namespace PropertyAds.WebApp.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Models.District;
@@ -49,6 +50,7 @@ namespace PropertyAds.WebApp.Controllers
             });
         }
 
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             return View(new CreatePropertyFormModel
@@ -59,6 +61,7 @@ namespace PropertyAds.WebApp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(CreatePropertyFormModel propertyModel)
         {
             var isExistingPropertyType = await this
@@ -107,6 +110,7 @@ namespace PropertyAds.WebApp.Controllers
             {
                 Price = propertyModel.Price,
                 Area = propertyModel.Area,
+                UsableArea = propertyModel.UsableArea,
                 Floor = propertyModel.Floor,
                 TotalFloors = propertyModel.TotalFloors,
                 Year = propertyModel.Year,
@@ -118,6 +122,7 @@ namespace PropertyAds.WebApp.Controllers
             return RedirectToAction(nameof(List));
         }
 
+        [Authorize]
         public async Task<IActionResult> List()
         {
             var properties = await this.propertyData.GetList();
@@ -125,11 +130,35 @@ namespace PropertyAds.WebApp.Controllers
             return View(properties
                 .Select(x => new PropertySummaryViewModel
                 {
+                    Id = x.Id,
                     Price = x.Price,
                     Description = x.Description,
                     PropertyTypeName = x.Type.Name,
                     DistrictName = x.District.Name,
                 }));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Details(string id)
+        {
+            var property = await this.propertyData
+                .VisitProperty(id);
+
+            return View(new PropertyDetailsViewModel {
+                Id = property.Id,
+                Price = property.Price,
+                Area = property.Area,
+                UsableArea = property.UsableArea,
+                Floor = property.Floor,
+                TotalFloors = property.TotalFloors,
+                Year = property.Year,
+                Description = property.Description,
+                CreatedOn = property.CreatedOn,
+                VisitedCount = property.VisitedCount,
+                OwnerName = property.Owner.Email,
+                Type = property.Type.Name,
+                District = property.District.Name
+            });
         }
     }
 }
