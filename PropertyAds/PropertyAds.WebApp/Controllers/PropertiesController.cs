@@ -8,6 +8,7 @@
     using PropertyAds.WebApp.Models.PropertyType;
     using PropertyAds.WebApp.Services;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -17,17 +18,20 @@
         private readonly IPropertyData propertyData;
         private readonly IPropertyTypeData propertyTypeData;
         private readonly IDistrictData districtData;
+        private readonly IPropertyImageData imageData;
         private readonly IDataFormatter dataFormatter;
 
         public PropertiesController(
             IPropertyData propertyData,
             IPropertyTypeData propertyTypeData,
             IDistrictData districtData,
+            IPropertyImageData imageData,
             IDataFormatter dataFormatter)
         {
             this.propertyData = propertyData;
             this.propertyTypeData = propertyTypeData;
             this.districtData = districtData;
+            this.imageData = imageData;
             this.dataFormatter = dataFormatter;
         }
 
@@ -65,7 +69,7 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(CreatePropertyFormModel propertyModel)
+        public async Task<IActionResult> Create([FromForm] CreatePropertyFormModel propertyModel)
         {
             var isExistingPropertyType = await this
                 .propertyTypeData.Exists(propertyModel.TypeId);
@@ -109,7 +113,7 @@
                 return View(propertyModel);
             }
 
-            await this.propertyData.Create(new Property
+            var property = await this.propertyData.Create(new Property
             {
                 Price = propertyModel.Price,
                 Area = propertyModel.Area,
@@ -121,6 +125,23 @@
                 TypeId = propertyModel.TypeId,
                 DistrictId = propertyModel.DistrictId
             });
+
+            if (propertyModel.Images != null && propertyModel.Images.Count() > 0)
+            {
+                foreach (var formImage in propertyModel.Images)
+                {
+                    using var memoryStream = new MemoryStream();
+
+                    await formImage.CopyToAsync(memoryStream);
+
+                    var image = await this.imageData.Create(new PropertyImage
+                    {
+                        Bytes = memoryStream.ToArray(),
+                        Name = formImage.FileName,
+                        PropertyId = property.Id
+                    });
+                }
+            }
 
             return RedirectToAction(nameof(List));
         }
@@ -136,8 +157,9 @@
                     Id = x.Id,
                     Price = this.dataFormatter.FormatCurrency(x.Price),
                     Description = x.Description,
-                    PropertyTypeName = x.Type.Name,
-                    DistrictName = x.District.Name,
+                    PropertyTypeName = x.Type,
+                    DistrictName = x.District,
+                    ImageId = x.ImageIds.First()
                 }));
         }
 
@@ -158,10 +180,19 @@
                 Description = property.Description,
                 CreatedOn = property.CreatedOn,
                 VisitedCount = property.VisitedCount,
-                OwnerName = property.Owner.Email,
-                Type = property.Type.Name,
-                District = property.District.Name
+                OwnerName = property.Owner,
+                Type = property.Type,
+                District = property.District,
+                ImageIds = property.ImageIds
             });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Image(string id)
+        {
+            var image = await this.imageData.GetById(id);
+
+            return File(image.Bytes, "image/jpeg");
         }
     }
 }

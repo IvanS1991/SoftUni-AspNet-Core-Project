@@ -1,7 +1,7 @@
 ﻿@model CreatePropertyFormModel
 
 <h1 class="text-center mb-5">Създай обява</h1>
-<form class="col-sm-12 col-lg-8 offset-lg-2" method="post">
+<form enctype="multipart/form-data" class="col-sm-12 col-lg-8 offset-lg-2" method="post">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label asp-for="DistrictId"></label>
@@ -63,6 +63,12 @@
             <label asp-for="Description"></label>
             <textarea asp-for="Description" class="form-control"></textarea>
             <span asp-validation-for="Description" class="small text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label asp-for="Images"></label>
+            <input asp-for="Images" class="form-control-file" />
         </div>
     </div>
     <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5">Създай</button>
