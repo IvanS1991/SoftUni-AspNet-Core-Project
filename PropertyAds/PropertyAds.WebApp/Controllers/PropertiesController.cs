@@ -159,7 +159,7 @@
                     Description = x.Description,
                     PropertyTypeName = x.Type,
                     DistrictName = x.District,
-                    ImageId = x.ImageIds.First()
+                    ImageId = x.ImageIds.Count() > 0 ? x.ImageIds.First() : null
                 }));
         }
 

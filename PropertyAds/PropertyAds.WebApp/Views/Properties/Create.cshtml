@@ -1,7 +1,7 @@
 ﻿@model CreatePropertyFormModel
 
 <h1 class="text-center mb-5">Създай обява</h1>
-<form enctype="multipart/form-data" class="col-sm-12 col-lg-8 offset-lg-2" method="post">
+<form enctype="multipart/form-data" class="col-sm-12 col-lg-8 offset-lg-2 create-property-form" method="post">
     <div class="form-row">
         <div class="form-group col-md-6">
             <label asp-for="DistrictId"></label>
@@ -67,9 +67,72 @@
     </div>
     <div class="form-row">
         <div class="form-group">
-            <label asp-for="Images"></label>
-            <input asp-for="Images" class="form-control-file" />
+            <label asp-for="Images" class="btn btn-primary"></label>
+            <input asp-for="Images" class="form-control-file image-upload invisible" />
         </div>
     </div>
+    <div class="form-row image-preview"></div>
     <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5">Създай</button>
 </form>
+
+@section Scripts {
+    <script>
+        const $imageInput = $('input.image-upload');
+        const $imagePreview = $('div.image-preview');
+
+        const updatePreview = (input) => {
+            $imagePreview.empty();
+
+            Array.from(input.files).forEach((x, idx) => addImageToPreview($imagePreview, x, idx));
+        };
+
+        const createRemoveImageButton = (index) => {
+            const $button = $('<button></button>')
+                .addClass(['btn', 'btn-danger'])
+                .attr('type', 'button');
+
+            $button.html('x');
+            $button.on('click', () => {
+                const dt = new DataTransfer();
+                const input = $imageInput[0];
+                const { files } = input;
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+
+                    if (index !== i) {
+                        dt.items.add(file);
+                    }
+
+                    input.files = dt.files;
+                }
+
+                updatePreview(input);
+            });
+
+            return $button;
+        };
+
+        const createImageElement = (image) => {
+            const $image = $('<img/>');
+
+            $image.attr('src', URL.createObjectURL(image));
+            $image.on('load', () => {
+                URL.revokeObjectURL($image.attr('src'));
+            });
+
+            return $image;
+        };
+
+        const addImageToPreview = ($imagePreview, image, index) => {
+            const $container = $('<div></div>').addClass('image-preview-container');
+
+            $container.append(createImageElement(image));
+            $container.append(createRemoveImageButton(index));
+
+            $imagePreview.append($container);
+        };
+
+        $imageInput.on('input', (evt) => updatePreview(evt.target));
+    </script>
+}

@@ -16,3 +16,22 @@
     max-height: 500px;
     width: initial;
 }
+
+.image-preview .image-preview-container {
+    max-height: 150px;
+    width: 100px;
+    overflow: hidden;
+    padding: 5px;
+    position: relative;
+}
+
+.image-preview .image-preview-container .btn-danger {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    padding: 3px 10px;
+}
+
+.image-preview .image-preview-container img {
+    height: 100%;
+}

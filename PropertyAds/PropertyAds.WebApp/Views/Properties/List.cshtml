@@ -6,7 +6,10 @@
     <div class="container col-md-4 mb-3">
         <div class="card">
             <div class="container property-summary-image">
-                <img class="card-img-top" src="@($"/Properties/Image/{summary.ImageId}")" alt="@summary.DistrictName - @summary.PropertyTypeName">
+                @if (summary.ImageId != null)
+                {
+                    <img class="card-img-top" src="@($"/Properties/Image/{summary.ImageId}")" alt="@summary.DistrictName - @summary.PropertyTypeName">
+                }
             </div>
             <div class="card-body">
                 <h2 class="text-center">@summary.Price</h2>
