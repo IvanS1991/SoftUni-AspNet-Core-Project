@@ -1,9 +1,9 @@
-﻿namespace PropertyAds.WebApp.Services
+﻿namespace PropertyAds.WebApp.Services.PropertyServices
 {
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
-    using PropertyAds.WebApp.Models.Property;
+    using PropertyAds.WebApp.Services.UserServices;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,7 +22,7 @@
             this.userData = userData;
         }
 
-        private static PropertyServiceModel MapToServiceModel(Property property)
+        private static PropertyServiceModel FromDbModel(Property property)
         {
             return new PropertyServiceModel
             {
@@ -53,15 +53,34 @@
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Property> Create(Property property)
+        public async Task<PropertyServiceModel> Create(
+            int price,
+            decimal area,
+            decimal usableArea,
+            int floor,
+            int totalFloors,
+            int year,
+            string description,
+            string typeId,
+            string districtId)
         {
-            property.CreatedOn = DateTime.UtcNow;
-            property.OwnerId = this.userData.GetCurrentUserId();
-
-            var result = await this.db.Properties.AddAsync(property);
+            var result = await this.db.Properties.AddAsync(new Property
+            {
+                Price = price,
+                Area = area,
+                UsableArea = usableArea,
+                Floor = floor,
+                TotalFloors = totalFloors,
+                Year = year,
+                Description = description,
+                CreatedOn = DateTime.UtcNow,
+                OwnerId = this.userData.GetCurrentUserId(),
+                TypeId = typeId,
+                DistrictId = districtId,
+            });
             await this.db.SaveChangesAsync();
 
-            return result.Entity;
+            return FromDbModel(result.Entity);
         }
 
         public async Task Update(Property property)
@@ -87,6 +106,7 @@
                 .Include(x => x.Type)
                 .Include(x => x.District)
                 .Include(x => x.Images)
+                .Select(x => FromDbModel(x))
                 .Skip(offset);
 
             if (limit > 0)
@@ -95,7 +115,6 @@
             }
 
             return queryable
-                .Select(x => MapToServiceModel(x))
                 .ToListAsync();
         }
 
@@ -104,7 +123,7 @@
             var property = await this.db.Properties
                 .FirstOrDefaultAsync(x => x.Id == query);
 
-            return MapToServiceModel(property);
+            return FromDbModel(property);
         }
 
         public async Task<PropertyServiceModel> VisitProperty(string id)
@@ -120,7 +139,7 @@
 
             await this.Update(property);
 
-            return MapToServiceModel(property);
+            return FromDbModel(property);
         }
     }
 }

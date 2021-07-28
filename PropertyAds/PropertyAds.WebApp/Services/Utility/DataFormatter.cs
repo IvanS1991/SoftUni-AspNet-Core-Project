@@ -1,4 +1,4 @@
-﻿namespace PropertyAds.WebApp.Services
+﻿namespace PropertyAds.WebApp.Services.Utility
 {
     using System;
     using System.Globalization;

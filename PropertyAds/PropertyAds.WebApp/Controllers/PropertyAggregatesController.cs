@@ -1,9 +1,8 @@
 ﻿namespace PropertyAds.WebApp.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
     using PropertyAds.WebApp.Models.PropertyAggregate;
-    using PropertyAds.WebApp.Services;
+    using PropertyAds.WebApp.Services.PropertyAggregateServices;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -12,8 +11,7 @@
         private readonly IPropertyAggregateData propertyAggregateData;
 
         public PropertyAggregatesController(
-            IPropertyAggregateData propertyAggregateData,
-            IConfiguration config)
+            IPropertyAggregateData propertyAggregateData)
         {
             this.propertyAggregateData = propertyAggregateData;
         }
