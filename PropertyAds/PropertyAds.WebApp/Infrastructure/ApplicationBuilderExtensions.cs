@@ -4,7 +4,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using PropertyAds.WebApp.Data;
-    using PropertyAds.WebApp.Services;
+    using PropertyAds.WebApp.Services.PropertyAggregateServices;
 
     public static class ApplicationBuilderExtensions
     {

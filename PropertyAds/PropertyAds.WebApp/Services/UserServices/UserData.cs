@@ -1,4 +1,4 @@
-﻿namespace PropertyAds.WebApp.Services
+﻿namespace PropertyAds.WebApp.Services.UserServices
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;

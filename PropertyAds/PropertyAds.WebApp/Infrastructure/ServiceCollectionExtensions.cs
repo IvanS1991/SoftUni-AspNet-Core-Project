@@ -7,7 +7,11 @@
     using PropertyAds.Scraper;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
-    using PropertyAds.WebApp.Services;
+    using PropertyAds.WebApp.Services.DistrictServices;
+    using PropertyAds.WebApp.Services.PropertyAggregateServices;
+    using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.UserServices;
+    using PropertyAds.WebApp.Services.Utility;
 
     public static class ServiceCollectionExtensions
     {

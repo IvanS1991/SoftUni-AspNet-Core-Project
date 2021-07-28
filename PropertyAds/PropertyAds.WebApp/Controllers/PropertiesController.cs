@@ -6,7 +6,9 @@
     using PropertyAds.WebApp.Models.District;
     using PropertyAds.WebApp.Models.Property;
     using PropertyAds.WebApp.Models.PropertyType;
-    using PropertyAds.WebApp.Services;
+    using PropertyAds.WebApp.Services.DistrictServices;
+    using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.Utility;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -113,18 +115,17 @@
                 return View(propertyModel);
             }
 
-            var property = await this.propertyData.Create(new Property
-            {
-                Price = propertyModel.Price,
-                Area = propertyModel.Area,
-                UsableArea = propertyModel.UsableArea,
-                Floor = propertyModel.Floor,
-                TotalFloors = propertyModel.TotalFloors,
-                Year = propertyModel.Year,
-                Description = propertyModel.Description,
-                TypeId = propertyModel.TypeId,
-                DistrictId = propertyModel.DistrictId
-            });
+            var property = await this.propertyData.Create(
+                propertyModel.Price,
+                propertyModel.Area,
+                propertyModel.UsableArea,
+                propertyModel.Floor,
+                propertyModel.TotalFloors,
+                propertyModel.Year,
+                propertyModel.Description,
+                propertyModel.TypeId,
+                propertyModel.DistrictId
+            );
 
             if (propertyModel.Images != null && propertyModel.Images.Count() > 0)
             {
@@ -134,12 +135,11 @@
 
                     await formImage.CopyToAsync(memoryStream);
 
-                    var image = await this.imageData.Create(new PropertyImage
-                    {
-                        Bytes = memoryStream.ToArray(),
-                        Name = formImage.FileName,
-                        PropertyId = property.Id
-                    });
+                    var image = await this.imageData.Create(
+                        memoryStream.ToArray(),
+                        formImage.FileName,
+                        property.Id
+                    );
                 }
             }
 

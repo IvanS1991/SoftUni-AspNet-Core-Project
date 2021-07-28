@@ -1,4 +1,4 @@
-namespace PropertyAds.WebApp
+namespace PropertyAds.WebApp.PropertyAggregateServices
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;

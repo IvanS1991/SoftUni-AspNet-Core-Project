@@ -1,4 +1,4 @@
-﻿namespace PropertyAds.WebApp.Models.Property
+﻿namespace PropertyAds.WebApp.Services.PropertyServices
 {
     using System;
     using System.Collections.Generic;
