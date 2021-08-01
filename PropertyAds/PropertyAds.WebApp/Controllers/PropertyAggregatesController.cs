@@ -2,27 +2,39 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using PropertyAds.WebApp.Models.PropertyAggregate;
+    using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyAggregateServices;
+    using PropertyAds.WebApp.Services.PropertyServices;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class PropertyAggregatesController : Controller
     {
         private readonly IPropertyAggregateData propertyAggregateData;
+        private readonly IPropertyTypeData propertyTypeData;
+        private readonly IDistrictData districtData;
 
         public PropertyAggregatesController(
-            IPropertyAggregateData propertyAggregateData)
+            IPropertyAggregateData propertyAggregateData,
+            IPropertyTypeData propertyTypeData,
+            IDistrictData districtData)
         {
             this.propertyAggregateData = propertyAggregateData;
+            this.propertyTypeData = propertyTypeData;
+            this.districtData = districtData;
         }
 
-        public async Task<IActionResult> List(int page = 1)
+        public async Task<IActionResult> List([FromQuery] PropertyAggregateListQueryModel queryModel)
         {
             var itemsPerPage = this.propertyAggregateData.GetItemsPerPage();
-            var offset = (page - 1) * itemsPerPage;
+            var offset = (queryModel.Page - 1) * itemsPerPage;
 
-            var aggregates = await this.propertyAggregateData.GetAll(itemsPerPage, offset);
-            var aggregatesListViewModel = new PropertyAggregateListViewModel
+            var aggregates = await this.propertyAggregateData.GetAll(
+                itemsPerPage,
+                offset,
+                queryModel.DistrictId,
+                queryModel.PropertyTypeId);
+            var aggregatesListViewModel = new PropertyAggregateListQueryModel
             {
                 Rows = aggregates.Select(
                 x => new PropertyAggregateViewModel
@@ -32,21 +44,17 @@
                     AveragePrice = x.AveragePrice,
                     AveragePricePerSqM = x.AveragePricePerSqM
                 }),
-                PageCount = await PageCount(),
-                CurrentPage = page
+                Page = queryModel.Page,
+                TotalPages = await this.propertyAggregateData.TotalPageCount(
+                    queryModel.DistrictId,
+                    queryModel.PropertyTypeId),
+                PropertyTypes = await this.propertyTypeData.GetAll(),
+                Districts = await this.districtData.GetAll(),
+                DistrictId = queryModel.DistrictId,
+                PropertyTypeId = queryModel.PropertyTypeId
             };
 
             return View(aggregatesListViewModel);
-        }
-
-        public async Task<int> PageCount()
-        {
-            var aggregatesCount = await this.propertyAggregateData
-                .GetCount();
-            var itemsPerPage = this.propertyAggregateData
-                .GetItemsPerPage();
-
-            return aggregatesCount / itemsPerPage;
         }
     }
 }

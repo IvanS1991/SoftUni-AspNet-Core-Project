@@ -3,13 +3,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using PropertyAds.WebApp.Data.Models;
-    using PropertyAds.WebApp.Models.District;
     using PropertyAds.WebApp.Models.Property;
-    using PropertyAds.WebApp.Models.PropertyType;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
     using PropertyAds.WebApp.Services.Utility;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -37,35 +34,13 @@
             this.dataFormatter = dataFormatter;
         }
 
-        private async Task<IEnumerable<PropertyTypeViewModel>> GetPropertyTypesList()
-        {
-            var propertyTypes = await this.propertyTypeData.GetAll();
-
-            return propertyTypes.Select(x => new PropertyTypeViewModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            });
-        }
-
-        private async Task<IEnumerable<DistrictViewModel>> GetDistrictsList()
-        {
-            var districts = await this.districtData.GetAll();
-
-            return districts.Select(x => new DistrictViewModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            });
-        }
-
         [Authorize]
         public async Task<IActionResult> Create()
         {
             return View(new CreatePropertyFormModel
             {
-                Types = await GetPropertyTypesList(),
-                Districts = await GetDistrictsList()
+                Types = await this.propertyTypeData.GetAll(),
+                Districts = await this.districtData.GetAll()
             });
         }
 
@@ -109,8 +84,8 @@
 
             if (!this.ModelState.IsValid)
             {
-                propertyModel.Types = await GetPropertyTypesList();
-                propertyModel.Districts = await GetDistrictsList();
+                propertyModel.Types = await this.propertyTypeData.GetAll();
+                propertyModel.Districts = await this.districtData.GetAll();
 
                 return View(propertyModel);
             }

@@ -53,6 +53,42 @@
             };
         }
 
+        private IQueryable<PropertyAggregate> TryApplyFilter(
+            IQueryable<PropertyAggregate> queryable,
+            string districtId,
+            string propertyTypeId)
+        {
+            if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.DistrictId == districtId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.PropertyTypeId == propertyTypeId);
+            }
+
+            return queryable;
+        }
+
+        private IQueryable<PropertyAggregate> TryApplyPagination(
+            IQueryable<PropertyAggregate> queryable,
+            int limit,
+            int offset)
+        {
+            if (offset > 0)
+            {
+                queryable = queryable.Skip(offset);
+            }
+
+            if (limit > 0)
+            {
+                queryable = queryable.Take(limit);
+            }
+
+            return queryable;
+        }
+
         public async Task<PropertyAggregateServiceModel> Create(
             string districtId,
             string propertyTypeId,
@@ -119,23 +155,26 @@
             return timer;
         }
 
-        public Task<int> GetCount()
+    public Task<List<PropertyAggregateServiceModel>> GetAll(
+            string districtId,
+            string propertyTypeId)
         {
-            return this.db.PropertyAggregates
-                .CountAsync();
+            return this.GetAll(0, districtId, propertyTypeId);
         }
 
-        public Task<List<PropertyAggregateServiceModel>> GetAll()
+        public Task<List<PropertyAggregateServiceModel>> GetAll(
+            int limit,
+            string districtId,
+            string propertyTypeId)
         {
-            return this.GetAll(0);
+            return this.GetAll(limit, 0, districtId, propertyTypeId);
         }
 
-        public Task<List<PropertyAggregateServiceModel>> GetAll(int limit)
-        {
-            return this.GetAll(limit, 0);
-        }
-
-        public Task<List<PropertyAggregateServiceModel>> GetAll(int limit, int offset)
+        public Task<List<PropertyAggregateServiceModel>> GetAll(
+            int limit,
+            int offset,
+            string districtId,
+            string propertyTypeId)
         {
             var queryable = this.db.PropertyAggregates
                 .Include(x => x.PropertyType)
@@ -143,12 +182,17 @@
                 .OrderByDescending(x => x.AveragePrice)
                 .ThenBy(x => x.District.Name)
                 .ThenBy(x => x.PropertyType.SortRank)
-                .Skip(offset);
+                .AsQueryable();
 
-            if (limit > 0)
-            {
-                queryable = queryable.Take(limit);
-            }
+            queryable = this.TryApplyFilter(
+                queryable,
+                districtId,
+                propertyTypeId);
+
+            queryable = this.TryApplyPagination(
+                queryable,
+                limit,
+                offset);
 
             return queryable
                 .Select(x => FromDbModel(x))
@@ -160,6 +204,31 @@
             return this.config
                 .GetSection("Pagination")
                 .GetValue<int>("PropertyAggregatesList");
+        }
+
+        public Task<int> GetCount(
+            string districtId,
+            string propertyTypeId)
+        {
+            var queryable = this.TryApplyFilter(
+                this.db.PropertyAggregates,
+                districtId,
+                propertyTypeId);
+
+            return queryable
+                .CountAsync();
+        }
+
+        public async Task<int> TotalPageCount(
+            string districtId,
+            string propertyTypeId)
+        {
+            var aggregatesCount = await this
+                .GetCount(districtId, propertyTypeId);
+            var itemsPerPage = this
+                .GetItemsPerPage();
+
+            return aggregatesCount / itemsPerPage;
         }
     }
 }

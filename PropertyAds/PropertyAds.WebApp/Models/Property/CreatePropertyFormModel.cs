@@ -1,8 +1,8 @@
 ﻿namespace PropertyAds.WebApp.Models.Property
 {
     using Microsoft.AspNetCore.Http;
-    using PropertyAds.WebApp.Models.District;
-    using PropertyAds.WebApp.Models.PropertyType;
+    using PropertyAds.WebApp.Services.DistrictServices;
+    using PropertyAds.WebApp.Services.PropertyServices;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -76,8 +76,8 @@
         [Display(Name = "Снимки")]
         public IFormFileCollection Images { get; set; }
 
-        public IEnumerable<PropertyTypeViewModel> Types { get; set; }
+        public IEnumerable<PropertyTypeServiceModel> Types { get; set; }
 
-        public IEnumerable<DistrictViewModel> Districts { get; set; }
+        public IEnumerable<DistrictServiceModel> Districts { get; set; }
     }
 }
