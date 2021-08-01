@@ -62,6 +62,7 @@
         public async Task<List<DistrictServiceModel>> GetAll()
         {
             return await this.db.Districts
+                .OrderBy(x => x.Name)
                 .Select(x => FromDbModel(x))
                 .ToListAsync();
         }
