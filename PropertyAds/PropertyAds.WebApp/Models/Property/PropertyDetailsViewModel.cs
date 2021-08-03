@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PropertyAds.WebApp.Models.Property
+﻿namespace PropertyAds.WebApp.Models.Property
 {
+    using System;
+    using System.Collections.Generic;
+
     public class PropertyDetailsViewModel
     {
         public string Id { get; set; }
