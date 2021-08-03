@@ -1,5 +1,7 @@
 ﻿namespace PropertyAds.WebApp.Services.DistrictServices
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
@@ -10,19 +12,14 @@
     public class DistrictData : IDistrictData
     {
         private readonly PropertyAdsDbContext db;
+        private readonly IMapper mapper;
 
-        public DistrictData(PropertyAdsDbContext db)
+        public DistrictData(
+            PropertyAdsDbContext db,
+            IMapper mapper)
         {
             this.db = db;
-        }
-
-        private static DistrictServiceModel FromDbModel(District dbModel)
-        {
-            return new DistrictServiceModel
-            {
-                Id = dbModel.Id,
-                Name = dbModel.Name
-            };
+            this.mapper = mapper;
         }
 
         public async Task<DistrictServiceModel> Create(string name)
@@ -37,7 +34,7 @@
             var result = await this.db.Districts.AddAsync(new District { Name = name });
             await this.db.SaveChangesAsync();
 
-            return FromDbModel(result.Entity);
+            return this.mapper.Map<DistrictServiceModel>(result.Entity);
         }
 
         public Task<bool> Exists(string query)
@@ -56,14 +53,14 @@
                 return null;
             }
 
-            return FromDbModel(district);
+            return this.mapper.Map<DistrictServiceModel>(district);
         }
 
         public async Task<List<DistrictServiceModel>> GetAll()
         {
             return await this.db.Districts
+                .ProjectTo<DistrictServiceModel>(this.mapper.ConfigurationProvider)
                 .OrderBy(x => x.Name)
-                .Select(x => FromDbModel(x))
                 .ToListAsync();
         }
     }

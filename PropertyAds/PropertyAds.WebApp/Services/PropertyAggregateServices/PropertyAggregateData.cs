@@ -1,5 +1,7 @@
 ﻿namespace PropertyAds.WebApp.Services.PropertyAggregateServices
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using PropertyAds.Scraper;
@@ -19,60 +21,44 @@
         private readonly IPropertyTypeData propertyTypeData;
         private readonly IDistrictData districtData;
         private readonly IConfiguration config;
+        private readonly IMapper mapper;
 
         public PropertyAggregateData(
             PropertyAdsDbContext db,
             IPropertyAggregateScraper scraper,
             IPropertyTypeData propertyTypeData,
             IDistrictData districtData,
-            IConfiguration config)
+            IConfiguration config,
+            IMapper mapper)
         {
             this.db = db;
             this.scraper = scraper;
             this.propertyTypeData = propertyTypeData;
             this.districtData = districtData;
             this.config = config;
+            this.mapper = mapper;
         }
 
-        private static PropertyAggregateServiceModel FromDbModel(PropertyAggregate dbModel)
-        {
-            return new PropertyAggregateServiceModel
-            {
-                District = new DistrictServiceModel
-                {
-                    Id = dbModel.District.Id,
-                    Name = dbModel.District.Name
-                },
-                PropertyType = new PropertyTypeServiceModel
-                {
-                    Id = dbModel.PropertyType.Id,
-                    Name = dbModel.PropertyType.Name
-                },
-                AveragePrice = dbModel.AveragePrice,
-                AveragePricePerSqM = dbModel.AveragePricePerSqM
-            };
-        }
-
-        private IQueryable<PropertyAggregate> TryApplyFilter(
-            IQueryable<PropertyAggregate> queryable,
+        private IQueryable<PropertyAggregateServiceModel> TryApplyFilter(
+            IQueryable<PropertyAggregateServiceModel> queryable,
             string districtId,
             string propertyTypeId)
         {
             if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
             {
-                queryable = queryable.Where(x => x.DistrictId == districtId);
+                queryable = queryable.Where(x => x.District.Id == districtId);
             }
 
             if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
             {
-                queryable = queryable.Where(x => x.PropertyTypeId == propertyTypeId);
+                queryable = queryable.Where(x => x.District.Id == propertyTypeId);
             }
 
             return queryable;
         }
 
-        private IQueryable<PropertyAggregate> TryApplyPagination(
-            IQueryable<PropertyAggregate> queryable,
+        private IQueryable<PropertyAggregateServiceModel> TryApplyPagination(
+            IQueryable<PropertyAggregateServiceModel> queryable,
             int limit,
             int offset)
         {
@@ -118,7 +104,7 @@
 
             await this.db.SaveChangesAsync();
 
-            return FromDbModel(result);
+            return this.mapper.Map< PropertyAggregateServiceModel>(result);
         }
 
         public async Task Populate()
@@ -177,11 +163,8 @@
             string propertyTypeId)
         {
             var queryable = this.db.PropertyAggregates
-                .Include(x => x.PropertyType)
-                .Include(x => x.District)
+                .ProjectTo<PropertyAggregateServiceModel>(this.mapper.ConfigurationProvider)
                 .OrderByDescending(x => x.AveragePrice)
-                .ThenBy(x => x.District.Name)
-                .ThenBy(x => x.PropertyType.SortRank)
                 .AsQueryable();
 
             queryable = this.TryApplyFilter(
@@ -195,7 +178,6 @@
                 offset);
 
             return queryable
-                .Select(x => FromDbModel(x))
                 .ToListAsync();
         }
 
@@ -210,8 +192,11 @@
             string districtId,
             string propertyTypeId)
         {
-            var queryable = this.TryApplyFilter(
-                this.db.PropertyAggregates,
+            var queryable = this.db.PropertyAggregates
+                .ProjectTo<PropertyAggregateServiceModel>(this.mapper.ConfigurationProvider);
+
+            queryable = this.TryApplyFilter(
+                queryable,
                 districtId,
                 propertyTypeId);
 

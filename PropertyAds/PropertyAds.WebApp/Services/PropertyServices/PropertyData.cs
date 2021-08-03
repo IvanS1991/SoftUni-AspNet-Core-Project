@@ -1,5 +1,7 @@
 ﻿namespace PropertyAds.WebApp.Services.PropertyServices
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
@@ -13,44 +15,16 @@
     {
         private readonly PropertyAdsDbContext db;
         private readonly IUserData userData;
+        private readonly IMapper mapper;
 
         public PropertyData(
             PropertyAdsDbContext db,
-            IUserData userData)
+            IUserData userData,
+            IMapper mapper)
         {
             this.db = db;
             this.userData = userData;
-        }
-
-        private static PropertyServiceModel FromDbModel(Property property)
-        {
-            return new PropertyServiceModel
-            {
-                Id = property.Id,
-                Price = property.Price,
-                Area = property.Area,
-                UsableArea = property.UsableArea,
-                Floor = property.Floor,
-                TotalFloors = property.TotalFloors,
-                Year = property.Year,
-                Description = property.Description,
-                CreatedOn = property.CreatedOn,
-                VisitedCount = property.VisitedCount,
-                Owner = property.Owner.Email,
-                Type = property.Type.Name,
-                District = property.District.Name,
-                ImageIds = property.Images.Select(x => x.Id)
-            };
-        }
-
-        private Task<Property> FindById(string id)
-        {
-            return this.db.Properties
-                .Include(x => x.Owner)
-                .Include(x => x.Type)
-                .Include(x => x.District)
-                .Include(x => x.Images)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            this.mapper = mapper;
         }
 
         public async Task<PropertyServiceModel> Create(
@@ -80,7 +54,7 @@
             });
             await this.db.SaveChangesAsync();
 
-            return FromDbModel(result.Entity);
+            return this.mapper.Map<PropertyServiceModel>(result.Entity);
         }
 
         public async Task Update(Property property)
@@ -102,11 +76,7 @@
         public Task<List<PropertyServiceModel>> GetList(int limit, int offset)
         {
             var queryable = this.db.Properties
-                .Include(x => x.Owner)
-                .Include(x => x.Type)
-                .Include(x => x.District)
-                .Include(x => x.Images)
-                .Select(x => FromDbModel(x))
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
                 .Skip(offset);
 
             if (limit > 0)
@@ -115,6 +85,7 @@
             }
 
             return queryable
+                .OrderBy(x => x.Price)
                 .ToListAsync();
         }
 
@@ -123,12 +94,17 @@
             var property = await this.db.Properties
                 .FirstOrDefaultAsync(x => x.Id == query);
 
-            return FromDbModel(property);
+            return this.mapper.Map<PropertyServiceModel>(property);
         }
 
         public async Task<PropertyServiceModel> VisitProperty(string id)
         {
-            var property = await this.FindById(id);
+            var property = await this.db.Properties
+                .Include(x => x.Type)
+                .Include(x => x.District)
+                .Include(x => x.Images)
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (property == null)
             {
@@ -137,9 +113,9 @@
 
             property.VisitedCount += 1;
 
-            await this.Update(property);
+            await this.Update(this.mapper.Map<Property>(property));
 
-            return FromDbModel(property);
+            return this.mapper.Map<PropertyServiceModel>(property);
         }
     }
 }

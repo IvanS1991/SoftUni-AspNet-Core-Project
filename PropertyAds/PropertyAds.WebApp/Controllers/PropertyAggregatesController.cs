@@ -1,5 +1,6 @@
 ﻿namespace PropertyAds.WebApp.Controllers
 {
+    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using PropertyAds.WebApp.Models.PropertyAggregate;
     using PropertyAds.WebApp.Services.DistrictServices;
@@ -13,15 +14,18 @@
         private readonly IPropertyAggregateData propertyAggregateData;
         private readonly IPropertyTypeData propertyTypeData;
         private readonly IDistrictData districtData;
+        private readonly IMapper mapper;
 
         public PropertyAggregatesController(
             IPropertyAggregateData propertyAggregateData,
             IPropertyTypeData propertyTypeData,
-            IDistrictData districtData)
+            IDistrictData districtData,
+            IMapper mapper)
         {
             this.propertyAggregateData = propertyAggregateData;
             this.propertyTypeData = propertyTypeData;
             this.districtData = districtData;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> List([FromQuery] PropertyAggregateListQueryModel queryModel)
@@ -37,13 +41,7 @@
             var aggregatesListViewModel = new PropertyAggregateListQueryModel
             {
                 Rows = aggregates.Select(
-                x => new PropertyAggregateViewModel
-                {
-                    PropertyType = x.PropertyType.Name,
-                    District = x.District.Name,
-                    AveragePrice = x.AveragePrice,
-                    AveragePricePerSqM = x.AveragePricePerSqM
-                }),
+                    x => this.mapper.Map<PropertyAggregateViewModel>(x)),
                 Page = queryModel.Page,
                 TotalPages = await this.propertyAggregateData.TotalPageCount(
                     queryModel.DistrictId,

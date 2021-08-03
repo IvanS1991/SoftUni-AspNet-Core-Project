@@ -1,5 +1,6 @@
 ﻿namespace PropertyAds.WebApp.Services.PropertyServices
 {
+    using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
@@ -8,21 +9,14 @@
     public class PropertyImageData : IPropertyImageData
     {
         private readonly PropertyAdsDbContext db;
+        private readonly IMapper mapper;
 
         public PropertyImageData(
-            PropertyAdsDbContext db)
+            PropertyAdsDbContext db,
+            IMapper mapper)
         {
             this.db = db;
-        }
-
-        private static PropertyImageServiceModel FromDbModel(PropertyImage dbModel)
-        {
-            return new PropertyImageServiceModel
-            {
-                Id = dbModel.Id,
-                Bytes = dbModel.Bytes,
-                Name = dbModel.Name
-            };
+            this.mapper = mapper;
         }
 
         public async Task<PropertyImageServiceModel> Create(byte[] bytes, string name, string propertyId)
@@ -34,7 +28,7 @@
             });
             await this.db.SaveChangesAsync();
 
-            return FromDbModel(result.Entity);
+            return this.mapper.Map< PropertyImageServiceModel>(result.Entity);
         }
 
         public async Task<PropertyImageServiceModel> GetById(string id)
@@ -47,7 +41,7 @@
                 return null;
             }
 
-            return FromDbModel(propertyImage);
+            return this.mapper.Map<PropertyImageServiceModel>(propertyImage);
         }
     }
 }

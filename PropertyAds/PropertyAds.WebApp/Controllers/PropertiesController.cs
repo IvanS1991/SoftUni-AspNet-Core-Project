@@ -1,37 +1,38 @@
 ﻿namespace PropertyAds.WebApp.Controllers
 {
+    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Models.Property;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
-    using PropertyAds.WebApp.Services.Utility;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     using static PropertyAds.WebApp.Data.DataErrors;
+
     public class PropertiesController : Controller
     {
         private readonly IPropertyData propertyData;
         private readonly IPropertyTypeData propertyTypeData;
         private readonly IDistrictData districtData;
         private readonly IPropertyImageData imageData;
-        private readonly IDataFormatter dataFormatter;
+        private readonly IMapper mapper;
 
         public PropertiesController(
             IPropertyData propertyData,
             IPropertyTypeData propertyTypeData,
             IDistrictData districtData,
             IPropertyImageData imageData,
-            IDataFormatter dataFormatter)
+            IMapper mapper)
         {
             this.propertyData = propertyData;
             this.propertyTypeData = propertyTypeData;
             this.districtData = districtData;
             this.imageData = imageData;
-            this.dataFormatter = dataFormatter;
+            this.mapper = mapper;
         }
 
         [Authorize]
@@ -48,20 +49,16 @@
         [Authorize]
         public async Task<IActionResult> Create([FromForm] CreatePropertyFormModel propertyModel)
         {
-            var isExistingPropertyType = await this
-                .propertyTypeData.Exists(propertyModel.TypeId);
-
-            if (!isExistingPropertyType)
+            if (await this.propertyTypeData.Exists(propertyModel.TypeId)
+                == false)
             {
                 this.ModelState.AddModelError(
                     nameof(Property.TypeId),
                     PropertyTypeNotFoundError);
             }
 
-            var isExistingDistrict = await this
-                .districtData.Exists(propertyModel.DistrictId);
-
-            if (!isExistingDistrict)
+            if (await this.districtData.Exists(propertyModel.DistrictId)
+                == false)
             {
                 this.ModelState.AddModelError(
                     nameof(Property.DistrictId),
@@ -126,16 +123,9 @@
         {
             var properties = await this.propertyData.GetList();
 
+
             return View(properties
-                .Select(x => new PropertySummaryViewModel
-                {
-                    Id = x.Id,
-                    Price = this.dataFormatter.FormatCurrency(x.Price),
-                    Description = x.Description,
-                    PropertyTypeName = x.Type,
-                    DistrictName = x.District,
-                    ImageId = x.ImageIds.Count() > 0 ? x.ImageIds.First() : null
-                }));
+                .Select(x => this.mapper.Map<PropertySummaryViewModel>(x)));
         }
 
         [Authorize]
@@ -144,22 +134,9 @@
             var property = await this.propertyData
                 .VisitProperty(id);
 
-            return View(new PropertyDetailsViewModel {
-                Id = property.Id,
-                Price = this.dataFormatter.FormatCurrency(property.Price),
-                Area = property.Area,
-                UsableArea = property.UsableArea,
-                Floor = property.Floor,
-                TotalFloors = property.TotalFloors,
-                Year = property.Year,
-                Description = property.Description,
-                CreatedOn = property.CreatedOn,
-                VisitedCount = property.VisitedCount,
-                OwnerName = property.Owner,
-                Type = property.Type,
-                District = property.District,
-                ImageIds = property.ImageIds
-            });
+            var viewModel = this.mapper.Map<PropertyDetailsViewModel>(property);
+
+            return View(viewModel);
         }
 
         [Authorize]
