@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<PropertySummaryViewModel>
+@inject IDataFormatter formatter
 
 <div class="row">
     @foreach (var summary in Model)
@@ -12,7 +13,7 @@
                 }
             </div>
             <div class="card-body">
-                <h2 class="text-center">@summary.Price</h2>
+                <h2 class="text-center">@formatter.FormatCurrency(summary.Price)</h2>
                 <p class="card-text text-truncate">@summary.Description</p>
                 <a class="card-link" asp-controller="Properties" asp-action="Details" asp-route-id="@summary.Id">Виж повече...</a>
             </div>

@@ -1,4 +1,5 @@
 ﻿@model PropertyDetailsViewModel
+@inject IDataFormatter formatter
 
 <h1 class="text-center mb-5">@Model.Type - @Model.District</h1>
 <div class="row">
@@ -30,7 +31,7 @@
     </section>
     <section class="col-md-6">
         <div class="row">
-            <h2 class="col-md-12 text-center mb-2">@Model.Price</h2>
+            <h2 class="col-md-12 text-center mb-2">@formatter.FormatCurrency(Model.Price)</h2>
             <hr />
             <p class="col-md-12">@Model.Description</p>
         </div>
