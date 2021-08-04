@@ -15,7 +15,7 @@
     using Moq;
 
     [TestFixture]
-    class PropertyAggregateDataTests
+    public class PropertyAggregateDataTests
     {
         private PropertyAdsDbContext db;
         private IPropertyAggregateScraper propertyAggregateScraper;
