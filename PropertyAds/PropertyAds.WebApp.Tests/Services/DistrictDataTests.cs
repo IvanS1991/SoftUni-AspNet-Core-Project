@@ -22,7 +22,9 @@
         {
             this.db = DatabaseMock.Instance();
             this.mapper = MapperMock.Instance();
-            this.districtData = new DistrictData(this.db, this.mapper);
+            this.districtData = new DistrictData(
+                this.db,
+                this.mapper);
             this.testDistrict = "test-district";
         }
 

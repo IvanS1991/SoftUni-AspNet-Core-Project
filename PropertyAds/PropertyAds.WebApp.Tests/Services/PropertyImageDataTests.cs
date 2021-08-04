@@ -16,24 +16,14 @@
         private IMapper mapper;
         private PropertyImageData propertyImageData;
 
-        private byte[] GetBytes()
-        {
-            return Enumerable.Range(0, 255)
-                .Select(x => (byte)x).ToArray();
-        }
-
-        private void PopulateProperties()
-        {
-            this.db.Properties.Add(new Property());
-            this.db.SaveChanges();
-        }
-
         [SetUp]
         public void SetUp()
         {
             this.db = DatabaseMock.Instance();
             this.mapper = MapperMock.Instance();
-            this.propertyImageData = new PropertyImageData(this.db, this.mapper);
+            this.propertyImageData = new PropertyImageData(
+                this.db,
+                this.mapper);
         }
 
         [TearDown]
@@ -84,6 +74,18 @@
 
             Assert.AreEqual(result.Id, expectedResult.Id);
             Assert.AreEqual(result.Name, expectedResult.Name);
+        }
+
+        private byte[] GetBytes()
+        {
+            return Enumerable.Range(0, 255)
+                .Select(x => (byte)x).ToArray();
+        }
+
+        private void PopulateProperties()
+        {
+            this.db.Properties.Add(new Property());
+            this.db.SaveChanges();
         }
     }
 }

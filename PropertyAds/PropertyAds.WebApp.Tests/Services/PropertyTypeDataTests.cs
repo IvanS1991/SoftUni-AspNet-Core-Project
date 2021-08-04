@@ -22,7 +22,9 @@
         {
             this.db = DatabaseMock.Instance();
             this.mapper = MapperMock.Instance();
-            this.propertyTypeData = new PropertyTypeData(this.db, this.mapper);
+            this.propertyTypeData = new PropertyTypeData(
+                this.db,
+                this.mapper);
         }
 
         [TearDown]
