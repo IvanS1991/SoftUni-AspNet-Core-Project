@@ -119,6 +119,11 @@
             var resultNames = result.Select(x => x.Name);
 
             Assert.AreEqual(orderedNames, resultNames);
+
+            foreach (var district in result)
+            {
+                Assert.IsInstanceOf<DistrictServiceModel>(district);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data.Models;
+    using System.Threading.Tasks;
 
     public class PropertyAdsDbContext : IdentityDbContext<User>
     {
@@ -20,6 +21,7 @@
         public DbSet<PropertyAggregate> PropertyAggregates { get; set; }
 
         public DbSet<PropertyImage> PropertyImages { get; set; }
+        public Task FirstOrDefaultAsync { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
