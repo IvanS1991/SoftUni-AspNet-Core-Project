@@ -63,10 +63,10 @@
         }
 
         [Test]
-        public async Task Exists_ShouldReturnCorrectBooleanValue()
+        public async Task Exists_ShouldReturnCorrectBooleanValueByName()
         {
             string existingDistrictName = this.testDistrict;
-            const string nonExistingDistrictName = "non-existing district";
+            const string nonExistingDistrictName = "non-existing property type";
 
             await this.propertyTypeData.Create(existingDistrictName, 0);
 
@@ -78,6 +78,26 @@
                 .Any() == exists);
             Assert.That(this.db.PropertyTypes
                 .Where(x => x.Name == nonExistingDistrictName)
+                .Any() == doesNotExist);
+        }
+
+        [Test]
+        public async Task Exists_ShouldReturnCorrectBooleanValueById()
+        {
+            string existingDistrictName = this.testDistrict;
+            const string nonExistingDistrictId = "non-existing property type";
+
+            var result = await this.propertyTypeData
+                .Create(existingDistrictName, 0);
+
+            var exists = await this.propertyTypeData.Exists(result.Id);
+            var doesNotExist = await this.propertyTypeData.Exists(nonExistingDistrictId);
+
+            Assert.That(this.db.PropertyTypes
+                .Where(x => x.Id == result.Id)
+                .Any() == exists);
+            Assert.That(this.db.PropertyTypes
+                .Where(x => x.Id == nonExistingDistrictId)
                 .Any() == doesNotExist);
         }
 
