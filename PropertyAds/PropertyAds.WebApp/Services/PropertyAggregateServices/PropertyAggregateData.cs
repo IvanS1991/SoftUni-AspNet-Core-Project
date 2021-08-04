@@ -9,6 +9,7 @@
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -51,7 +52,7 @@
 
             if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
             {
-                queryable = queryable.Where(x => x.District.Id == propertyTypeId);
+                queryable = queryable.Where(x => x.PropertyType.Id == propertyTypeId);
             }
 
             return queryable;
@@ -81,6 +82,14 @@
             int averagePrice,
             int averagePricePerSqM)
         {
+            var districtExists = await this.districtData.Exists(districtId);
+            var propertyTypeExists = await this.propertyTypeData.Exists(propertyTypeId);
+
+            if (!districtExists || !propertyTypeExists)
+            {
+                throw new ArgumentException("District or property type does not exist");
+            }
+
             var result = await this.db.PropertyAggregates
                 .FirstOrDefaultAsync(x => x.DistrictId == districtId
                     && x.PropertyTypeId == propertyTypeId);
@@ -141,7 +150,7 @@
             return timer;
         }
 
-    public Task<List<PropertyAggregateServiceModel>> GetAll(
+        public Task<List<PropertyAggregateServiceModel>> GetAll(
             string districtId,
             string propertyTypeId)
         {
@@ -181,7 +190,7 @@
                 .ToListAsync();
         }
 
-        public int GetItemsPerPage()
+        public virtual int GetItemsPerPage()
         {
             return this.config
                 .GetSection("Pagination")
