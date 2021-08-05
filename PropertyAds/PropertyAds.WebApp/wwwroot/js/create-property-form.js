@@ -30,14 +30,35 @@
         });
     }
 
+    listenForPriceChange() {
+        $('#Price').on('input', (e) => {
+            const $diffUp = $('.diff-indicator.diff-up');
+            const $diffDown = $('.diff-indicator.diff-down');
+
+            if (e.target.value < this.currentAverage) {
+                $diffUp.addClass('hidden');
+                $diffDown.removeClass('hidden');
+            } else if (e.target.value > this.currentAverage) {
+                $diffUp.removeClass('hidden');
+                $diffDown.addClass('hidden');
+            } else {
+                $diffUp.addClass('hidden');
+                $diffDown.addClass('hidden');
+            }
+        });
+    }
+
     populateAggregatesSection() {
         const $aggregateData = $('#aggregateData');
 
-        $aggregateData.empty();
-
-        $.get(`/api/property-aggregates?districtid=${this.districtId}&propertytypeid=${this.propertyTypeId}`,
+        $.get(`/api/property-aggregates/aggregate?districtid=${this.districtId}&propertytypeid=${this.propertyTypeId}`,
             (response) => {
-                $aggregateData.html(`Средна цена за ${response.propertyType.name} в ${response.district.name} - ${response.averagePrice}`);
+                var currencyValue = Formatter.currencyEuro(response.averagePrice);
+
+                this.currentAverage = response.averagePrice;
+
+                $aggregateData
+                    .html(`Средна цена за <strong>${response.propertyType.name}</strong> в <strong>${response.district.name}</strong> - <strong>${currencyValue}</strong>`);
             });
 
         $('form.create-property-form > *').removeClass('hidden');

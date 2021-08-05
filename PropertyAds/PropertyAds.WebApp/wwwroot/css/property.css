@@ -35,3 +35,17 @@
 .image-preview .image-preview-container img {
     height: 100%;
 }
+
+.diff-indicator {
+    font-weight: 600;
+    cursor: help;
+    padding: 10px;
+}
+
+.diff-indicator.diff-up {
+    color: red;
+}
+
+.diff-indicator.diff-down {
+    color: green;
+}

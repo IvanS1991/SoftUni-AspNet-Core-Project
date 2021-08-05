@@ -17,6 +17,8 @@
             this.propertyAggregateData = propertyAggregateData;
         }
 
+        [HttpGet]
+        [Route("aggregate")]
         public async Task<ActionResult<PropertyAggregateServiceModel>> Aggregate(
             string districtId, string propertyTypeId)
         {
