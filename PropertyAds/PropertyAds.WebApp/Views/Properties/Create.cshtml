@@ -4,18 +4,9 @@
 <form enctype="multipart/form-data" class="col-sm-12 col-lg-8 offset-lg-2 create-property-form" method="post">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label asp-for="DistrictId"></label>
-            <select asp-for="DistrictId" class="form-control">
-                @foreach (var district in Model.Districts)
-                {
-                    <option value="@district.Id">@district.Name</option>
-                }
-            </select>
-            <span asp-validation-for="DistrictId" class="small text-danger"></span>
-        </div>
-        <div class="form-group col-md-6">
             <label asp-for="TypeId"></label>
             <select asp-for="TypeId" class="form-control">
+                <option value="">Изберете вид имот</option>
                 @foreach (var type in Model.Types)
                 {
                     <option value="@type.Id">@type.Name</option>
@@ -23,8 +14,22 @@
             </select>
             <span asp-validation-for="TypeId" class="small text-danger"></span>
         </div>
+        <div class="form-group col-md-6">
+            <label asp-for="DistrictId"></label>
+            <select asp-for="DistrictId" class="form-control">
+                <option value="">Изберете квартал</option>
+                @foreach (var district in Model.Districts)
+                {
+                    <option value="@district.Id">@district.Name</option>
+                }
+            </select>
+            <span asp-validation-for="DistrictId" class="small text-danger"></span>
+        </div>
     </div>
-    <div class="form-row">
+    <div class="form-row hidden">
+        <p id="aggregateData" class="text-center col-md-12 alert alert-info"></p>
+    </div>
+    <div class="form-row hidden">
         <div class="form-group col-md-4">
             <label asp-for="Area"></label>
             <input asp-for="Area" class="form-control" />
@@ -37,11 +42,13 @@
         </div>
         <div class="form-group col-md-4">
             <label asp-for="Price"></label>
+            <span class="diff-indicator diff-up hidden" title="По-висока от средната">&uarr;</span>
+            <span class="diff-indicator diff-down hidden" title="По-ниска от средната">&darr;</span>
             <input asp-for="Price" class="form-control" />
             <span asp-validation-for="Price" class="small text-danger"></span>
         </div>
     </div>
-    <div class="form-row">
+    <div class="form-row hidden">
         <div class="form-group col-md-4">
             <label asp-for="Floor"></label>
             <input asp-for="Floor" class="form-control" />
@@ -58,81 +65,29 @@
             <span asp-validation-for="Year" class="small text-danger"></span>
         </div>
     </div>
-    <div class="form-row">
+    <div class="form-row hidden">
         <div class="form-group col-md-12">
             <label asp-for="Description"></label>
             <textarea asp-for="Description" class="form-control"></textarea>
             <span asp-validation-for="Description" class="small text-danger"></span>
         </div>
     </div>
-    <div class="form-row">
+    <div class="form-row hidden">
         <div class="form-group">
             <label asp-for="Images" class="btn btn-primary"></label>
             <input asp-for="Images" class="form-control-file image-upload invisible" />
         </div>
     </div>
-    <div class="form-row image-preview"></div>
-    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5">Създай</button>
+    <div class="form-row image-preview hidden"></div>
+    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5 hidden">Създай</button>
 </form>
 
 @section Scripts {
     <script>
-        const $imageInput = $('input.image-upload');
-        const $imagePreview = $('div.image-preview');
+        var createPropertyForm = new CreatePropertyForm();
 
-        const updatePreview = (input) => {
-            $imagePreview.empty();
-
-            Array.from(input.files).forEach((x, idx) => addImageToPreview($imagePreview, x, idx));
-        };
-
-        const createRemoveImageButton = (index) => {
-            const $button = $('<button></button>')
-                .addClass(['btn', 'btn-danger'])
-                .attr('type', 'button');
-
-            $button.html('x');
-            $button.on('click', () => {
-                const dt = new DataTransfer();
-                const input = $imageInput[0];
-                const { files } = input;
-
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-
-                    if (index !== i) {
-                        dt.items.add(file);
-                    }
-
-                    input.files = dt.files;
-                }
-
-                updatePreview(input);
-            });
-
-            return $button;
-        };
-
-        const createImageElement = (image) => {
-            const $image = $('<img/>');
-
-            $image.attr('src', URL.createObjectURL(image));
-            $image.on('load', () => {
-                URL.revokeObjectURL($image.attr('src'));
-            });
-
-            return $image;
-        };
-
-        const addImageToPreview = ($imagePreview, image, index) => {
-            const $container = $('<div></div>').addClass('image-preview-container');
-
-            $container.append(createImageElement(image));
-            $container.append(createRemoveImageButton(index));
-
-            $imagePreview.append($container);
-        };
-
-        $imageInput.on('input', (evt) => updatePreview(evt.target));
+        createPropertyForm.listenForPreview();
+        createPropertyForm.listenForDistrictAndPropertyType();
+        createPropertyForm.listenForPriceChange();
     </script>
 }
