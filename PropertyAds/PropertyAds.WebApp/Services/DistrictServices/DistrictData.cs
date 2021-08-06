@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
+    using PropertyAds.WebApp.Services.Utility;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,13 +14,16 @@
     {
         private readonly PropertyAdsDbContext db;
         private readonly IMapper mapper;
+        private readonly ICache cache;
 
         public DistrictData(
             PropertyAdsDbContext db,
-            IMapper mapper)
+            IMapper mapper,
+            ICache cache)
         {
             this.db = db;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         public async Task<DistrictServiceModel> Create(string name)
@@ -58,10 +62,19 @@
 
         public async Task<List<DistrictServiceModel>> GetAll()
         {
-            return await this.db.Districts
-                .ProjectTo<DistrictServiceModel>(this.mapper.ConfigurationProvider)
-                .OrderBy(x => x.Name)
-                .ToListAsync();
+            List<DistrictServiceModel> result;
+
+            if (!this.cache.TryGetValue(CacheKey.DistrictList, out result))
+            {
+                result = await this.db.Districts
+                    .ProjectTo<DistrictServiceModel>(this.mapper.ConfigurationProvider)
+                    .OrderBy(x => x.Name)
+                    .ToListAsync();
+
+                this.cache.Set(CacheKey.DistrictList, result);
+            }
+
+            return result;
         }
     }
 }

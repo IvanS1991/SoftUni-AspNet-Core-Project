@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
+    using PropertyAds.WebApp.Services.Utility;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,13 +14,16 @@
     {
         private readonly PropertyAdsDbContext db;
         private readonly IMapper mapper;
+        private readonly ICache cache;
 
         public PropertyTypeData(
             PropertyAdsDbContext db,
-            IMapper mapper)
+            IMapper mapper,
+            ICache cache)
         {
             this.db = db;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         public async Task<PropertyTypeServiceModel> Create(string name, int sortRank)
@@ -61,10 +65,19 @@
 
         public async Task<List<PropertyTypeServiceModel>> GetAll()
         {
-            return await this.db.PropertyTypes
+            List<PropertyTypeServiceModel> result;
+
+            if (!this.cache.TryGetValue(CacheKey.PropertyTypeList, out result))
+            {
+                result = await this.db.PropertyTypes
                 .ProjectTo<PropertyTypeServiceModel>(this.mapper.ConfigurationProvider)
                 .OrderBy(x => x.SortRank)
                 .ToListAsync();
+
+                this.cache.Set(CacheKey.PropertyTypeList, result);
+            }
+
+            return result;
         }
     }
 }

@@ -13,6 +13,8 @@
     using System.Threading.Tasks;
     using System.Linq;
     using Moq;
+    using System.Collections.Generic;
+    using PropertyAds.WebApp.Services.Utility;
 
     [TestFixture]
     public class PropertyAggregateDataTests
@@ -23,6 +25,7 @@
         private IDistrictData districtData;
         private IConfiguration config;
         private IMapper mapper;
+        private ICache cache;
         private PropertyAggregateData propertyAggregateData;
 
         [SetUp]
@@ -31,9 +34,10 @@
             this.db = DatabaseMock.Instance();
             this.propertyAggregateScraper = PropertyAggregateScraperMock.Instance();
             this.mapper = MapperMock.Instance();
+            this.cache = CacheMock.Instance();
             this.config = ConfigurationMock.Instance();
-            this.propertyTypeData = new PropertyTypeData(this.db, this.mapper);
-            this.districtData = new DistrictData(this.db, this.mapper);
+            this.propertyTypeData = new PropertyTypeData(this.db, this.mapper, this.cache);
+            this.districtData = new DistrictData(this.db, this.mapper, this.cache);
 
             var propertyAggregateData = new Mock<PropertyAggregateData>(
                 this.db,
@@ -41,7 +45,8 @@
                 this.propertyTypeData,
                 this.districtData,
                 this.config,
-                this.mapper);
+                this.mapper,
+                this.cache);
 
             propertyAggregateData.Setup(x => x.GetItemsPerPage())
                 .Returns(2);

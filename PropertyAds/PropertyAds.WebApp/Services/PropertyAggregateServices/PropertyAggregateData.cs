@@ -9,6 +9,7 @@
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.Utility;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -23,6 +24,7 @@
         private readonly IDistrictData districtData;
         private readonly IConfiguration config;
         private readonly IMapper mapper;
+        private readonly ICache cache;
 
         public PropertyAggregateData(
             PropertyAdsDbContext db,
@@ -30,7 +32,8 @@
             IPropertyTypeData propertyTypeData,
             IDistrictData districtData,
             IConfiguration config,
-            IMapper mapper)
+            IMapper mapper,
+            ICache cache)
         {
             this.db = db;
             this.scraper = scraper;
@@ -38,6 +41,7 @@
             this.districtData = districtData;
             this.config = config;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         private IQueryable<PropertyAggregateServiceModel> TryApplyFilter(
@@ -119,6 +123,9 @@
         public async Task Populate()
         {
             var result = await this.scraper.Scrape();
+
+            this.cache.Remove(CacheKey.PropertyTypeList);
+            this.cache.Remove(CacheKey.DistrictList);
 
             foreach (var aggregate in result.Aggregates)
             {
