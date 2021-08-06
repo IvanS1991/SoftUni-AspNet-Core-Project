@@ -3,13 +3,13 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Configuration;
     using PropertyAds.Scraper;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.Utility;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,7 +24,7 @@
         private readonly IDistrictData districtData;
         private readonly IConfiguration config;
         private readonly IMapper mapper;
-        private readonly IMemoryCache cache;
+        private readonly ICache cache;
 
         public PropertyAggregateData(
             PropertyAdsDbContext db,
@@ -33,7 +33,7 @@
             IDistrictData districtData,
             IConfiguration config,
             IMapper mapper,
-            IMemoryCache cache)
+            ICache cache)
         {
             this.db = db;
             this.scraper = scraper;

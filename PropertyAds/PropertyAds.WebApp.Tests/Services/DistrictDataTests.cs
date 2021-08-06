@@ -4,6 +4,7 @@
     using NUnit.Framework;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Services.DistrictServices;
+    using PropertyAds.WebApp.Services.Utility;
     using PropertyAds.WebApp.Tests.Mocks;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,6 +15,7 @@
     {
         private PropertyAdsDbContext db;
         private IMapper mapper;
+        private ICache cache;
         private DistrictData districtData;
         private string testDistrict = "test-district";
     
@@ -22,9 +24,11 @@
         {
             this.db = DatabaseMock.Instance();
             this.mapper = MapperMock.Instance();
+            this.cache = CacheMock.Instance();
             this.districtData = new DistrictData(
                 this.db,
-                this.mapper);
+                this.mapper,
+                this.cache);
             this.testDistrict = "test-district";
         }
 

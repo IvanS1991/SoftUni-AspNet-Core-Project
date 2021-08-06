@@ -4,6 +4,7 @@
     using NUnit.Framework;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.Utility;
     using PropertyAds.WebApp.Tests.Mocks;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,6 +15,7 @@
     {
         private PropertyAdsDbContext db;
         private IMapper mapper;
+        private ICache cache;
         private PropertyTypeData propertyTypeData;
         private string testDistrict = "test-property-type";
 
@@ -22,9 +24,11 @@
         {
             this.db = DatabaseMock.Instance();
             this.mapper = MapperMock.Instance();
+            this.cache = CacheMock.Instance();
             this.propertyTypeData = new PropertyTypeData(
                 this.db,
-                this.mapper);
+                this.mapper,
+                this.cache);
         }
 
         [TearDown]
