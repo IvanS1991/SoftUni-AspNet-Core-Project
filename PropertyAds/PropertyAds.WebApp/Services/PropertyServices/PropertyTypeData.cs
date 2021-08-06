@@ -3,6 +3,7 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Caching.Memory;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
     using System.Collections.Generic;
@@ -13,13 +14,16 @@
     {
         private readonly PropertyAdsDbContext db;
         private readonly IMapper mapper;
+        private readonly IMemoryCache cache;
 
         public PropertyTypeData(
             PropertyAdsDbContext db,
-            IMapper mapper)
+            IMapper mapper,
+            IMemoryCache cache)
         {
             this.db = db;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         public async Task<PropertyTypeServiceModel> Create(string name, int sortRank)
@@ -61,10 +65,19 @@
 
         public async Task<List<PropertyTypeServiceModel>> GetAll()
         {
-            return await this.db.PropertyTypes
+            List<PropertyTypeServiceModel> result;
+
+            if (!this.cache.TryGetValue(CacheKey.PropertyTypeList, out result))
+            {
+                result = await this.db.PropertyTypes
                 .ProjectTo<PropertyTypeServiceModel>(this.mapper.ConfigurationProvider)
                 .OrderBy(x => x.SortRank)
                 .ToListAsync();
+
+                this.cache.Set(CacheKey.PropertyTypeList, result);
+            }
+
+            return result;
         }
     }
 }

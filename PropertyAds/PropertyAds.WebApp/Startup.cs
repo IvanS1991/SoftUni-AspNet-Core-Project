@@ -26,6 +26,7 @@ namespace PropertyAds.WebApp
                 .AddTransientServices()
                 .AddScopedServices()
                 .AddAutoMapper(typeof(Startup))
+                .AddMemoryCache()
                 .AddControllersWithViews();
         }
 
