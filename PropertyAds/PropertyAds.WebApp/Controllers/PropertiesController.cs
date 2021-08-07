@@ -262,7 +262,6 @@
             return View(viewModel);
         }
 
-        [Authorize]
         public async Task<IActionResult> Image(string id)
         {
             var image = await this.imageData.GetById(id);

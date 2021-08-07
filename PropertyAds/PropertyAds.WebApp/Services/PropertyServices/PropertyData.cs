@@ -145,6 +145,16 @@
                 .ToListAsync();
         }
 
+        public Task<List<PropertyServiceModel>> GetLatest()
+        {
+            return this.db.Properties
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
+                .Where(x => x.ImageIds.Count() > 0)
+                .OrderByDescending(x => x.CreatedOn)
+                .Take(3)
+                .ToListAsync();
+        }
+
         public Task<PropertyServiceModel> Find(string query)
         {
             return this.db.Properties

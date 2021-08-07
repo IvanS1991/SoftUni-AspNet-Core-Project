@@ -1,4 +1,5 @@
 ﻿@model PropertyAggregateListQueryModel
+@inject IDataFormatter formatter
 
 @if (Model.Rows.Count() == 0)
 {
@@ -23,15 +24,22 @@ else
             {
                 <tr>
                     <th class="col-5" scope="row">
-                        <a target="_blank"
-                           rel="noreferrer"
-                           asp-controller="Properties"
-                           asp-action="List"
-                           asp-route-districtid="@aggregate.District.Id"
-                           asp-route-propertytypeid="@aggregate.PropertyType.Id">@aggregate.District.Name - @aggregate.PropertyType.Name</a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a target="_blank"
+                               rel="noreferrer"
+                               asp-controller="Properties"
+                               asp-action="List"
+                               asp-route-districtid="@aggregate.District.Id"
+                               asp-route-propertytypeid="@aggregate.PropertyType.Id">@aggregate.District.Name - @aggregate.PropertyType.Name</a>
+                        }
+                        else
+                        {
+                            <span>@aggregate.District.Name - @aggregate.PropertyType.Name</span>
+                        }
                     </th>
-                    <td class="col-2">@(aggregate.AveragePrice == null ? "-" : aggregate.AveragePrice)</td>
-                    <td class="col-2">@(aggregate.AveragePricePerSqM == null ? "-" : aggregate.AveragePricePerSqM)</td>
+                    <td class="col-2">@formatter.FormatCurrency(aggregate.AveragePrice)</td>
+                    <td class="col-2">@formatter.FormatCurrency(aggregate.AveragePricePerSqM)</td>
                 </tr>
             }
         </tbody>

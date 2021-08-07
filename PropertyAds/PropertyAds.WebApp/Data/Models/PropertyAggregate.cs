@@ -16,8 +16,8 @@
 
         public PropertyType PropertyType { get; set; }
 
-        public int? AveragePrice { get; set; }
+        public int AveragePrice { get; set; }
 
-        public int? AveragePricePerSqM { get; set; }
+        public int AveragePricePerSqM { get; set; }
     }
 }
