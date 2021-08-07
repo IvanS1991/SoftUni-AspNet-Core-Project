@@ -32,12 +32,9 @@
             this.CreateMap<PropertyServiceModel, PropertySummaryViewModel>()
                 .ForMember(p => p.ImageId, c => c
                     .MapFrom(x => x.ImageIds.Count() > 0 ? x.ImageIds.First() : null));
+            this.CreateMap<PropertyServiceModel, PropertyFormModel>();
 
-            this.CreateMap<PropertyAggregateServiceModel, PropertyAggregateViewModel>()
-                .ForMember(p => p.PropertyType, c => c
-                    .MapFrom(x => x.PropertyType.Name))
-                .ForMember(p => p.District, c => c
-                    .MapFrom(x => x.District.Name));
+            this.CreateMap<PropertyAggregateServiceModel, PropertyAggregateViewModel>();
         }
     }
 }

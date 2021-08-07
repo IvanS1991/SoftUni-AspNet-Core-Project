@@ -40,6 +40,14 @@
             return this.mapper.Map< PropertyImageServiceModel>(result.Entity);
         }
 
+        public async Task Delete(string id)
+        {
+            var image = await this.db.PropertyImages.FindAsync(id);
+
+            this.db.PropertyImages.Remove(image);
+            await this.db.SaveChangesAsync();
+        }
+
         public async Task<PropertyImageServiceModel> GetById(string id)
         {
             var propertyImage = await this.db.PropertyImages

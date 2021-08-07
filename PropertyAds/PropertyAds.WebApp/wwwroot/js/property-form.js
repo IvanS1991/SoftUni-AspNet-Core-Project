@@ -1,9 +1,10 @@
-﻿class CreatePropertyForm
+﻿class PropertyForm
 {
     constructor() {
         this.$selects = $('select.form-control');
         this.$districtSelect = $('select.form-control#DistrictId');
         this.$propertyTypeSelect = $('select.form-control#TypeId');
+        this.$priceInput = $('#Price');
         this.$imageInput = $('input.image-upload');
         this.$imagePreview = $('div.image-preview');
 
@@ -30,21 +31,25 @@
     }
 
     listenForPriceChange() {
-        $('#Price').on('input', (e) => {
-            const $diffUp = $('.diff-indicator.diff-up');
-            const $diffDown = $('.diff-indicator.diff-down');
-
-            if (e.target.value < this.currentAverage) {
-                $diffUp.addClass('hidden');
-                $diffDown.removeClass('hidden');
-            } else if (e.target.value > this.currentAverage) {
-                $diffUp.removeClass('hidden');
-                $diffDown.addClass('hidden');
-            } else {
-                $diffUp.addClass('hidden');
-                $diffDown.addClass('hidden');
-            }
+        this.$priceInput.on('input', (e) => {
+            this.determinePriceDiff(e.target.value);
         });
+    }
+
+    determinePriceDiff(priceAverage) {
+        const $diffUp = $('.diff-indicator.diff-up');
+        const $diffDown = $('.diff-indicator.diff-down');
+
+        if (priceAverage < this.currentAverage) {
+            $diffUp.addClass('hidden');
+            $diffDown.removeClass('hidden');
+        } else if (priceAverage > this.currentAverage) {
+            $diffUp.removeClass('hidden');
+            $diffDown.addClass('hidden');
+        } else {
+            $diffUp.addClass('hidden');
+            $diffDown.addClass('hidden');
+        }
     }
 
     tryInitializeForm() {
@@ -64,6 +69,8 @@
 
                 $aggregateData
                     .html(`Средна цена за <strong>${response.propertyType.name}</strong> в <strong>${response.district.name}</strong> - <strong>${currencyValue}</strong>`);
+
+                this.determinePriceDiff(this.$priceInput.val());
             });
 
         $('form.create-property-form > *').removeClass('hidden');

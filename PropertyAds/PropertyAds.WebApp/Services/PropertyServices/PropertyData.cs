@@ -17,6 +17,7 @@
     {
         private readonly PropertyAdsDbContext db;
         private readonly IUserData userData;
+        private readonly IPropertyImageData propertyImageData;
         private readonly IMapper mapper;
         private readonly IConfiguration config;
 
@@ -24,12 +25,14 @@
             PropertyAdsDbContext db,
             IUserData userData,
             IMapper mapper,
-            IConfiguration config)
+            IConfiguration config,
+            IPropertyImageData propertyImageData)
         {
             this.db = db;
             this.userData = userData;
             this.mapper = mapper;
             this.config = config;
+            this.propertyImageData = propertyImageData;
         }
 
         public async Task<PropertyServiceModel> Create(
@@ -62,9 +65,44 @@
             return this.mapper.Map<PropertyServiceModel>(result.Entity);
         }
 
-        public async Task Update(Property property)
+        public async Task Update(
+            string propertyId,
+            int price,
+            decimal area,
+            decimal usableArea,
+            int floor,
+            int totalFloors,
+            int year,
+            string description,
+            string typeId,
+            string districtId)
         {
+            var property = await this.db.Properties.FindAsync(propertyId);
+
+            property.Price = price;
+            property.Area = area;
+            property.UsableArea = usableArea;
+            property.Floor = floor;
+            property.TotalFloors = totalFloors;
+            property.Year = year;
+            property.Description = description;
+            property.TypeId = typeId;
+            property.DistrictId = districtId;
+
             this.db.Properties.Update(property);
+            await this.db.SaveChangesAsync();
+        }
+
+        public async Task Delete(string id)
+        {
+            var property = await this.db.Properties.FindAsync(id);
+
+            foreach (var image in property.Images)
+            {
+                await this.propertyImageData.Delete(image.Id);
+            }
+
+            this.db.Properties.Remove(property);
             await this.db.SaveChangesAsync();
         }
 
@@ -107,12 +145,11 @@
                 .ToListAsync();
         }
 
-        public async Task<PropertyServiceModel> Find(string query)
+        public Task<PropertyServiceModel> Find(string query)
         {
-            var property = await this.db.Properties
+            return this.db.Properties
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => x.Id == query);
-
-            return this.mapper.Map<PropertyServiceModel>(property);
         }
 
         public async Task<PropertyServiceModel> VisitProperty(string id)
@@ -131,7 +168,8 @@
 
             property.VisitedCount += 1;
 
-            await this.Update(this.mapper.Map<Property>(property));
+            this.db.Properties.Update(property);
+            await this.db.SaveChangesAsync();
 
             return this.mapper.Map<PropertyServiceModel>(property);
         }

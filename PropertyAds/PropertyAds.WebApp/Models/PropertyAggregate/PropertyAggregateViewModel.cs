@@ -1,10 +1,13 @@
 ﻿namespace PropertyAds.WebApp.Models.PropertyAggregate
 {
+    using PropertyAds.WebApp.Services.DistrictServices;
+    using PropertyAds.WebApp.Services.PropertyServices;
+
     public class PropertyAggregateViewModel
     {
-        public string PropertyType { get; set; }
+        public PropertyTypeServiceModel PropertyType { get; set; }
 
-        public string District { get; set; }
+        public DistrictServiceModel District { get; set; }
 
         public int? AveragePrice { get; set; }
 

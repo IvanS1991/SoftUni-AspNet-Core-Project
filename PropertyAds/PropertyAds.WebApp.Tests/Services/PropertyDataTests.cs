@@ -1,5 +1,6 @@
 ﻿namespace PropertyAds.WebApp.Tests.Services
 {
+    using AutoMapper;
     using Moq;
     using NUnit.Framework;
     using PropertyAds.WebApp.Data;
@@ -16,7 +17,9 @@
     {
         private Random random;
         private PropertyAdsDbContext db;
+        private IMapper mapper;
         private IUserData userData;
+        private IPropertyImageData propertyImageData;
         private PropertyData propertyData;
         private string userEmail = "gosho@abv.bg";
 
@@ -25,18 +28,16 @@
         {
             this.random = new Random();
             this.db = DatabaseMock.Instance();
+            this.mapper = MapperMock.Instance();
             this.userData = UserDataMock.Instance();
-            this.propertyData = new PropertyData(
-                this.db,
-                this.userData,
-                MapperMock.Instance(),
-                ConfigurationMock.Instance());
-
+            this.propertyImageData = new PropertyImageData(this.db, this.mapper);
+            
             var propertyData = new Mock<PropertyData>(
                 this.db,
                 this.userData,
                 MapperMock.Instance(),
-                ConfigurationMock.Instance());
+                ConfigurationMock.Instance(),
+                this.propertyImageData);
 
             propertyData.Setup(x => x.GetItemsPerPage())
                 .Returns(2);
@@ -81,6 +82,87 @@
 
             Assert.NotNull(result);
             this.AssertProperty(insertedEntity, result);
+        }
+        
+        [Test]
+        public async Task Delete_ShouldDeletePropertyAndCorrespondingImages()
+        {
+            this.PopulateDb();
+
+            var firstProperty = this.db.Properties.First();
+            var imageCount = 3;
+
+            for (int i = 0; i < imageCount; i++) {
+                await this.propertyImageData.Create(
+                    new byte[] { },
+                    $"test-image-{i}",
+                    firstProperty.Id);
+            }
+
+            Assert.NotNull(this.db.Properties.Find(firstProperty.Id));
+            Assert.AreEqual(
+                this.GetPropertyImagesCount(firstProperty.Id),
+                imageCount);
+
+            await this.propertyData.Delete(firstProperty.Id);
+
+            Assert.AreEqual(
+                this.GetPropertyImagesCount(firstProperty.Id),
+                0);
+        }
+
+        [Test]
+        public async Task Update_ShouldUpdatePropertyCorrectly()
+        {
+            this.PopulateDb();
+
+            var property = this.db.Properties.First();
+
+            var price = 50000;
+            var area = 50.45M;
+            var usableArea = 40.45M;
+            var floor = 3;
+            var totalFloors = 5;
+            var year = 2005;
+            var description = Guid.NewGuid().ToString();
+            var typeId = this.db.PropertyTypes.Last().Id;
+            var districtId = this.db.Districts.Last().Id;
+
+            var before = await this.propertyData.Find(property.Id);
+
+            Assert.AreNotEqual(before.Price, price);
+            Assert.AreNotEqual(before.Area, area);
+            Assert.AreNotEqual(before.UsableArea, usableArea);
+            Assert.AreNotEqual(before.Floor, floor);
+            Assert.AreNotEqual(before.TotalFloors, totalFloors);
+            Assert.AreNotEqual(before.Year, year);
+            Assert.AreNotEqual(before.Description, description);
+            Assert.AreNotEqual(before.Type.Id, typeId);
+            Assert.AreNotEqual(before.District.Id, districtId);
+
+            await this.propertyData.Update(
+                property.Id,
+                price,
+                area,
+                usableArea,
+                floor,
+                totalFloors,
+                year,
+                description,
+                typeId,
+                districtId);
+
+            var after = await this.propertyData.Find(property.Id);
+
+            Assert.AreEqual(after.Price, price);
+            Assert.AreEqual(after.Area, area);
+            Assert.AreEqual(after.UsableArea, usableArea);
+            Assert.AreEqual(after.Floor, floor);
+            Assert.AreEqual(after.TotalFloors, totalFloors);
+            Assert.AreEqual(after.Year, year);
+            Assert.AreEqual(after.Description, description);
+            Assert.AreEqual(after.Type.Id, typeId);
+            Assert.AreEqual(after.District.Id, districtId);
         }
 
         [Test]
@@ -144,6 +226,13 @@
             Assert.AreEqual(result.VisitedCount, 3);
         }
 
+        private int GetPropertyImagesCount(string propertyId)
+        {
+            return this.db.PropertyImages
+                .Where(x => x.PropertyId == propertyId)
+                .Count();
+        }
+
         private void AssertProperty(PropertyServiceModel insertedEntity, Property result)
         {
             Assert.IsInstanceOf<PropertyServiceModel>(insertedEntity);
@@ -168,20 +257,20 @@
                     Email = this.userEmail
                 });
 
-            var propertyType = this.db.PropertyTypes
-                .Add(new PropertyType
-                {
-                    Name = "test-property-type"
-                });
-
-            var district = this.db.Districts
-                .Add(new District
-                {
-                    Name = "test-district"
-                });
-
             for (int i = 0; i < 10; i++)
             {
+                var propertyType = this.db.PropertyTypes
+                    .Add(new PropertyType
+                    {
+                        Name = $"test-property-type-{i}"
+                    });
+
+                var district = this.db.Districts
+                    .Add(new District
+                    {
+                        Name = $"test-district-{i}"
+                    });
+
                 this.db.Properties.Add(new Property
                 {
                     Price = this.random.Next(20000, 50000),

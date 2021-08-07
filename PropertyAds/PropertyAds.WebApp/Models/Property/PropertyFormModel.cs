@@ -11,8 +11,10 @@
     using static PropertyAds.WebApp.Data.DataConstants;
     using static PropertyAds.WebApp.Data.DataErrors;
 
-    public class CreatePropertyFormModel
+    public class PropertyFormModel
     {
+        public string Id { get; set; }
+
         [Display(Name = "Цена")]
         [Range(
             PropertyPriceMinValue,

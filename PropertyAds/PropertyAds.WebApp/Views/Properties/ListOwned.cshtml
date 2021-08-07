@@ -30,8 +30,14 @@
             <td scope="col">@property.Year</td>
             <td scope="col">
                 <div class="button-group">
-                    <a class="btn" href="#">&#x270E;</a>
-                    <a class="btn" href="#">&#x2716;</a>
+                    <a class="btn"
+                       asp-controller="Properties"
+                       asp-action="Edit"
+                       asp-route-id="@property.Id">&#x270E;</a>
+                    <a class="btn"
+                       asp-controller="Properties"
+                       asp-action="Delete"
+                       asp-route-id="@property.Id">&#x2716;</a>
                 </div>
             </td>
         </tr>
