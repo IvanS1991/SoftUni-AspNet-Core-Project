@@ -1,0 +1,12 @@
+﻿.home-carousel {
+    background: darkgrey;
+}
+
+.home-carousel-slide {
+    text-align: center;
+}
+
+.home-carousel-image {
+    max-height: 800px;
+    width: initial;
+}

@@ -1,8 +1,41 @@
-﻿@{
+﻿@model IEnumerable<PropertySummaryViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div id="carouselExampleIndicators" class="carousel slide home-carousel" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var property = Model.Skip(i).Take(1).First();
+            <div class="carousel-item home-carousel-slide @(i == 0 ? "active" : "")">
+                <img class="home-carousel-image" src="@($"/Properties/Image/{property.ImageId}")">
+                <div class="carousel-caption card card-body bg-dark d-none d-md-block">
+                    <h5>@property.PropertyTypeName - @property.DistrictName</h5>
+                    <p>@property.Description</p>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="btn btn-primary"
+                           asp-controller="Properties"
+                           asp-action="Details"
+                           asp-route-id="@property.Id">Виж повече</a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
 </div>

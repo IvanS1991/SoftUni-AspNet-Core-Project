@@ -45,6 +45,9 @@
             string districtId,
             string propertyTypeId,
             bool showOnlyOwned = false);
+
+        Task<List<PropertyServiceModel>> GetLatest();
+
         Task<int> GetCount(
             string districtId,
             string propertyTypeId);
