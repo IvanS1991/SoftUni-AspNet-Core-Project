@@ -1,23 +1,66 @@
-﻿@model IEnumerable<PropertySummaryViewModel>
+﻿@model PropertyListQueryModel
 @inject IDataFormatter formatter
 
-<div class="row">
-    @foreach (var summary in Model)
-    {
-    <div class="container col-md-4 mb-3">
-        <div class="card">
-            <div class="container property-summary-image">
-                @if (summary.ImageId != null)
-                {
-                    <img class="card-img-top" src="@($"/Properties/Image/{summary.ImageId}")" alt="@summary.DistrictName - @summary.PropertyTypeName">
-                }
-            </div>
-            <div class="card-body">
-                <h2 class="text-center">@formatter.FormatCurrency(summary.Price)</h2>
-                <p class="card-text text-truncate">@summary.Description</p>
-                <a class="card-link" asp-controller="Properties" asp-action="Details" asp-route-id="@summary.Id">Виж повече...</a>
-            </div>
+<partial name="_PropertyTypeDistrictFilterForm" model="@Model" />
+
+@if (Model.Rows.Count() == 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center alert alert-info">
+            Няма намерени имоти
         </div>
     </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var summary in Model.Rows)
+        {
+            <div class="container col-md-3 mb-3">
+                <div class="card">
+                    <div class="container property-summary-image">
+                        @if (summary.ImageId != null)
+                        {
+                            <img class="card-img-top" src="@($"/Properties/Image/{summary.ImageId}")" alt="@summary.DistrictName - @summary.PropertyTypeName">
+                        }
+                    </div>
+                    <div class="card-body">
+                        <h2 class="text-center">@formatter.FormatCurrency(summary.Price)</h2>
+                        <p class="card-text text-truncate">@summary.Description</p>
+                        <a class="card-link" asp-controller="Properties" asp-action="Details" asp-route-id="@summary.Id">Виж повече...</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination pagination-sm justify-content-between">
+                <li class="page-item">
+                    <a class="page-link btn btn-primary @(Model.Page <= 1 ? "disabled" : "")"
+                       asp-controller="Properties"
+                       asp-action="List"
+                       asp-route-page="@(Model.Page - 1)"
+                       asp-route-districtid="@Model.DistrictId"
+                       asp-route-propertytypeid="@Model.PropertyTypeId">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link btn btn-primary @(Model.Page >= Model.TotalPages ? "disabled" : "")"
+                       asp-controller="Properties"
+                       asp-action="List"
+                       asp-route-page="@(Model.Page + 1)"
+                       asp-route-districtid="@Model.DistrictId"
+                       asp-route-propertytypeid="@Model.PropertyTypeId">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     }
-</div>
+}

@@ -76,6 +76,7 @@
         <div class="form-group">
             <label asp-for="Images" class="btn btn-primary"></label>
             <input asp-for="Images" class="form-control-file image-upload invisible" />
+            <span asp-validation-for="Images" class="small text-danger"></span>
         </div>
     </div>
     <div class="form-row image-preview hidden"></div>
@@ -90,4 +91,6 @@
         createPropertyForm.listenForDistrictAndPropertyType();
         createPropertyForm.listenForPriceChange();
     </script>
+
+    <partial name="_ValidationScriptsPartial" />
 }

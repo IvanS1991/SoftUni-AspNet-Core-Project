@@ -30,12 +30,8 @@
 
         public async Task<IActionResult> List([FromQuery] PropertyAggregateListQueryModel queryModel)
         {
-            var itemsPerPage = this.propertyAggregateData.GetItemsPerPage();
-            var offset = (queryModel.Page - 1) * itemsPerPage;
-
             var aggregates = await this.propertyAggregateData.GetAll(
-                itemsPerPage,
-                offset,
+                queryModel.Page,
                 queryModel.DistrictId,
                 queryModel.PropertyTypeId);
             var aggregatesListViewModel = new PropertyAggregateListQueryModel

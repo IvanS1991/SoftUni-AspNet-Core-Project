@@ -10,6 +10,7 @@
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
     using PropertyAds.WebApp.Services.Utility;
+    using PropertyAds.WebApp.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -42,42 +43,6 @@
             this.config = config;
             this.mapper = mapper;
             this.cache = cache;
-        }
-
-        private IQueryable<PropertyAggregateServiceModel> TryApplyFilter(
-            IQueryable<PropertyAggregateServiceModel> queryable,
-            string districtId,
-            string propertyTypeId)
-        {
-            if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
-            {
-                queryable = queryable.Where(x => x.District.Id == districtId);
-            }
-
-            if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
-            {
-                queryable = queryable.Where(x => x.PropertyType.Id == propertyTypeId);
-            }
-
-            return queryable;
-        }
-
-        private IQueryable<PropertyAggregateServiceModel> TryApplyPagination(
-            IQueryable<PropertyAggregateServiceModel> queryable,
-            int limit,
-            int offset)
-        {
-            if (offset > 0)
-            {
-                queryable = queryable.Skip(offset);
-            }
-
-            if (limit > 0)
-            {
-                queryable = queryable.Take(limit);
-            }
-
-            return queryable;
         }
 
         public async Task<PropertyAggregateServiceModel> Create(
@@ -158,42 +123,27 @@
         }
 
         public Task<List<PropertyAggregateServiceModel>> GetAll(
-            string districtId,
-            string propertyTypeId)
-        {
-            return this.GetAll(0, districtId, propertyTypeId);
-        }
-
-        public Task<List<PropertyAggregateServiceModel>> GetAll(
-            int limit,
-            string districtId,
-            string propertyTypeId)
-        {
-            return this.GetAll(limit, 0, districtId, propertyTypeId);
-        }
-
-        public Task<List<PropertyAggregateServiceModel>> GetAll(
-            int limit,
-            int offset,
-            string districtId,
-            string propertyTypeId)
+            int page = 0,
+            string districtId = null,
+            string propertyTypeId = null)
         {
             var queryable = this.db.PropertyAggregates
                 .ProjectTo<PropertyAggregateServiceModel>(this.mapper.ConfigurationProvider)
                 .OrderByDescending(x => x.AveragePrice)
                 .AsQueryable();
 
-            queryable = this.TryApplyFilter(
-                queryable,
-                districtId,
-                propertyTypeId);
+            if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.District.Id == districtId);
+            }
 
-            queryable = this.TryApplyPagination(
-                queryable,
-                limit,
-                offset);
+            if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.PropertyType.Id == propertyTypeId);
+            }
 
             return queryable
+                .TryApplyPagination(this.GetItemsPerPage(), page)
                 .ToListAsync();
         }
 
@@ -211,10 +161,15 @@
             var queryable = this.db.PropertyAggregates
                 .ProjectTo<PropertyAggregateServiceModel>(this.mapper.ConfigurationProvider);
 
-            queryable = this.TryApplyFilter(
-                queryable,
-                districtId,
-                propertyTypeId);
+            if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.District.Id == districtId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.PropertyType.Id == propertyTypeId);
+            }
 
             return queryable
                 .CountAsync();
@@ -229,7 +184,7 @@
             var itemsPerPage = this
                 .GetItemsPerPage();
 
-            return aggregatesCount / itemsPerPage;
+            return (int)Math.Ceiling(aggregatesCount / (float)itemsPerPage);
         }
     }
 }

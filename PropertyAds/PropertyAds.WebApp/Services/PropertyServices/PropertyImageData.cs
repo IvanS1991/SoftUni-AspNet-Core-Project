@@ -1,13 +1,22 @@
 ﻿namespace PropertyAds.WebApp.Services.PropertyServices
 {
     using AutoMapper;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Mime;
     using System.Threading.Tasks;
 
     public class PropertyImageData : IPropertyImageData
     {
+        private readonly List<string> imageContentTypes = new List<string>()
+        {
+            MediaTypeNames.Image.Jpeg
+        };
+
         private readonly PropertyAdsDbContext db;
         private readonly IMapper mapper;
 
@@ -42,6 +51,12 @@
             }
 
             return this.mapper.Map<PropertyImageServiceModel>(propertyImage);
+        }
+
+        public bool IsValidFormImageCollection(IFormFileCollection fileCollection)
+        {
+            return fileCollection
+                       .All(x => this.imageContentTypes.Contains(x.ContentType));
         }
     }
 }
