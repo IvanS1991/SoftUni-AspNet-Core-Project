@@ -7,6 +7,8 @@
     {
         Task<PropertyImageServiceModel> Create(byte[] bytes, string name, string propertyId);
 
+        Task Delete(string id);
+
         Task<PropertyImageServiceModel> GetById(string id);
 
         bool IsValidFormImageCollection(IFormFileCollection fileCollection);

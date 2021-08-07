@@ -19,7 +19,19 @@
 
         Task<PropertyServiceModel> Find(string query);
 
-        Task Update(Property property);
+        Task Update(
+            string propertyId,
+            int price,
+            decimal area,
+            decimal usableArea,
+            int floor,
+            int totalFloors,
+            int year,
+            string description,
+            string typeId,
+            string districtId);
+
+        Task Delete(string id);
 
         Task<PropertyServiceModel> VisitProperty(string id);
 

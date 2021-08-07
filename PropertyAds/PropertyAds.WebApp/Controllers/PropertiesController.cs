@@ -39,7 +39,7 @@
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            return View(new CreatePropertyFormModel
+            return View(new PropertyFormModel
             {
                 Types = await this.propertyTypeData.GetAll(),
                 Districts = await this.districtData.GetAll()
@@ -48,7 +48,7 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create([FromForm] CreatePropertyFormModel propertyModel)
+        public async Task<IActionResult> Create([FromForm] PropertyFormModel propertyModel)
         {
             if (await this.propertyTypeData.Exists(propertyModel.TypeId)
                 == false)
@@ -88,7 +88,7 @@
             }
 
 
-                if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
                 propertyModel.Types = await this.propertyTypeData.GetAll();
                 propertyModel.Districts = await this.districtData.GetAll();
@@ -128,6 +128,92 @@
             }
 
             return RedirectToAction(nameof(List));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var property = await this.propertyData.Find(id);
+            var viewModel = this.mapper.Map<PropertyFormModel>(property);
+
+            viewModel.Id = id;
+            viewModel.Types = await this.propertyTypeData.GetAll();
+            viewModel.Districts = await this.districtData.GetAll();
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit([FromForm] PropertyFormModel propertyModel)
+        {
+            if (await this.propertyTypeData.Exists(propertyModel.TypeId)
+                == false)
+            {
+                this.ModelState.AddModelError(
+                    nameof(Property.TypeId),
+                    PropertyTypeNotFoundError);
+            }
+
+            if (await this.districtData.Exists(propertyModel.DistrictId)
+                == false)
+            {
+                this.ModelState.AddModelError(
+                    nameof(Property.DistrictId),
+                    DistrictNotFoundError);
+            }
+
+            if (propertyModel.Floor > propertyModel.TotalFloors)
+            {
+                this.ModelState.AddModelError(
+                    nameof(Property.DistrictId),
+                    FloorGreaterThanTotalError);
+            }
+
+            if (propertyModel.Area < propertyModel.UsableArea)
+            {
+                this.ModelState.AddModelError(
+                    nameof(Property.UsableArea),
+                    UsableAreaGreaterThanAreaError);
+            }
+
+            if (!this.imageData.IsValidFormImageCollection(propertyModel.Images))
+            {
+                this.ModelState.AddModelError(
+                    nameof(Property.Images),
+                    OnlyImagesAllowedError);
+            }
+
+
+            if (!this.ModelState.IsValid)
+            {
+                propertyModel.Types = await this.propertyTypeData.GetAll();
+                propertyModel.Districts = await this.districtData.GetAll();
+
+                return View(propertyModel);
+            }
+
+            await this.propertyData.Update(
+               propertyModel.Id,
+               propertyModel.Price,
+               propertyModel.Area,
+               propertyModel.UsableArea,
+               propertyModel.Floor,
+               propertyModel.TotalFloors,
+               propertyModel.Year,
+               propertyModel.Description,
+               propertyModel.TypeId,
+               propertyModel.DistrictId);
+
+            return RedirectToAction(nameof(ListOwned));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await this.propertyData.Delete(id);
+
+            return RedirectToAction(nameof(ListOwned));
         }
 
         [Authorize]
