@@ -1,6 +1,6 @@
 ﻿namespace PropertyAds.WebApp.Tests.Services
 {
-    using AutoMapper;
+    using Moq;
     using NUnit.Framework;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
@@ -16,7 +16,6 @@
     {
         private Random random;
         private PropertyAdsDbContext db;
-        private IMapper mapper;
         private IUserData userData;
         private PropertyData propertyData;
         private string userEmail = "gosho@abv.bg";
@@ -26,19 +25,30 @@
         {
             this.random = new Random();
             this.db = DatabaseMock.Instance();
-            this.mapper = MapperMock.Instance();
             this.userData = UserDataMock.Instance();
             this.propertyData = new PropertyData(
                 this.db,
                 this.userData,
-                this.mapper);
+                MapperMock.Instance(),
+                ConfigurationMock.Instance());
+
+            var propertyData = new Mock<PropertyData>(
+                this.db,
+                this.userData,
+                MapperMock.Instance(),
+                ConfigurationMock.Instance());
+
+            propertyData.Setup(x => x.GetItemsPerPage())
+                .Returns(2);
+
+            this.propertyData = propertyData.Object;
         }
 
         [TearDown]
         public void TearDown()
         {
             this.db = null;
-            this.mapper = null;
+            this.userData = null;
             this.propertyData = null;
         }
 
@@ -78,7 +88,7 @@
         {
             this.PopulateDb();
             
-            var result = await this.propertyData.GetList();
+            var result = await this.propertyData.GetList(null, null);
 
             Assert.AreEqual(this.db.Properties.Count(), result.Count());
 
@@ -93,8 +103,8 @@
         {
             this.PopulateDb();
 
-            var firstResult = await this.propertyData.GetList(1, 0);
-            var secondResult = await this.propertyData.GetList(1, 1);
+            var firstResult = await this.propertyData.GetList(1, null, null);
+            var secondResult = await this.propertyData.GetList(2, null, null);
 
             Assert.AreNotEqual(firstResult, secondResult);
         }
@@ -144,8 +154,8 @@
             Assert.AreEqual(insertedEntity.TotalFloors, result.TotalFloors);
             Assert.AreEqual(insertedEntity.Year, result.Year);
             Assert.AreEqual(insertedEntity.Description, result.Description);
-            Assert.AreEqual(insertedEntity.Type, result.Type.Name);
-            Assert.AreEqual(insertedEntity.District, result.District.Name);
+            Assert.AreEqual(insertedEntity.Type.Name, result.Type.Name);
+            Assert.AreEqual(insertedEntity.District.Name, result.District.Name);
             Assert.AreEqual(insertedEntity.Owner, this.userEmail);
         }
 

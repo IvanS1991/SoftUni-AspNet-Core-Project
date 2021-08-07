@@ -9,15 +9,14 @@
             int itemsPerPage,
             int page = 0)
         {
-
             if (page > 1)
             {
                 var offset = (page - 1) * itemsPerPage;
 
-                queryable = queryable.Skip(offset);
+                queryable = queryable
+                    .Skip(offset)
+                    .Take(itemsPerPage);
             }
-
-            queryable = queryable.Take(itemsPerPage);
 
             return queryable;
         }

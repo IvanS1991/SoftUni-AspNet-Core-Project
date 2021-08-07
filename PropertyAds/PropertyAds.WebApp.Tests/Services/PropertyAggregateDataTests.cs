@@ -212,10 +212,7 @@
             var result = await this.propertyAggregateData
                 .TotalPageCount(null, null);
 
-            var expected = this.db.PropertyAggregates.Count()
-                / this.propertyAggregateData.GetItemsPerPage();
-
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(result, 2);
         }
     }
 }
