@@ -1,6 +1,7 @@
 ﻿namespace PropertyAds.WebApp.Models.Property
 {
     using Microsoft.AspNetCore.Http;
+    using PropertyAds.WebApp.Models.Validation;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
     using System;
@@ -74,7 +75,9 @@
         public string DistrictId { get; set; }
 
         [Display(Name = "Снимки")]
-        public IFormFileCollection Images { get; set; }
+        [CollectionRange(0, 3,
+            ErrorMessage = CollectionRangeError)]
+        public IFormFileCollection Images { get; set; } = new FormFileCollection();
 
         public IEnumerable<PropertyTypeServiceModel> Types { get; set; }
 

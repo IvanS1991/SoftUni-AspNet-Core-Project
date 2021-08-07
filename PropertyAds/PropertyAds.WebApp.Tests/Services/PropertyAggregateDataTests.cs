@@ -174,7 +174,7 @@
             var firstDistrict = this.db.Districts.First();
 
             var result = await this.propertyAggregateData
-                .GetAll(firstDistrict.Id, firstPropertyType.Id);
+                .GetAll(0, firstDistrict.Id, firstPropertyType.Id);
 
             var expectedCount = this.db.PropertyAggregates
                 .Where(x => x.DistrictId == firstDistrict.Id
@@ -196,9 +196,9 @@
                 .Populate();
 
             var firstPage = await this.propertyAggregateData
-                .GetAll(1, 0, null, null);
+                .GetAll(0, null, null);
             var secondPage = await this.propertyAggregateData
-                .GetAll(1, 1, null, null);
+                .GetAll(0, null, null);
 
             Assert.AreNotEqual(firstPage, secondPage);
         }
@@ -212,10 +212,7 @@
             var result = await this.propertyAggregateData
                 .TotalPageCount(null, null);
 
-            var expected = this.db.PropertyAggregates.Count()
-                / this.propertyAggregateData.GetItemsPerPage();
-
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(result, 2);
         }
     }
 }

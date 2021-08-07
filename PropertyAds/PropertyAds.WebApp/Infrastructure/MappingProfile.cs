@@ -16,10 +16,6 @@
             this.CreateMap<Property, PropertyServiceModel>()
                 .ForMember(p => p.ImageIds, m => m
                     .MapFrom(x => x.Images.Select(i => i.Id)))
-                .ForMember(p => p.District, m => m
-                    .MapFrom(x => x.District.Name))
-                .ForMember(p => p.Type, m => m
-                    .MapFrom(x => x.Type.Name))
                 .ForMember(p => p.Owner, m => m
                     .MapFrom(x => x.Owner.Email));
 
@@ -28,7 +24,11 @@
             this.CreateMap<PropertyAggregate, PropertyAggregateServiceModel>();
             this.CreateMap<PropertyImage, PropertyImageServiceModel>();
 
-            this.CreateMap<PropertyServiceModel, PropertyDetailsViewModel>();
+            this.CreateMap<PropertyServiceModel, PropertyDetailsViewModel>()
+                .ForMember(p => p.District, c => c
+                    .MapFrom(x => x.District.Name))
+                .ForMember(p => p.Type, c => c
+                    .MapFrom(x => x.Type.Name));
             this.CreateMap<PropertyServiceModel, PropertySummaryViewModel>()
                 .ForMember(p => p.ImageId, c => c
                     .MapFrom(x => x.ImageIds.Count() > 0 ? x.ImageIds.First() : null));

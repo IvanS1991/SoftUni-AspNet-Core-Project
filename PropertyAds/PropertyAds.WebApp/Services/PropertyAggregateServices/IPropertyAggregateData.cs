@@ -4,10 +4,8 @@
     using System.Threading.Tasks;
     using System.Timers;
 
-    public interface IPropertyAggregateData
+    public interface IPropertyAggregateData : IPaginationList
     {
-        int GetItemsPerPage();
-
         Task<int> GetCount(
             string districtId,
             string propertyTypeId);
@@ -21,17 +19,7 @@
             int averagePricePerSqM);
 
         Task<List<PropertyAggregateServiceModel>> GetAll(
-            string districtId,
-            string propertyTypeId);
-
-        Task<List<PropertyAggregateServiceModel>> GetAll(
-            int limit,
-            string districtId,
-            string propertyTypeId);
-
-        Task<List<PropertyAggregateServiceModel>> GetAll(
-            int limit,
-             int offset,
+            int page,
             string districtId,
             string propertyTypeId);
 

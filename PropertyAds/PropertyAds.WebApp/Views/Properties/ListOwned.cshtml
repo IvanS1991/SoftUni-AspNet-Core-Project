@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PropertyDetailsViewModel>
+@inject IDataFormatter formatter
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Цена</th>
+            <th scope="col">Етаж</th>
+            <th scope="col">Площ</th>
+            <th scope="col">Година</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var property in Model)
+        {
+        <tr>
+            <td scope="col">
+                <a
+                   target="_blank"
+                   rel="noreferrer"
+                   asp-controller="Properties"
+                   asp-action="Details"
+                   asp-route-id="@property.Id">@property.District - @property.Type</a>
+            </td>
+            <td scope="col">@formatter.FormatCurrency(property.Price)</td>
+            <td scope="col">@property.Floor от @property.TotalFloors</td>
+            <td scope="col">@property.UsableArea кв.м. / @property.Area кв.м.</td>
+            <td scope="col">@property.Year</td>
+            <td scope="col">
+                <div class="button-group">
+                    <a class="btn" href="#">&#x270E;</a>
+                    <a class="btn" href="#">&#x2716;</a>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

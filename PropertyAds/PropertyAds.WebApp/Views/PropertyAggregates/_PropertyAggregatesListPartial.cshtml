@@ -1,23 +1,34 @@
 ﻿@model PropertyAggregateListQueryModel
 
-<table class="table">
-    <thead>
-        <tr>
-            <th class="col-5" scope="col">Квартал</th>
-            <th class="col-3" scope="col">Вид имот</th>
-            <th class="col-2" scope="col">Средна Цена</th>
-            <th class="col-2" scope="col">Средна Цена / кв.м.</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var aggregate in Model.Rows)
-        {
+@if (Model.Rows.Count() == 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center alert alert-info">
+            Няма намерени резултати
+        </div>
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <th class="col-5" scope="row">@aggregate.District</th>
-                <th class="col-3" scope="row">@aggregate.PropertyType</th>
-                <td class="col-2">@(aggregate.AveragePrice == null ? "-" : aggregate.AveragePrice)</td>
-                <td class="col-2">@(aggregate.AveragePricePerSqM == null ? "-" : aggregate.AveragePricePerSqM)</td>
+                <th class="col-5" scope="col">Квартал</th>
+                <th class="col-3" scope="col">Вид имот</th>
+                <th class="col-2" scope="col">Средна Цена</th>
+                <th class="col-2" scope="col">Средна Цена / кв.м.</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var aggregate in Model.Rows)
+            {
+                <tr>
+                    <th class="col-5" scope="row">@aggregate.District</th>
+                    <th class="col-3" scope="row">@aggregate.PropertyType</th>
+                    <td class="col-2">@(aggregate.AveragePrice == null ? "-" : aggregate.AveragePrice)</td>
+                    <td class="col-2">@(aggregate.AveragePricePerSqM == null ? "-" : aggregate.AveragePricePerSqM)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

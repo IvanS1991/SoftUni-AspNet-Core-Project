@@ -1,5 +1,6 @@
 ﻿namespace PropertyAds.WebApp.Services.PropertyServices
 {
+    using PropertyAds.WebApp.Services.DistrictServices;
     using System;
     using System.Collections.Generic;
 
@@ -25,11 +26,13 @@
 
         public int VisitedCount { get; set; }
 
+        public string OwnerId { get; set; }
+
         public string Owner { get; set; }
 
-        public string Type { get; set; }
+        public PropertyTypeServiceModel Type { get; set; }
 
-        public string District { get; set; }
+        public DistrictServiceModel District { get; set; }
 
         public IEnumerable<string> ImageIds { get; set; }
     }

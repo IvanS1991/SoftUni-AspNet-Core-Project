@@ -1,47 +1,21 @@
 ﻿@model PropertyAggregateListQueryModel
 
-<form class="col-sm-12 col-lg-8 offset-lg-2">
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label asp-for="DistrictId"></label>
-            <select class="form-control" asp-for="DistrictId">
-                <option value="">Всички</option>
-                @foreach (var district in Model.Districts)
-                {
-                    <option value="@district.Id">@district.Name</option>
-                }
-            </select>
-        </div>
-        <div class="form-group col-md-6">
-            <label asp-for="PropertyTypeId"></label>
-            <select class="form-control" asp-for="PropertyTypeId">
-                <option value="">Всички</option>
-                @foreach (var propertyType in Model.PropertyTypes)
-                {
-                    <option value="@propertyType.Id">@propertyType.Name</option>
-                }
-            </select>
-        </div>
-    </div>
-    <input type="hidden" asp-for="Page" value="1" />
-    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-2 mb-3">Филтрирай</button>
-</form>
+<partial name="_PropertyTypeDistrictFilterForm" model="@Model" />
 
 <div class="col-10 offset-1">
     <partial name="_PropertyAggregatesListPartial" model="@Model" />
 
-
     @if (Model.TotalPages > 1)
     {
-        <nav aria-label="Page navigation example">
+        <nav>
             <ul class="pagination pagination-sm justify-content-between">
                 <li class="page-item">
                     <a class="page-link btn btn-primary @(Model.Page <= 1 ? "disabled" : "")"
                        asp-controller="PropertyAggregates"
                        asp-action="List"
                        asp-route-page="@(Model.Page - 1)"
-                       asp-route-district-id="@Model.DistrictId"
-                       asp-route-propertyTypeId="@Model.PropertyTypeId">
+                       asp-route-districtid="@Model.DistrictId"
+                       asp-route-propertytypeid="@Model.PropertyTypeId">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
                     </a>
@@ -51,8 +25,8 @@
                        asp-controller="PropertyAggregates"
                        asp-action="List"
                        asp-route-page="@(Model.Page + 1)"
-                       asp-route-districtId="@Model.DistrictId"
-                       asp-route-propertyTypeId="@Model.PropertyTypeId">
+                       asp-route-districtid="@Model.DistrictId"
+                       asp-route-propertytypeid="@Model.PropertyTypeId">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Previous</span>
                     </a>

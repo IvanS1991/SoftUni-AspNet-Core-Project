@@ -6,25 +6,30 @@
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Services.UserServices;
+    using PropertyAds.WebApp.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Configuration;
 
     public class PropertyData : IPropertyData
     {
         private readonly PropertyAdsDbContext db;
         private readonly IUserData userData;
         private readonly IMapper mapper;
+        private readonly IConfiguration config;
 
         public PropertyData(
             PropertyAdsDbContext db,
             IUserData userData,
-            IMapper mapper)
+            IMapper mapper,
+            IConfiguration config)
         {
             this.db = db;
             this.userData = userData;
             this.mapper = mapper;
+            this.config = config;
         }
 
         public async Task<PropertyServiceModel> Create(
@@ -63,28 +68,41 @@
             await this.db.SaveChangesAsync();
         }
 
-        public Task<List<PropertyServiceModel>> GetList()
+        public Task<List<PropertyServiceModel>> GetList(
+            string districtId,
+            string propertyTypeId,
+            bool showOnlyOwned = false)
         {
-            return this.GetList(0);
+            return this.GetList(0, districtId, propertyTypeId, showOnlyOwned);
         }
 
-        public Task<List<PropertyServiceModel>> GetList(int limit)
-        {
-            return this.GetList(limit, 0);
-        }
-
-        public Task<List<PropertyServiceModel>> GetList(int limit, int offset)
+        public Task<List<PropertyServiceModel>> GetList(
+            int page,
+            string districtId,
+            string propertyTypeId,
+            bool showOnlyOwned = false)
         {
             var queryable = this.db.Properties
-                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
-                .Skip(offset);
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider);
 
-            if (limit > 0)
+
+            if (showOnlyOwned)
             {
-                queryable = queryable.Take(limit);
+                queryable = queryable.Where(x => x.OwnerId == this.userData.GetCurrentUserId());
+            }
+
+            if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.District.Id == districtId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.Type.Id == propertyTypeId);
             }
 
             return queryable
+                .TryApplyPagination(this.GetItemsPerPage(), page)
                 .OrderBy(x => x.Price)
                 .ToListAsync();
         }
@@ -116,6 +134,46 @@
             await this.Update(this.mapper.Map<Property>(property));
 
             return this.mapper.Map<PropertyServiceModel>(property);
+        }
+
+        public virtual int GetItemsPerPage()
+        {
+            return this.config
+                .GetSection("Pagination")
+                .GetValue<int>("PropertyList");
+        }
+
+        public Task<int> GetCount(
+            string districtId,
+            string propertyTypeId)
+        {
+            var queryable = this.db.Properties
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider);
+
+            if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.District.Id == districtId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
+            {
+                queryable = queryable.Where(x => x.Type.Id == propertyTypeId);
+            }
+
+            return queryable
+                .CountAsync();
+        }
+
+        public async Task<int> TotalPageCount(
+            string districtId,
+            string propertyTypeId)
+        {
+            var propertiesCount = await this
+                .GetCount(districtId, propertyTypeId);
+            var itemsPerPage = this
+                .GetItemsPerPage();
+
+            return (int)Math.Ceiling(propertiesCount / (float)itemsPerPage);
         }
     }
 }

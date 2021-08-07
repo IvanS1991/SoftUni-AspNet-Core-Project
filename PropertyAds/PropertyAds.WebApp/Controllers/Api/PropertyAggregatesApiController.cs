@@ -23,7 +23,7 @@
             string districtId, string propertyTypeId)
         {
             var results = await this.propertyAggregateData
-                .GetAll(districtId, propertyTypeId);
+                .GetAll(0, districtId, propertyTypeId);
 
             if (results.Count == 0)
             {

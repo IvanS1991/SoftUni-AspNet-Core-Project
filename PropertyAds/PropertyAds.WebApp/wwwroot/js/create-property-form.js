@@ -2,10 +2,20 @@
 {
     constructor() {
         this.$selects = $('select.form-control');
+        this.$districtSelect = $('select.form-control#DistrictId');
+        this.$propertyTypeSelect = $('select.form-control#TypeId');
         this.$imageInput = $('input.image-upload');
         this.$imagePreview = $('div.image-preview');
-        this.districtId = null;
-        this.propertyTypeId = null;
+
+        this.tryInitializeForm();
+    }
+
+    get districtId() {
+        return this.$districtSelect.val();
+    }
+
+    get propertyTypeId() {
+        return this.$propertyTypeSelect.val();
     }
 
     listenForPreview() {
@@ -15,18 +25,7 @@
 
     listenForDistrictAndPropertyType() {
         this.$selects.on('change', (e) => {
-            switch (e.target.id) {
-                case 'DistrictId':
-                    this.districtId = e.target.value;
-                    break;
-                case 'TypeId':
-                    this.propertyTypeId = e.target.value;
-                    break;
-            }
-
-            if (this.districtId && this.propertyTypeId) {
-                this.populateAggregatesSection();
-            }
+            this.tryInitializeForm();
         });
     }
 
@@ -46,6 +45,12 @@
                 $diffDown.addClass('hidden');
             }
         });
+    }
+
+    tryInitializeForm() {
+        if (this.districtId && this.propertyTypeId) {
+            this.populateAggregatesSection();
+        }
     }
 
     populateAggregatesSection() {
