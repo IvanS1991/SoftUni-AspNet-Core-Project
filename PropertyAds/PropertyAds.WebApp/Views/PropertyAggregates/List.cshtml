@@ -1,6 +1,9 @@
 ﻿@model PropertyAggregateListQueryModel
 
-<partial name="_PageHeadingPartial" model="@("Средни цени")" />
+@{
+    ViewData["Title"] = "Средни цени";
+}
+
 <partial name="_PropertyTypeDistrictFilterForm" model="@Model" />
 
 <div class="col-10 offset-1">
@@ -49,6 +52,10 @@
                 const $dropdownMenu = $dropdown.find('.dropdown-menu');
 
                 $dropdownMenu.empty();
+
+                if (response.length === 0) {
+                    return $dropdownMenu.append($('<span></span>').html("Няма намерени списъци"));
+                }
 
                 response.forEach(watchlist => {
                     const $dropdownItem = $('<button></button>')

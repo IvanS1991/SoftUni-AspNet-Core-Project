@@ -1,7 +1,9 @@
 ﻿@model WatchlistListingFormModel
 @inject IUserData userData
 
-<partial name="_PageHeadingPartial" model="@("Списъци за наблюдение")" />
+@{
+    ViewData["Title"] = "Списъци за наблюдение";
+}
 
 <table class="table">
     <thead>

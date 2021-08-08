@@ -11,7 +11,6 @@
                 &#9881;
             </button>
             <div class="dropdown-menu pl-2" aria-labelledby="dropdownMenuButton">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Профил</a>
                 <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="ListOwned">Създадени обяви</a>
                 <a class="nav-link text-dark" asp-area="" asp-controller="Watchlists" asp-action="List">Списъци за наблюдение</a>
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

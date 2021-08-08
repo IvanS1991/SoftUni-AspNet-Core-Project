@@ -1,6 +1,10 @@
 ﻿@model PropertyListQueryModel
 @inject IDataFormatter formatter
 
+@{ 
+    ViewData["Title"] = "Разгледай имоти";
+}
+
 <partial name="_PropertyTypeDistrictFilterForm" model="@Model" />
 
 @if (Model.Rows.Count() == 0)

@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<PropertyDetailsViewModel>
 @inject IDataFormatter formatter
 
-<partial name="_PageHeadingPartial" model="@("Собствени имоти")" />
+@{
+    ViewData["Title"] = "Собствени имоти";
+}
 
 <partial name="_PropertiesTablePartial" model="@Model" />
