@@ -1,0 +1,27 @@
+﻿<script>
+    $('.add-watchlist-toggle').on('click', (e) => {
+        const $target = $(e.target);
+        const propertyId = $target.attr('data-property-id');
+
+        $.get(`/api/watchlists/by-property?propertyId=${propertyId}`, (response) => {
+            const $dropdown = $target.parents('.dropdown');
+            const $dropdownMenu = $dropdown.find('.dropdown-menu');
+
+            $dropdownMenu.empty();
+
+            response.forEach(watchlist => {
+                const $dropdownItem = $('<button></button>')
+                    .html(watchlist.name)
+                    .addClass('dropdown-item')
+                    .on('click', (clickEvt) => {
+                        $.post(`/api/watchlists/add-property?watchlistId=${watchlist.id}&propertyId=${propertyId}`);
+
+                        $dropdownMenu.find('.dropdown-item').off('input');
+                        $dropdown.find('.dropdown-menu').removeClass('show');
+                    });
+
+                $dropdownMenu.append($dropdownItem);
+            });
+        });
+    })
+</script>

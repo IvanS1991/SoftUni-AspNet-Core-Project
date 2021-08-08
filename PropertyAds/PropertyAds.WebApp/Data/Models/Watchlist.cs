@@ -15,6 +15,10 @@
 
         public DateTime LastViewedOn { get; set; }
 
+        public string OwnerId { get; set; }
+
+        public User Owner { get; set; }
+
         public ICollection<WatchlistPropertySegment> WatchlistPropertySegments { get; set; }
             = new HashSet<WatchlistPropertySegment>();
 

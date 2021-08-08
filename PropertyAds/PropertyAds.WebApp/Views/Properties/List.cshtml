@@ -27,7 +27,10 @@ else
                     <div class="card-body">
                         <h2 class="text-center">@formatter.FormatCurrency(summary.Price)</h2>
                         <p class="card-text text-truncate">@summary.Description</p>
-                        <a class="card-link" asp-controller="Properties" asp-action="Details" asp-route-id="@summary.Id">Виж повече...</a>
+                        <div class="row justify-content-between align-items-center">
+                            <a class="card-link" asp-controller="Properties" asp-action="Details" asp-route-id="@summary.Id">Виж повече...</a>
+                            <partial name="_AddPropertyToWatchlistViewPartial" model="@summary"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,4 +66,8 @@ else
             </ul>
         </nav>
     }
+}
+
+@section Scripts {
+    <partial name="_AddPropertyToWatchlistScriptPartial" />
 }

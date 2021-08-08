@@ -225,5 +225,13 @@
 
             return (int)Math.Ceiling(propertiesCount / (float)itemsPerPage);
         }
+
+        public Task<List<PropertyServiceModel>> GetMultipleById(IEnumerable<string> ids)
+        {
+            return this.db.Properties
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+        }
     }
 }

@@ -1,0 +1,33 @@
+﻿@model WatchlistDetailsViewModel
+
+@{
+    ViewBag.WatchlistId = Model.Id;
+}
+
+<partial name="_PageHeadingPartial" model="@Model.Name" />
+
+<h2 class="text-center mb-3">Наблюдавани имоти</h2>
+<partial name="_PropertiesTablePartial" model="@Model.Properties" />
+<hr />
+<h2 class="text-center mb-3">Наблюдавани сегменти</h2>
+<div class="segment-properties">
+    @foreach (var segment in Model.Segments)
+    {
+        <h3 class="text-center mb-3">
+            <span>@segment.Name</span>
+            <a class="btn"
+               asp-controller="Watchlists"
+               asp-action="RemoveSegment"
+               asp-route-watchlistid="@ViewBag.WatchlistId"
+               asp-route-propertytypeid="@segment.PropertyTypeId"
+               asp-route-districtid="@segment.DistrictId">&#x2716;</a>
+        </h3>
+        <partial name="_PropertiesTablePartial" model="@segment.Properties" />
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $('.segment-properties .property-watchlist-controls').empty();
+    </script>
+}

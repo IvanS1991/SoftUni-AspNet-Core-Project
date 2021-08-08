@@ -262,6 +262,7 @@
             return View(viewModel);
         }
 
+        [ResponseCache(Duration = 1000000)]
         public async Task<IActionResult> Image(string id)
         {
             var image = await this.imageData.GetById(id);

@@ -4,6 +4,7 @@
     using PropertyAds.WebApp.Data.Models;
     using PropertyAds.WebApp.Models.Property;
     using PropertyAds.WebApp.Models.PropertyAggregate;
+    using PropertyAds.WebApp.Models.Watchlist;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyAggregateServices;
     using PropertyAds.WebApp.Services.PropertyServices;
@@ -42,6 +43,7 @@
             this.CreateMap<Watchlist, WatchlistServiceModel>();
             this.CreateMap<WatchlistProperty, WatchlistPropertyServiceModel>();
             this.CreateMap<WatchlistPropertySegment, WatchlistPropertySegmentServiceModel>();
+            this.CreateMap<WatchlistServiceModel, WatchlistDetailsViewModel>();
         }
     }
 }

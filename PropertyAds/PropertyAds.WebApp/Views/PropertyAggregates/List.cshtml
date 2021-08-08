@@ -1,5 +1,6 @@
 ﻿@model PropertyAggregateListQueryModel
 
+<partial name="_PageHeadingPartial" model="@("Средни цени")" />
 <partial name="_PropertyTypeDistrictFilterForm" model="@Model" />
 
 <div class="col-10 offset-1">
@@ -35,3 +36,34 @@
         </nav>
     }
 </div>
+
+@section Scripts {
+    <script>
+        $('.add-watchlist-toggle').on('click', (e) => {
+            const $target = $(e.target);
+            const propertyTypeId = $target.attr('data-property-type-id');
+            const districtId = $target.attr('data-district-id');
+
+            $.get(`/api/watchlists/by-segment?propertyTypeId=${propertyTypeId}&districtId=${districtId}`, (response) => {
+                const $dropdown = $target.parents('.dropdown');
+                const $dropdownMenu = $dropdown.find('.dropdown-menu');
+
+                $dropdownMenu.empty();
+
+                response.forEach(watchlist => {
+                    const $dropdownItem = $('<button></button>')
+                        .html(watchlist.name)
+                        .addClass('dropdown-item')
+                        .on('click', (clickEvt) => {
+                            $.post(`/api/watchlists/add-segment?watchlistId=${watchlist.id}&propertyTypeId=${propertyTypeId}&districtId=${districtId}`);
+
+                            $dropdownMenu.find('.dropdown-item').off('input');
+                            $dropdown.find('.dropdown-menu').removeClass('show');
+                        });
+
+                    $dropdownMenu.append($dropdownItem);
+                });
+            });
+        })
+    </script>
+}

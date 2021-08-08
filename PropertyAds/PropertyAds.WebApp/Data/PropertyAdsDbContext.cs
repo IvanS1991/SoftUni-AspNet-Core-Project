@@ -52,6 +52,17 @@
             builder.Entity<WatchlistPropertySegment>()
                 .HasKey(x => new { x.WatchlistId, x.PropertyTypeId, x.DistrictId });
 
+
+            builder.Entity<Watchlist>()
+                .HasMany(x => x.WatchlistProperties)
+                .WithOne(x => x.Watchlist)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Watchlist>()
+                .HasMany(x => x.WatchlistPropertySegments)
+                .WithOne(x => x.Watchlist)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
         }
     }

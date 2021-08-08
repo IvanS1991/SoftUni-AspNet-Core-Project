@@ -48,6 +48,8 @@
 
         Task<List<PropertyServiceModel>> GetLatest();
 
+        Task<List<PropertyServiceModel>> GetMultipleById(IEnumerable<string> ids);
+
         Task<int> GetCount(
             string districtId,
             string propertyTypeId);

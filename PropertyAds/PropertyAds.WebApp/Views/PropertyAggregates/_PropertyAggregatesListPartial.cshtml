@@ -17,6 +17,7 @@ else
                 <th class="col-5" scope="col"></th>
                 <th class="col-2" scope="col">Средна Цена</th>
                 <th class="col-2" scope="col">Средна Цена / кв.м.</th>
+                <th class="col-5" scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +41,20 @@ else
                     </th>
                     <td class="col-2">@formatter.FormatCurrency(aggregate.AveragePrice)</td>
                     <td class="col-2">@formatter.FormatCurrency(aggregate.AveragePricePerSqM)</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle add-watchlist-toggle"
+                                    data-property-type-id="@aggregate.PropertyType.Id"
+                                    data-district-id="@aggregate.District.Id"
+                                    type="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                &plus;
+                            </button>
+                            <div class="dropdown-menu p-2"></div>
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>

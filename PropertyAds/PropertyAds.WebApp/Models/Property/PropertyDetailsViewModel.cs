@@ -3,10 +3,8 @@
     using System;
     using System.Collections.Generic;
 
-    public class PropertyDetailsViewModel
+    public class PropertyDetailsViewModel : PropertyViewModelBase
     {
-        public string Id { get; set; }
-
         public int Price { get; set; }
 
         public decimal Area { get; set; }
@@ -24,6 +22,8 @@
         public DateTime CreatedOn { get; set; }
 
         public int VisitedCount { get; set; }
+
+        public string OwnerId { get; set; }
 
         public string OwnerName { get; set; }
 

@@ -11,6 +11,8 @@
 
         public DateTime LastViewedOn { get; set; }
 
+        public string OwnerId { get; set; }
+
         public List<WatchlistPropertySegmentServiceModel> WatchlistPropertySegments { get; set; }
 
         public List<WatchlistPropertyServiceModel> WatchlistProperties { get; set; }

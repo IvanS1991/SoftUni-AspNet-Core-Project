@@ -7,9 +7,15 @@
     {
         Task<WatchlistServiceModel> Create(string name);
 
+        Task Delete(string watchlistId);
+
         Task<WatchlistServiceModel> Get(string query);
 
-        Task<List<WatchlistServiceModel>> GetAll();
+        Task<List<WatchlistServiceModel>> GetAll(string userId);
+
+        Task<List<WatchlistServiceModel>> GetForProperty(string propertyId);
+
+        Task<List<WatchlistServiceModel>> GetForSegment(string propertyTypeId, string districtId);
 
         Task AddProperty(
             string watchlistId,
