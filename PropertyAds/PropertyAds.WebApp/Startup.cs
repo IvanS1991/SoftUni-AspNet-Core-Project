@@ -27,6 +27,7 @@ namespace PropertyAds.WebApp
                 .AddScopedServices()
                 .AddAutoMapper(typeof(Startup))
                 .AddMemoryCache()
+                .AddResponseCaching()
                 .AddControllersWithViews();
         }
 
@@ -47,6 +48,7 @@ namespace PropertyAds.WebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseMigrations();
+            app.UseResponseCaching();
             app.UseDatabasePopulation(
                 this.Configuration.GetSection("Timeouts").GetValue<int>("DatabasePopulate"));
 

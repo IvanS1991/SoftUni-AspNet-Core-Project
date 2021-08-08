@@ -12,6 +12,7 @@
     using PropertyAds.WebApp.Services.PropertyServices;
     using PropertyAds.WebApp.Services.UserServices;
     using PropertyAds.WebApp.Services.Utility;
+    using PropertyAds.WebApp.Services.WatchlistServices;
 
     public static class ServiceCollectionExtensions
     {
@@ -28,6 +29,7 @@
                 .AddTransient<IPropertyData, PropertyData>()
                 .AddTransient<IPropertyAggregateScraper, ImotBgScraper>()
                 .AddTransient<IPropertyAggregateData, PropertyAggregateData>()
+                .AddTransient<IWatchlistData, WatchlistData>()
                 .AddTransient<IUserData, UserData>()
                 .AddTransient<IPropertyImageData, PropertyImageData>()
                 .AddTransient<ICache, Cache>();

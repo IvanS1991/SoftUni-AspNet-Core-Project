@@ -24,6 +24,8 @@
 
         public DateTime CreatedOn { get; set; }
 
+        public DateTime LastModifiedOn { get; set; }
+
         public int VisitedCount { get; set; }
 
         public string OwnerId { get; set; }

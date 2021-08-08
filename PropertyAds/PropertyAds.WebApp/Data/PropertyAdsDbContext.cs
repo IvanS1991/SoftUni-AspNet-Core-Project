@@ -21,7 +21,12 @@
         public DbSet<PropertyAggregate> PropertyAggregates { get; set; }
 
         public DbSet<PropertyImage> PropertyImages { get; set; }
-        public Task FirstOrDefaultAsync { get; set; }
+
+        public DbSet<Watchlist> Watchlists { get; set; }
+
+        public DbSet<WatchlistProperty> WatchlistProperties { get; set; }
+
+        public DbSet<WatchlistPropertySegment> WatchlistPropertySegments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,6 +44,23 @@
             builder.Entity<Property>()
                 .HasOne(x => x.Owner)
                 .WithMany(x => x.Properties)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<WatchlistProperty>()
+                .HasKey(x => new { x.WatchlistId, x.PropertyId });
+
+            builder.Entity<WatchlistPropertySegment>()
+                .HasKey(x => new { x.WatchlistId, x.PropertyTypeId, x.DistrictId });
+
+
+            builder.Entity<Watchlist>()
+                .HasMany(x => x.WatchlistProperties)
+                .WithOne(x => x.Watchlist)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Watchlist>()
+                .HasMany(x => x.WatchlistPropertySegments)
+                .WithOne(x => x.Watchlist)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

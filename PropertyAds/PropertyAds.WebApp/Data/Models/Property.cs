@@ -30,6 +30,8 @@
 
         public DateTime CreatedOn { get; set; }
 
+        public DateTime LastModifiedOn { get; set; }
+
         public int VisitedCount { get; set; } = 0;
 
         [Required]

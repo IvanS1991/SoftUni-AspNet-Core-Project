@@ -56,6 +56,7 @@
                 Year = year,
                 Description = description,
                 CreatedOn = DateTime.UtcNow,
+                LastModifiedOn = DateTime.UtcNow,
                 OwnerId = this.userData.GetCurrentUserId(),
                 TypeId = typeId,
                 DistrictId = districtId,
@@ -88,6 +89,7 @@
             property.Description = description;
             property.TypeId = typeId;
             property.DistrictId = districtId;
+            property.LastModifiedOn = DateTime.UtcNow;
 
             this.db.Properties.Update(property);
             await this.db.SaveChangesAsync();
@@ -222,6 +224,14 @@
                 .GetItemsPerPage();
 
             return (int)Math.Ceiling(propertiesCount / (float)itemsPerPage);
+        }
+
+        public Task<List<PropertyServiceModel>> GetMultipleById(IEnumerable<string> ids)
+        {
+            return this.db.Properties
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
         }
     }
 }
