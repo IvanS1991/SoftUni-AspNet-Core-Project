@@ -9,6 +9,10 @@
 
             $dropdownMenu.empty();
 
+            if (response.length === 0) {
+                return $dropdownMenu.append($('<span></span>').html("Няма намерени списъци"));
+            }
+
             response.forEach(watchlist => {
                 const $dropdownItem = $('<button></button>')
                     .html(watchlist.name)

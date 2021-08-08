@@ -1,7 +1,10 @@
 ﻿@model PropertyDetailsViewModel
 @inject IDataFormatter formatter
 
-<partial name="_PageHeadingPartial" model="@(Model.Type + " " + Model.District)" />
+
+@{
+    ViewData["Title"] = $"{Model.Type } - {Model.District}";
+}
 <div class="row">
     <section class="col-md-6">
         <table class="table">

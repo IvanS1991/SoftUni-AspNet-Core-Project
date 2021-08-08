@@ -1,6 +1,9 @@
 ﻿@model PropertyFormModel
 
-<partial name="_PageHeadingPartial" model="@("Създай обява")" />
+@{
+    ViewData["Title"] = "Създай обява";
+}
+
 <partial name="_PropertyFormPartial" model="@Model" />
 
 @section Scripts {

@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">&#x1F3E0;</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -23,14 +23,14 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="Create">Създай обява</a>
+                                <a class="nav-link" asp-area="" asp-controller="Properties" asp-action="Create">Създай обява</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="List">Разгледай обяви</a>
+                                <a class="nav-link" asp-area="" asp-controller="Properties" asp-action="List">Разгледай обяви</a>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PropertyAggregates" asp-action="List">Средни цени</a>
+                            <a class="nav-link" asp-area="" asp-controller="PropertyAggregates" asp-action="List">Средни цени</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -40,6 +40,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_PageHeadingPartial" model="@ViewData["Title"]" />
             @RenderBody()
         </main>
     </div>
