@@ -7,6 +7,7 @@
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyAggregateServices;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.WatchlistServices;
     using System.Linq;
 
     public class MappingProfile : Profile
@@ -37,6 +38,10 @@
             this.CreateMap<PropertyServiceModel, PropertyFormModel>();
 
             this.CreateMap<PropertyAggregateServiceModel, PropertyAggregateViewModel>();
+
+            this.CreateMap<Watchlist, WatchlistServiceModel>();
+            this.CreateMap<WatchlistProperty, WatchlistPropertyServiceModel>();
+            this.CreateMap<WatchlistPropertySegment, WatchlistPropertySegmentServiceModel>();
         }
     }
 }
