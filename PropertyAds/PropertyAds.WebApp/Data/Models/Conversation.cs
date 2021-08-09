@@ -13,14 +13,9 @@
         public DateTime CreatedOn { get; set; }
 
         [Required]
-        public string AuthorId { get; set; }
+        public string OwnerId { get; set; }
 
-        public User Author { get; set; }
-
-        [Required]
-        public string RecipientId { get; set; }
-
-        public User Recipient { get; set; }
+        public User Owner { get; set; }
 
         public ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }

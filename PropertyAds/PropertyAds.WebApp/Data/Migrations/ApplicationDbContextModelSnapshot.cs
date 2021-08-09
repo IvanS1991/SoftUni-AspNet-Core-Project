@@ -159,22 +159,16 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("RecipientId")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("RecipientId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Conversations");
                 });
@@ -199,6 +193,10 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -211,9 +209,17 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("ConversationId");
+
+                    b.HasIndex("RecipientId");
 
                     b.ToTable("Messages");
                 });
@@ -514,9 +520,26 @@ namespace PropertyAds.WebApp.Data.Migrations
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Conversation", b =>
                 {
+                    b.HasOne("PropertyAds.WebApp.Data.Models.User", "Owner")
+                        .WithMany("Conversations")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Message", b =>
+                {
                     b.HasOne("PropertyAds.WebApp.Data.Models.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PropertyAds.WebApp.Data.Models.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -528,18 +551,9 @@ namespace PropertyAds.WebApp.Data.Migrations
 
                     b.Navigation("Author");
 
-                    b.Navigation("Recipient");
-                });
-
-            modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Message", b =>
-                {
-                    b.HasOne("PropertyAds.WebApp.Data.Models.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Conversation");
+
+                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Property", b =>
@@ -662,6 +676,8 @@ namespace PropertyAds.WebApp.Data.Migrations
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.User", b =>
                 {
+                    b.Navigation("Conversations");
+
                     b.Navigation("Properties");
                 });
 

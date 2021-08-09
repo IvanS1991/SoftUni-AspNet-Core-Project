@@ -19,6 +19,16 @@
         public DateTime CreatedOn { get; set; }
 
         [Required]
+        public string AuthorId { get; set; }
+
+        public User Author { get; set; }
+
+        [Required]
+        public string RecipientId { get; set; }
+
+        public User Recipient { get; set; }
+
+        [Required]
         public string ConversationId { get; set; }
 
         public Conversation Conversation { get; set; }
