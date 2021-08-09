@@ -10,7 +10,7 @@ using PropertyAds.WebApp.Data;
 namespace PropertyAds.WebApp.Data.Migrations
 {
     [DbContext(typeof(PropertyAdsDbContext))]
-    [Migration("20210809172438_Conversation_AddRelatedTables")]
+    [Migration("20210809172910_Conversation_AddRelatedTables")]
     partial class Conversation_AddRelatedTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -536,7 +536,7 @@ namespace PropertyAds.WebApp.Data.Migrations
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Message", b =>
                 {
                     b.HasOne("PropertyAds.WebApp.Data.Models.Conversation", "Conversation")
-                        .WithMany("MyProperty")
+                        .WithMany("Messages")
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -654,7 +654,7 @@ namespace PropertyAds.WebApp.Data.Migrations
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Conversation", b =>
                 {
-                    b.Navigation("MyProperty");
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Property", b =>

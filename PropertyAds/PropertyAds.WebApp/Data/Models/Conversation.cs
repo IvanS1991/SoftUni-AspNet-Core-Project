@@ -22,6 +22,6 @@
 
         public User Recipient { get; set; }
 
-        public ICollection<Message> MyProperty { get; set; } = new HashSet<Message>();
+        public ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }
 }
