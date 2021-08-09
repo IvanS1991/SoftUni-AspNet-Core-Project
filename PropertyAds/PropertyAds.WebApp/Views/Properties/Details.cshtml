@@ -1,5 +1,6 @@
 ﻿@model PropertyDetailsViewModel
 @inject IDataFormatter formatter
+@inject IUserData userData
 
 
 @{
@@ -31,7 +32,13 @@
                 </tr>
                 <tr>
                     <th class="col-6" scope="row">Действия</th>
-                    <td class="col-6">
+                    <td class="col-6 row">
+                        @if (Model.OwnerId != userData.GetCurrentUserId())
+                        {
+                            <a class="btn"
+                               asp-controller="Conversations"
+                               asp-action="Conversation">&#x2709;</a>
+                        }
                         <partial name="_AddPropertyToWatchlistViewPartial" model="@Model" />
                     </td>
                 </tr>

@@ -1,0 +1,19 @@
+﻿@model MessageFormModel
+
+@if (Model.Conversation != null)
+{
+    foreach (var message in Model.Conversation.Messages)
+    {
+        <partial name="_MessagePartial" model="@message" />
+    }
+}
+
+<form class="col-md-6 offset-md-6 mt-3" 
+      asp-controller="Conversations" 
+      asp-action="Create" 
+      asp-route-conversationid="@(Model.Conversation == null ? null : Model.Conversation.Id)" method="post">
+    <div class="form-group">
+        <textarea class="form-control" asp-for="Content" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Изпрати</button>
+</form>
