@@ -34,7 +34,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                     Content = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RecipientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ConversationId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -43,12 +42,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Messages_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_RecipientId",
-                        column: x => x.RecipientId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -74,11 +67,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                 name: "IX_Messages_ConversationId",
                 table: "Messages",
                 column: "ConversationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_RecipientId",
-                table: "Messages",
-                column: "RecipientId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

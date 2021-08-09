@@ -10,7 +10,7 @@ using PropertyAds.WebApp.Data;
 namespace PropertyAds.WebApp.Data.Migrations
 {
     [DbContext(typeof(PropertyAdsDbContext))]
-    [Migration("20210809173620_Conversation_AddRelatedTables")]
+    [Migration("20210809174231_Conversation_AddRelatedTables")]
     partial class Conversation_AddRelatedTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,17 +211,11 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("RecipientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("ConversationId");
-
-                    b.HasIndex("RecipientId");
 
                     b.ToTable("Messages");
                 });
@@ -545,17 +539,9 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PropertyAds.WebApp.Data.Models.User", "Recipient")
-                        .WithMany()
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Author");
 
                     b.Navigation("Conversation");
-
-                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Property", b =>
