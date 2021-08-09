@@ -7,6 +7,7 @@
     using PropertyAds.Scraper;
     using PropertyAds.WebApp.Data;
     using PropertyAds.WebApp.Data.Models;
+    using PropertyAds.WebApp.Services.ConversationServices;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyAggregateServices;
     using PropertyAds.WebApp.Services.PropertyServices;
@@ -32,6 +33,7 @@
                 .AddTransient<IWatchlistData, WatchlistData>()
                 .AddTransient<IUserData, UserData>()
                 .AddTransient<IPropertyImageData, PropertyImageData>()
+                .AddTransient<IConversationData, ConversationData>()
                 .AddTransient<ICache, Cache>();
 
             return services;
