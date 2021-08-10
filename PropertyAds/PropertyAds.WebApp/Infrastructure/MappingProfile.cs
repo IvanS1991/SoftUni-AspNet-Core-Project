@@ -5,9 +5,11 @@
     using PropertyAds.WebApp.Models.Property;
     using PropertyAds.WebApp.Models.PropertyAggregate;
     using PropertyAds.WebApp.Models.Watchlist;
+    using PropertyAds.WebApp.Services.ConversationServices;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyAggregateServices;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.UserServices;
     using PropertyAds.WebApp.Services.WatchlistServices;
     using System.Linq;
 
@@ -25,6 +27,11 @@
             this.CreateMap<PropertyType, PropertyTypeServiceModel>();
             this.CreateMap<PropertyAggregate, PropertyAggregateServiceModel>();
             this.CreateMap<PropertyImage, PropertyImageServiceModel>();
+            this.CreateMap<User, UserServiceModel>();
+            this.CreateMap<Conversation, ConversationServiceModel>()
+                .ForMember(p => p.Messages, c => c
+                    .MapFrom(x => x.Messages.OrderBy(m => m.CreatedOn)));
+            this.CreateMap<Message, MessageServiceModel>();
 
             this.CreateMap<PropertyServiceModel, PropertyDetailsViewModel>()
                 .ForMember(p => p.District, c => c

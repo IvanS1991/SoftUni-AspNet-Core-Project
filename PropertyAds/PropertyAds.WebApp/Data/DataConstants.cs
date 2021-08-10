@@ -19,5 +19,8 @@
 
         public const int PropertyYearMinValue = 1980;
         public const int PropertyYearMaxValue = 2050;
+
+        public const int MessageContentMinLength = 1;
+        public const int MessageContentMaxLength = 500;
     }
 }

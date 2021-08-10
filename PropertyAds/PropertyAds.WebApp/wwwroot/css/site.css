@@ -78,3 +78,19 @@ body {
 .dropdown-toggle::after {
     display: none;
 }
+
+.fa-times {
+    color: lightcoral;
+}
+
+.fa-pencil-alt {
+    color: lightseagreen;
+}
+
+.fa-plus {
+    color: mediumseagreen;
+}
+
+.fa-envelope {
+    color: dodgerblue;
+}

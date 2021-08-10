@@ -28,6 +28,10 @@
 
         public DbSet<WatchlistPropertySegment> WatchlistPropertySegments { get; set; }
 
+        public DbSet<Conversation> Conversations { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<PropertyAggregate>()
@@ -52,15 +56,16 @@
             builder.Entity<WatchlistPropertySegment>()
                 .HasKey(x => new { x.WatchlistId, x.PropertyTypeId, x.DistrictId });
 
-
-            builder.Entity<Watchlist>()
-                .HasMany(x => x.WatchlistProperties)
-                .WithOne(x => x.Watchlist)
+            builder.Entity<User>()
+                .HasMany(x => x.OwnConversations)
+                .WithOne(x => x.Owner)
+                .HasForeignKey(x => x.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Watchlist>()
-                .HasMany(x => x.WatchlistPropertySegments)
-                .WithOne(x => x.Watchlist)
+            builder.Entity<User>()
+                .HasMany(x => x.RecipientConversations)
+                .WithOne(x => x.Recipient)
+                .HasForeignKey(x => x.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

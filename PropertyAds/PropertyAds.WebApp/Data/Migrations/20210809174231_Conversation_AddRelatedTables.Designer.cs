@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PropertyAds.WebApp.Data;
 
 namespace PropertyAds.WebApp.Data.Migrations
 {
     [DbContext(typeof(PropertyAdsDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210809174231_Conversation_AddRelatedTables")]
+    partial class Conversation_AddRelatedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,21 +168,9 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("PropertyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RecipientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("RecipientId");
 
                     b.ToTable("Conversations");
                 });
@@ -527,28 +517,12 @@ namespace PropertyAds.WebApp.Data.Migrations
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Conversation", b =>
                 {
                     b.HasOne("PropertyAds.WebApp.Data.Models.User", "Owner")
-                        .WithMany("OwnConversations")
+                        .WithMany("Conversations")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PropertyAds.WebApp.Data.Models.Property", "Property")
-                        .WithMany("Conversations")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PropertyAds.WebApp.Data.Models.User", "Recipient")
-                        .WithMany("RecipientConversations")
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Owner");
-
-                    b.Navigation("Property");
-
-                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Message", b =>
@@ -685,18 +659,14 @@ namespace PropertyAds.WebApp.Data.Migrations
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Property", b =>
                 {
-                    b.Navigation("Conversations");
-
                     b.Navigation("Images");
                 });
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.User", b =>
                 {
-                    b.Navigation("OwnConversations");
+                    b.Navigation("Conversations");
 
                     b.Navigation("Properties");
-
-                    b.Navigation("RecipientConversations");
                 });
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Watchlist", b =>
