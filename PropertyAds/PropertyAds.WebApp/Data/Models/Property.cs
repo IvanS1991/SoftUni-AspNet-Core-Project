@@ -47,6 +47,8 @@
 
         public District District { get; set; }
 
+        public ICollection<Conversation> Conversations { get; set; } = new HashSet<Conversation>();
+
         public ICollection<PropertyImage> Images { get; set; } = new HashSet<PropertyImage>();
     }
 }

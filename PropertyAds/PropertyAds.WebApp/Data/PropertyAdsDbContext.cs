@@ -57,8 +57,15 @@
                 .HasKey(x => new { x.WatchlistId, x.PropertyTypeId, x.DistrictId });
 
             builder.Entity<User>()
-                .HasMany(x => x.Conversations)
+                .HasMany(x => x.OwnConversations)
                 .WithOne(x => x.Owner)
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<User>()
+                .HasMany(x => x.RecipientConversations)
+                .WithOne(x => x.Recipient)
+                .HasForeignKey(x => x.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

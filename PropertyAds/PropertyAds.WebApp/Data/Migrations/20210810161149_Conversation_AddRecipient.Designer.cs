@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PropertyAds.WebApp.Data;
 
 namespace PropertyAds.WebApp.Data.Migrations
 {
     [DbContext(typeof(PropertyAdsDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810161149_Conversation_AddRecipient")]
+    partial class Conversation_AddRecipient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,10 +168,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("PropertyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("RecipientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -177,8 +175,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("PropertyId");
 
                     b.HasIndex("RecipientId");
 
@@ -532,12 +528,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PropertyAds.WebApp.Data.Models.Property", "Property")
-                        .WithMany("Conversations")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PropertyAds.WebApp.Data.Models.User", "Recipient")
                         .WithMany("RecipientConversations")
                         .HasForeignKey("RecipientId")
@@ -545,8 +535,6 @@ namespace PropertyAds.WebApp.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-
-                    b.Navigation("Property");
 
                     b.Navigation("Recipient");
                 });
@@ -685,8 +673,6 @@ namespace PropertyAds.WebApp.Data.Migrations
 
             modelBuilder.Entity("PropertyAds.WebApp.Data.Models.Property", b =>
                 {
-                    b.Navigation("Conversations");
-
                     b.Navigation("Images");
                 });
 

@@ -35,9 +35,10 @@
                     <td class="col-6 row">
                         @if (Model.OwnerId != userData.GetCurrentUserId())
                         {
-                            <a class="btn"
+                            <a class="btn pt-0 pb-0"
                                asp-controller="Conversations"
-                               asp-action="Conversation">&#x2709;</a>
+                               asp-action="Conversation"
+                               asp-route-propertyid="@Model.Id"><i class="fas fa-envelope"></i></a>
                         }
                         <partial name="_AddPropertyToWatchlistViewPartial" model="@Model" />
                     </td>

@@ -7,6 +7,8 @@
     {
         public ICollection<Property> Properties { get; set; } = new HashSet<Property>();
 
-        public ICollection<Conversation> Conversations { get; set; } = new HashSet<Conversation>();
+        public ICollection<Conversation> OwnConversations { get; set; } = new HashSet<Conversation>();
+
+        public ICollection<Conversation> RecipientConversations { get; set; } = new HashSet<Conversation>();
     }
 }

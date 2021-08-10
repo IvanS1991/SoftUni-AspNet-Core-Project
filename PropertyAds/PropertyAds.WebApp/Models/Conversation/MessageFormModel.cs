@@ -8,6 +8,8 @@
 
     public class MessageFormModel
     {
+        public string PropertyId { get; set; }
+
         [Required]
         [StringLength(
             MessageContentMaxLength,

@@ -17,6 +17,16 @@
 
         public User Owner { get; set; }
 
+        [Required]
+        public string RecipientId { get; set; }
+
+        public User Recipient { get; set; }
+
+        [Required]
+        public string PropertyId { get; set; }
+
+        public Property Property { get; set; }
+
         public ICollection<Message> Messages { get; set; } = new HashSet<Message>();
     }
 }

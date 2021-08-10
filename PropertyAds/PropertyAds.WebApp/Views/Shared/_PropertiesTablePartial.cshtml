@@ -49,24 +49,24 @@ else
                            && !isWatchlistDetailsPage)
                         {
                             <div class="button-group">
-                                <a class="btn"
+                                <a class="btn pt-0 pb-0"
                                    asp-controller="Properties"
                                    asp-action="Edit"
-                                   asp-route-id="@property.Id">&#x270E;</a>
-                                <a class="btn"
+                                   asp-route-id="@property.Id"><i class="fas fa-pencil-alt"></i></a>
+                                <a class="btn pt-0 pb-0"
                                    asp-controller="Properties"
                                    asp-action="Delete"
-                                   asp-route-id="@property.Id">&#x2716;</a>
+                                   asp-route-id="@property.Id"><i class="fas fa-times"></i></a>
                             </div>
                         }
                         else if (isWatchlistDetailsPage)
                         {
                             <div class="button-group property-watchlist-controls">
-                                <a class="btn"
+                                <a class="btn pt-0 pb-0"
                                    asp-controller="Watchlists"
                                    asp-action="RemoveProperty"
                                    asp-route-watchlistid="@ViewBag.WatchlistId"
-                                   asp-route-propertyid="@property.Id">&#x2716;</a>
+                                   asp-route-propertyid="@property.Id"><i class="fas fa-times"></i></a>
                             </div>
                         }
                     </td>

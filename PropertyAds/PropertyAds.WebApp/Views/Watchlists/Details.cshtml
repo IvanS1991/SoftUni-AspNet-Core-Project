@@ -19,7 +19,7 @@
                asp-action="RemoveSegment"
                asp-route-watchlistid="@ViewBag.WatchlistId"
                asp-route-propertytypeid="@segment.PropertyTypeId"
-               asp-route-districtid="@segment.DistrictId">&#x2716;</a>
+               asp-route-districtid="@segment.DistrictId"><i class="fas fa-times"></i></a>
         </h3>
         <partial name="_PropertiesTablePartial" model="@segment.Properties" />
     }

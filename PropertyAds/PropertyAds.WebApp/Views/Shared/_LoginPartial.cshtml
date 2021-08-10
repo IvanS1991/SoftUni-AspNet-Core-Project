@@ -6,9 +6,12 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        <a class="btn nav-link"
+           asp-controller="Conversations"
+           asp-action="List"><i class="fas fa-envelope"></i></a>
         <li class="dropdown">
-            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                &#9881;
+            <button class="btn nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cog"></i>
             </button>
             <div class="dropdown-menu pl-2" aria-labelledby="dropdownMenuButton">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="ListOwned">Създадени обяви</a>
@@ -22,10 +25,10 @@
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Вход</a>
         </li>
     }
 </ul>
