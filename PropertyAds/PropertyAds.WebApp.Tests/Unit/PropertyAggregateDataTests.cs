@@ -1,4 +1,4 @@
-﻿namespace PropertyAds.WebApp.Tests.Services
+﻿namespace PropertyAds.WebApp.Tests.Unit
 {
     using System;
     using AutoMapper;
