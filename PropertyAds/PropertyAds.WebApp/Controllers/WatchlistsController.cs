@@ -86,8 +86,8 @@
             return View(viewModel);
         }
 
-        public async Task<IActionResult> RemoveProperty
-            (string watchlistId,
+        public async Task<IActionResult> RemoveProperty(
+            string watchlistId,
             string propertyId)
         {
             await this.watchlistData.RemoveProperty(
