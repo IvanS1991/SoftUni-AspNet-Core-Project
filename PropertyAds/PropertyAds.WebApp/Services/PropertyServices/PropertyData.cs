@@ -157,6 +157,14 @@
                 .ToListAsync();
         }
 
+        public Task<List<PropertyServiceModel>> GetFlagged()
+        {
+            return this.db.Properties
+                .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
+                .Where(x => x.IsFlagged)
+                .ToListAsync();
+        }
+
         public Task<PropertyServiceModel> Find(string query)
         {
             return this.db.Properties

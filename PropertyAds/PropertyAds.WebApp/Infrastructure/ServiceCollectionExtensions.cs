@@ -50,6 +50,7 @@
         public static IServiceCollection SetupIdentity(this IServiceCollection services)
         {
             services.AddDefaultIdentity<User>(ConfigureIdentityOptions)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<PropertyAdsDbContext>();
 
             return services;

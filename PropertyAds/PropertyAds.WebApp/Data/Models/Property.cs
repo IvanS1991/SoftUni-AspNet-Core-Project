@@ -34,6 +34,8 @@
 
         public int VisitedCount { get; set; } = 0;
 
+        public bool IsFlagged { get; set; } = false;
+
         [Required]
         public string OwnerId { get; set; }
 

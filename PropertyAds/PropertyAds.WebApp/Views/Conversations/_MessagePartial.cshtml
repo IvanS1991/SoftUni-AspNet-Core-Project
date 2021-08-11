@@ -9,4 +9,16 @@
 <div class="card col-md-8 @(isAuthor ? "offset-md-4" : "")">
     <strong>@Model.Author.Email - @Model.CreatedOn</strong>
     <p>@Model.Content</p>
+    @if (userData.GetCurrentUserId() != @Model.Author.Id)
+    {
+        <div>
+            <a class="btn"
+               asp-controller="Conversations"
+               asp-action="FlagMessage"
+               asp-route-conversationid="@Model.ConversationId"
+               asp-route-messageid="@Model.Id">
+                <i class="fas fa-flag" style="@(Model.IsFlagged ? "color: red;" : "")"></i>
+            </a>
+        </div>
+    }
 </div>

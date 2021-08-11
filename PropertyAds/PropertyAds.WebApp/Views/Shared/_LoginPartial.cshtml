@@ -2,20 +2,36 @@
 @using PropertyAds.WebApp.Data.Models; 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@inject IUserData userData
+
+@{ 
+    var isSignedIn = SignInManager.IsSignedIn(User);
+    var isAdmin = isSignedIn && userData.IsAdmin(User);
+}
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (isSignedIn)
     {
-        <a class="btn nav-link"
-           asp-controller="Conversations"
-           asp-action="List"><i class="fas fa-envelope"></i></a>
+        if (!isAdmin)
+        {
+            <a class="btn nav-link"
+               asp-controller="Conversations"
+               asp-action="List"><i class="fas fa-envelope"></i></a>
+        }
         <li class="dropdown">
             <button class="btn nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-cog"></i>
             </button>
             <div class="dropdown-menu pl-2" aria-labelledby="dropdownMenuButton">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="ListOwned">Създадени обяви</a>
-                <a class="nav-link text-dark" asp-area="" asp-controller="Watchlists" asp-action="List">Списъци за наблюдение</a>
+                @if (isAdmin)
+                {
+                    <a class="nav-link text-dark" asp-area="Admin" asp-controller="Conversations" asp-action="Flagged">Докладвани дискусии</a>
+                }
+                else
+                {
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Properties" asp-action="ListOwned">Създадени обяви</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Watchlists" asp-action="List">Списъци за наблюдение</a>
+                }
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button type="submit" class="nav-link btn btn-link text-dark">Изход</button>
                 </form>

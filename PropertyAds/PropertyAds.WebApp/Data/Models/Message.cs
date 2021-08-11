@@ -16,6 +16,8 @@
             MessageContentMaxLength)]
         public string Content { get; set; }
 
+        public bool IsFlagged { get; set; } = false;
+
         public DateTime CreatedOn { get; set; }
 
         [Required]
