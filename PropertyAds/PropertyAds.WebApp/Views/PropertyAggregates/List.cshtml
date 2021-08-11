@@ -43,7 +43,7 @@
 @section Scripts {
     <script>
         $('.add-watchlist-toggle').on('click', (e) => {
-            const $target = $(e.target);
+            const $target = $(e.currentTarget);
             const propertyTypeId = $target.attr('data-property-type-id');
             const districtId = $target.attr('data-district-id');
 

@@ -1,6 +1,6 @@
 ﻿<script>
     $('.add-watchlist-toggle').on('click', (e) => {
-        const $target = $(e.target);
+        const $target = $(e.currentTarget);
         const propertyId = $target.attr('data-property-id');
 
         $.get(`/api/watchlists/by-property?propertyId=${propertyId}`, (response) => {
