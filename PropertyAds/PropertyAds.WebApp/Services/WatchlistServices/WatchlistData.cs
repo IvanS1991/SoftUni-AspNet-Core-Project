@@ -95,6 +95,12 @@
             await this.db.SaveChangesAsync();
         }
 
+        public Task<bool> Exists(string watchlistId)
+        {
+            return this.db.Watchlists
+                .AnyAsync(x => x.Id == watchlistId);
+        }
+
         public Task<WatchlistServiceModel> Get(string query)
         {
             return this.db.Watchlists
@@ -114,7 +120,8 @@
         {
             return this.db.Watchlists
                 .ProjectTo<WatchlistServiceModel>(this.mapper.ConfigurationProvider)
-                .Where(x => !x.WatchlistProperties.Any(x => x.PropertyId == propertyId))
+                .Where(x => x.OwnerId == this.userData.GetCurrentUserId()
+                    && !x.WatchlistProperties.Any(x => x.PropertyId == propertyId))
                 .ToListAsync();
         }
 
@@ -122,8 +129,9 @@
         {
             return this.db.Watchlists
                 .ProjectTo<WatchlistServiceModel>(this.mapper.ConfigurationProvider)
-                .Where(x => !x.WatchlistPropertySegments
-                    .Any(x => x.PropertyType.Id == propertyTypeId && x.District.Id == districtId))
+                .Where(x => x.OwnerId == this.userData.GetCurrentUserId()
+                    && !x.WatchlistPropertySegments
+                        .Any(x => x.PropertyType.Id == propertyTypeId && x.District.Id == districtId))
                 .ToListAsync();
         }
 

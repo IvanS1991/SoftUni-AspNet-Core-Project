@@ -7,17 +7,6 @@
 <form enctype="multipart/form-data" class="col-sm-12 col-lg-8 offset-lg-2 create-property-form" method="post">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label asp-for="TypeId"></label>
-            <select asp-for="TypeId" class="form-control" disabled="@isEditing">
-                <option value="">Изберете вид имот</option>
-                @foreach (var type in Model.Types)
-                {
-                    <option value="@type.Id">@type.Name</option>
-                }
-            </select>
-            <span asp-validation-for="TypeId" class="small text-danger"></span>
-        </div>
-        <div class="form-group col-md-6">
             <label asp-for="DistrictId"></label>
             <select asp-for="DistrictId" class="form-control" disabled="@isEditing">
                 <option value="">Изберете квартал</option>
@@ -27,6 +16,17 @@
                 }
             </select>
             <span asp-validation-for="DistrictId" class="small text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="TypeId"></label>
+            <select asp-for="TypeId" class="form-control" disabled="@isEditing">
+                <option value="">Изберете вид имот</option>
+                @foreach (var type in Model.Types)
+                {
+                    <option value="@type.Id">@type.Name</option>
+                }
+            </select>
+            <span asp-validation-for="TypeId" class="small text-danger"></span>
         </div>
     </div>
     <div class="form-row hidden">

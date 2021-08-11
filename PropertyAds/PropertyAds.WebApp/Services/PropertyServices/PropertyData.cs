@@ -241,5 +241,11 @@
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync();
         }
+
+        public Task<bool> Exists(string propertyId)
+        {
+            return this.db.Properties
+                .AnyAsync(x => x.Id == propertyId);
+        }
     }
 }

@@ -9,6 +9,8 @@
 
         Task Delete(string watchlistId);
 
+        Task<bool> Exists(string watchlistId);
+
         Task<WatchlistServiceModel> Get(string query);
 
         Task<List<WatchlistServiceModel>> GetAll(string userId);

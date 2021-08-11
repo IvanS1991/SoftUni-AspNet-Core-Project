@@ -64,7 +64,7 @@
         public bool IsValidFormImageCollection(IFormFileCollection fileCollection)
         {
             return fileCollection
-                       .All(x => this.imageContentTypes.Contains(x.ContentType));
+                .All(x => this.imageContentTypes.Contains(x.ContentType) && x.Length <= 500 * 1024);
         }
     }
 }

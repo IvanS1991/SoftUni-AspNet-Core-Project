@@ -110,9 +110,6 @@
 
             if (propertyModel.Images != null && propertyModel.Images.Count() > 0)
             {
-                var hasInvalidContentType = propertyModel.Images
-                    .Any(x => x.ContentType != MediaTypeNames.Image.Jpeg);
-
                 foreach (var formImage in propertyModel.Images)
                 {
                     using var memoryStream = new MemoryStream();
