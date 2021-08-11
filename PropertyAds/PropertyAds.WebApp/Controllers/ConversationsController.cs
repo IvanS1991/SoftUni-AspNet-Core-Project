@@ -78,5 +78,14 @@
 
             return View(conversations);
         }
+
+        public async Task<IActionResult> FlagMessage(
+            string conversationId,
+            string messageId)
+        {
+            await this.conversationData.FlagMessage(messageId, true);
+
+            return RedirectToAction(nameof(Conversation), new { id = conversationId });
+        }
     }
 }

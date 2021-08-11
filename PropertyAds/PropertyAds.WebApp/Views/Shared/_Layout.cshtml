@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IUserData userData
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -23,9 +25,12 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Properties" asp-action="Create">Създай обява</a>
-                            </li>
+                            if (!userData.IsAdmin(User))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Properties" asp-action="Create">Създай обява</a>
+                                </li>
+                            }
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Properties" asp-action="List">Разгледай обяви</a>
                             </li>

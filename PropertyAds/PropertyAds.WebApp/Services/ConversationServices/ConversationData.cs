@@ -66,6 +66,14 @@
                 .ToListAsync();
         }
 
+        public Task<List<ConversationServiceModel>> GetFlagged()
+        {
+            return this.db.Conversations
+                .ProjectTo<ConversationServiceModel>(this.mapper.ConfigurationProvider)
+                .Where(x => x.Messages.Any(m => m.IsFlagged))
+                .ToListAsync();
+        }
+
         public async Task CreateMessage(
             string conversationId,
             string content)
@@ -92,6 +100,20 @@
             }
 
             this.db.Conversations.Remove(conversation);
+
+            await this.db.SaveChangesAsync();
+        }
+
+        public async Task FlagMessage(
+            string messageId,
+            bool isFlagged)
+        {
+            var message = await this.db.Messages
+                .FirstOrDefaultAsync(x => x.Id == messageId);
+
+            message.IsFlagged = isFlagged;
+
+            this.db.Messages.Update(message);
 
             await this.db.SaveChangesAsync();
         }

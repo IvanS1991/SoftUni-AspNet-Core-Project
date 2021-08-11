@@ -28,6 +28,8 @@
 
         public int VisitedCount { get; set; }
 
+        public bool IsFlagged { get; set; }
+
         public string OwnerId { get; set; }
 
         public string Owner { get; set; }

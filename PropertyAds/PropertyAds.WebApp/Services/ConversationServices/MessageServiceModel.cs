@@ -9,7 +9,11 @@
 
         public string Content { get; set; }
 
+        public bool IsFlagged { get; set; }
+
         public DateTime CreatedOn { get; set; }
+
+        public string ConversationId { get; set; }
 
         public UserServiceModel Author { get; set; }
     }

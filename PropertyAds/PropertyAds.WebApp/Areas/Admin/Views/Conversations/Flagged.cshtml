@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ConversationServiceModel>
+
+@if (Model.Count() == 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center alert alert-info">
+            Няма докладвани дискусии
+        </div>
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">От</th>
+                <th scope="col">До</th>
+                <th scope="col">Последно съобщение</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var conversation in Model)
+            {
+            <tr>
+                <td>@conversation.Owner.Email</td>
+                <td>@conversation.Recipient.Email</td>
+                <td>@conversation.Messages.Last().CreatedOn</td>
+                <td scope="col">
+                    <a class="btn pt-0 pb-0"
+                       asp-area=""
+                       asp-controller="Conversations"
+                       asp-action="Conversation"
+                       asp-route-id="@conversation.Id"
+                       asp-route-propertyid="@conversation.Property.Id"><i class="fas fa-search"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}

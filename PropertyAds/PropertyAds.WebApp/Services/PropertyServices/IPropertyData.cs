@@ -50,6 +50,8 @@
 
         Task<List<PropertyServiceModel>> GetMultipleById(IEnumerable<string> ids);
 
+        Task<List<PropertyServiceModel>> GetFlagged();
+
         Task<int> GetCount(
             string districtId,
             string propertyTypeId);

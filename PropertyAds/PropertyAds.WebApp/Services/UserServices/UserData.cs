@@ -3,6 +3,9 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using PropertyAds.WebApp.Data.Models;
+    using System.Security.Claims;
+
+    using static PropertyAds.WebApp.Data.Roles;
 
     public class UserData : IUserData
     {
@@ -21,6 +24,16 @@
         {
             return this.userManager
                 .GetUserId(this.httpContextAccessor.HttpContext.User);
+        }
+
+        public bool IsAdmin()
+        {
+            return this.IsAdmin(this.httpContextAccessor.HttpContext.User);
+        }
+
+        public bool IsAdmin(ClaimsPrincipal user)
+        {
+            return user.IsInRole(Administrator);
         }
     }
 }
