@@ -48,7 +48,7 @@
                 this.mapper,
                 this.cache);
 
-            propertyAggregateData.Setup(x => x.GetItemsPerPage())
+            propertyAggregateData.Setup(x => x.ItemsPerPage())
                 .Returns(2);
 
             this.propertyAggregateData = propertyAggregateData.Object;
@@ -141,7 +141,7 @@
         }
 
         [Test]
-        public async Task GetCount_ShouldReturnCorrectCountWithFiltering()
+        public async Task Count_ShouldReturnCorrectCountWithFiltering()
         {
             var mockAggregateData = PropertyAggregateScraperMock.GetMockData();
 
@@ -152,7 +152,7 @@
             var firstDistrict = this.db.Districts.First();
 
             var count = await this.propertyAggregateData
-                .GetCount(firstDistrict.Id, firstPropertyType.Id);
+                .Count(firstDistrict.Id, firstPropertyType.Id);
 
             var expectedCount = this.db.PropertyAggregates
                 .Where(x => x.DistrictId == firstDistrict.Id
@@ -163,7 +163,7 @@
         }
 
         [Test]
-        public async Task GetAll_ShouldReturnCorrectListWithFiltering()
+        public async Task All_ShouldReturnCorrectListWithFiltering()
         {
             var mockAggregateData = PropertyAggregateScraperMock.GetMockData();
 
@@ -174,7 +174,7 @@
             var firstDistrict = this.db.Districts.First();
 
             var result = await this.propertyAggregateData
-                .GetAll(0, firstDistrict.Id, firstPropertyType.Id);
+                .All(0, firstDistrict.Id, firstPropertyType.Id);
 
             var expectedCount = this.db.PropertyAggregates
                 .Where(x => x.DistrictId == firstDistrict.Id
@@ -190,15 +190,15 @@
         }
 
         [Test]
-        public async Task GetAll_ShouldReturnCorrectListWithPagination()
+        public async Task All_ShouldReturnCorrectListWithPagination()
         {
             await this.propertyAggregateData
                 .Populate();
 
             var firstPage = await this.propertyAggregateData
-                .GetAll(0, null, null);
+                .All(0, null, null);
             var secondPage = await this.propertyAggregateData
-                .GetAll(0, null, null);
+                .All(0, null, null);
 
             Assert.AreNotEqual(firstPage, secondPage);
         }

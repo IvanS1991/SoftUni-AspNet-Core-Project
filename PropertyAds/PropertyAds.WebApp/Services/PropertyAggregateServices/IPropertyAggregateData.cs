@@ -6,22 +6,19 @@
 
     public interface IPropertyAggregateData : IPaginationList
     {
-        Task<int> GetCount(
-            string districtId,
-            string propertyTypeId);
-
-        Task<int> TotalPageCount(string districtId, string propertyTypeId);
-
         Task<PropertyAggregateServiceModel> Create(
             string districtId,
             string propertyTypeId,
             int averagePrice,
             int averagePricePerSqM);
 
-        Task<List<PropertyAggregateServiceModel>> GetAll(
-            int page,
-            string districtId,
-            string propertyTypeId);
+        Task<int> Count(
+            string districtId, string propertyTypeId);
+
+        Task<int> TotalPageCount(string districtId, string propertyTypeId);
+
+        Task<List<PropertyAggregateServiceModel>> All(
+            int page, string districtId, string propertyTypeId);
 
         Task Populate();
 

@@ -4,7 +4,7 @@
 
     public interface IUserData
     {
-        string GetCurrentUserId();
+        string CurrentUserId();
 
         bool IsAdmin();
 

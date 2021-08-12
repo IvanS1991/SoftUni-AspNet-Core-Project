@@ -26,9 +26,11 @@
             this.cache = cache;
         }
 
-        public async Task<PropertyTypeServiceModel> Create(string name, int sortRank)
+        public async Task<PropertyTypeServiceModel> Create(
+            string name, int sortRank)
         {
-            var existingPropertyType = await this.GetByName(name);
+            var existingPropertyType = await this
+                .ByName(name);
 
             if (await this.Exists(name))
             {
@@ -39,6 +41,7 @@
                 Name = name,
                 SortRank = sortRank
             });
+
             await this.db.SaveChangesAsync();
 
             return this.mapper.Map< PropertyTypeServiceModel>(result.Entity);
@@ -50,7 +53,7 @@
                 .AnyAsync(x => x.Name == query || x.Id == query);
         }
 
-        public async Task<PropertyTypeServiceModel> GetByName(string propertyTypeName)
+        public async Task<PropertyTypeServiceModel> ByName(string propertyTypeName)
         {
             var propertyType = await this.db.PropertyTypes
                 .FirstOrDefaultAsync(x => x.Name == propertyTypeName);
@@ -63,7 +66,7 @@
             return this.mapper.Map<PropertyTypeServiceModel>(propertyType);
         }
 
-        public async Task<List<PropertyTypeServiceModel>> GetAll()
+        public async Task<List<PropertyTypeServiceModel>> All()
         {
             List<PropertyTypeServiceModel> result;
 

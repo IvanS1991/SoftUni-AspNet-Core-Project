@@ -35,10 +35,11 @@
             string propertyId,
             string content)
         {
-            var property = await this.propertyData.Find(propertyId);
+            var property = await this.propertyData
+                .Find(propertyId);
             var conversation = await this.db.Conversations.AddAsync(new Conversation
             {
-                OwnerId = this.userData.GetCurrentUserId(),
+                OwnerId = this.userData.CurrentUserId(),
                 PropertyId = property.Id,
                 RecipientId = property.OwnerId,
                 CreatedOn = DateTime.UtcNow
@@ -51,14 +52,14 @@
             return this.mapper.Map<ConversationServiceModel>(conversation.Entity);
         }
 
-        public Task<ConversationServiceModel> Get(string conversationId)
+        public Task<ConversationServiceModel> Find(string conversationId)
         {
             return this.db.Conversations
                 .ProjectTo<ConversationServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(x => x.Id == conversationId);
         }
 
-        public Task<List<ConversationServiceModel>> GetByParticipation(string userId)
+        public Task<List<ConversationServiceModel>> ByParticipation(string userId)
         {
             return this.db.Conversations
                 .ProjectTo<ConversationServiceModel>(this.mapper.ConfigurationProvider)
@@ -66,7 +67,7 @@
                 .ToListAsync();
         }
 
-        public Task<List<ConversationServiceModel>> GetFlagged()
+        public Task<List<ConversationServiceModel>> Flagged()
         {
             return this.db.Conversations
                 .ProjectTo<ConversationServiceModel>(this.mapper.ConfigurationProvider)
@@ -78,14 +79,13 @@
             string conversationId,
             string content)
         {
-            await this.db.Messages
-                .AddAsync(new Message
-                {
-                    Content  = content,
-                    CreatedOn  = DateTime.UtcNow,
-                    AuthorId = this.userData.GetCurrentUserId(),
-                    ConversationId  = conversationId
-                });
+            await this.db.Messages.AddAsync(new Message
+            {
+                Content  = content,
+                CreatedOn  = DateTime.UtcNow,
+                AuthorId = this.userData.CurrentUserId(),
+                ConversationId  = conversationId
+            });
             await this.db.SaveChangesAsync();
         }
 

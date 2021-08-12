@@ -19,7 +19,7 @@
         {
             <tr>
                 <td scope="col">
-                    @if (User.Identity.IsAuthenticated && userData.GetCurrentUserId() == watchlist.OwnerId)
+                    @if (User.Identity.IsAuthenticated && userData.CurrentUserId() == watchlist.OwnerId)
                     {
                         <a asp-controller="Watchlists"
                            asp-action="Details"
@@ -46,7 +46,7 @@
             <td scope="col">
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        &plus;
+                        <i class="fas fa-plus"></i>
                     </button>
                     <div class="dropdown-menu p-2">
                         <form asp-controller="Watchlists" asp-action="Create" method="post">

@@ -59,7 +59,7 @@
                 {
                     Name = name,
                     LastViewedOn = DateTime.UtcNow,
-                    OwnerId = this.userData.GetCurrentUserId()
+                    OwnerId = this.userData.CurrentUserId()
                 });
 
             await this.db.SaveChangesAsync();
@@ -108,7 +108,7 @@
                 .FirstOrDefaultAsync(x => x.Id == query || x.Name == query);
         }
 
-        public Task<List<WatchlistServiceModel>> GetAll(string userId)
+        public Task<List<WatchlistServiceModel>> All(string userId)
         {
             return this.db.Watchlists
                 .ProjectTo<WatchlistServiceModel>(this.mapper.ConfigurationProvider)
@@ -116,20 +116,20 @@
                 .ToListAsync();
         }
 
-        public Task<List<WatchlistServiceModel>> GetForProperty(string propertyId)
+        public Task<List<WatchlistServiceModel>> ForProperty(string propertyId)
         {
             return this.db.Watchlists
                 .ProjectTo<WatchlistServiceModel>(this.mapper.ConfigurationProvider)
-                .Where(x => x.OwnerId == this.userData.GetCurrentUserId()
+                .Where(x => x.OwnerId == this.userData.CurrentUserId()
                     && !x.WatchlistProperties.Any(x => x.PropertyId == propertyId))
                 .ToListAsync();
         }
 
-        public Task<List<WatchlistServiceModel>> GetForSegment(string propertyTypeId, string districtId)
+        public Task<List<WatchlistServiceModel>> ForSegment(string propertyTypeId, string districtId)
         {
             return this.db.Watchlists
                 .ProjectTo<WatchlistServiceModel>(this.mapper.ConfigurationProvider)
-                .Where(x => x.OwnerId == this.userData.GetCurrentUserId()
+                .Where(x => x.OwnerId == this.userData.CurrentUserId()
                     && !x.WatchlistPropertySegments
                         .Any(x => x.PropertyType.Id == propertyTypeId && x.District.Id == districtId))
                 .ToListAsync();

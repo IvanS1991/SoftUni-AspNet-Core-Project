@@ -9,8 +9,8 @@
 
         Task<bool> Exists(string query);
 
-        Task<DistrictServiceModel> GetByName(string districtName);
+        Task<DistrictServiceModel> ByName(string districtName);
 
-        Task<List<DistrictServiceModel>> GetAll();
+        Task<List<DistrictServiceModel>> All();
     }
 }

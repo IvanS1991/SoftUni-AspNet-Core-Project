@@ -34,18 +34,20 @@
         public async Task<ActionResult<PropertyAggregateServiceModel>> Aggregate(
             string districtId, string propertyTypeId)
         {
-            if (await this.districtData.Exists(districtId) == false)
+            if (await this.districtData
+                .Exists(districtId) == false)
             {
                 return BadRequest(DistrictNotFoundError);
             }
 
-            if (await this.propertyTypeData.Exists(propertyTypeId) == false)
+            if (await this.propertyTypeData
+                .Exists(propertyTypeId) == false)
             {
                 return BadRequest(PropertyTypeNotFoundError);
             }
 
             var results = await this.propertyAggregateData
-                .GetAll(0, districtId, propertyTypeId);
+                .All(0, districtId, propertyTypeId);
 
             if (results.Count == 0)
             {

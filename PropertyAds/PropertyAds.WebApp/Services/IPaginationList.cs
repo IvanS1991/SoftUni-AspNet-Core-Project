@@ -2,6 +2,6 @@
 {
     public interface IPaginationList
     {
-        int GetItemsPerPage();
+        int ItemsPerPage();
     }
 }

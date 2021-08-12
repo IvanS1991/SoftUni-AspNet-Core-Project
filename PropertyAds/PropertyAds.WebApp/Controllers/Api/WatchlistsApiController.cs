@@ -37,13 +37,14 @@
         public async Task<ActionResult<List<WatchlistServiceModel>>> ByProperty(
             string propertyId)
         {
-            if (await this.propertyData.Exists(propertyId)
-                == false)
+            if (await this.propertyData
+                .Exists(propertyId) == false)
             {
                 return BadRequest(PropertyNotFoundError);
             }
 
-            var result = await this.watchlistData.GetForProperty(propertyId);
+            var result = await this.watchlistData
+                .ForProperty(propertyId);
 
             return result;
         }
@@ -54,17 +55,20 @@
         public async Task<ActionResult<List<WatchlistServiceModel>>> BySegment(
             string propertyTypeId, string districtId)
         {
-            if (await this.districtData.Exists(districtId) == false)
+            if (await this.districtData
+                .Exists(districtId) == false)
             {
                 return BadRequest(DistrictNotFoundError);
             }
 
-            if (await this.propertyTypeData.Exists(propertyTypeId) == false)
+            if (await this.propertyTypeData
+                .Exists(propertyTypeId) == false)
             {
                 return BadRequest(PropertyTypeNotFoundError);
             }
 
-            var result = await this.watchlistData.GetForSegment(propertyTypeId, districtId);
+            var result = await this.watchlistData
+                .ForSegment(propertyTypeId, districtId);
 
             return result;
         }
@@ -77,48 +81,47 @@
             string propertyTypeId,
             string districtId)
         {
-            if (await this.districtData.Exists(districtId)
-                == false)
+            if (await this.districtData
+                .Exists(districtId) == false)
             {
                 return BadRequest(DistrictNotFoundError);
             }
 
-            if (await this.propertyTypeData.Exists(propertyTypeId)
-                == false)
+            if (await this.propertyTypeData
+                .Exists(propertyTypeId) == false)
             {
                 return BadRequest(PropertyTypeNotFoundError);
             }
 
-            if (await this.watchlistData.Exists(watchlistId)
-                == false)
+            if (await this.watchlistData
+                .Exists(watchlistId) == false)
             {
                 return BadRequest(WatchlistNotFoundError);
             }
 
-            await this.watchlistData.AddSegment(
-                watchlistId,
-                propertyTypeId,
-                districtId);
+            await this.watchlistData
+                .AddSegment(watchlistId, propertyTypeId, districtId);
 
             return Ok();
         }
 
         [HttpPost]
         [Route("add-property")]
+        [Authorize]
         public async Task<IActionResult> AddProperty(
             string watchlistId,
             string propertyId)
         {
-            if (await this.watchlistData.Exists(watchlistId)
-                == false)
+            if (await this.watchlistData
+                .Exists(watchlistId) == false)
             {
                 this.ModelState.AddModelError(
                     nameof(watchlistId),
                     WatchlistNotFoundError);
             }
 
-            if (await this.propertyData.Exists(propertyId)
-                == false)
+            if (await this.propertyData
+                .Exists(propertyId) == false)
             {
                 this.ModelState.AddModelError(
                     nameof(propertyId),
@@ -129,9 +132,9 @@
             {
                 return BadRequest();
             }
-            await this.watchlistData.AddProperty(
-                watchlistId,
-                propertyId);
+
+            await this.watchlistData
+                .AddProperty(watchlistId, propertyId);
 
             return Ok();
         }

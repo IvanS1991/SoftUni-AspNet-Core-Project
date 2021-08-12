@@ -30,20 +30,23 @@
 
         public async Task<IActionResult> List([FromQuery] PropertyAggregateListQueryModel queryModel)
         {
-            var aggregates = await this.propertyAggregateData.GetAll(
-                queryModel.Page,
-                queryModel.DistrictId,
-                queryModel.PropertyTypeId);
+            var aggregates = await this.propertyAggregateData
+                .All(
+                    queryModel.Page,
+                    queryModel.DistrictId,
+                    queryModel.PropertyTypeId);
             var aggregatesListViewModel = new PropertyAggregateListQueryModel
             {
                 Rows = aggregates.Select(
-                    x => this.mapper.Map<PropertyAggregateViewModel>(x)),
+                    x => this.mapper
+                        .Map<PropertyAggregateViewModel>(x)),
                 Page = queryModel.Page,
-                TotalPages = await this.propertyAggregateData.TotalPageCount(
-                    queryModel.DistrictId,
-                    queryModel.PropertyTypeId),
-                PropertyTypes = await this.propertyTypeData.GetAll(),
-                Districts = await this.districtData.GetAll(),
+                TotalPages = await this.propertyAggregateData
+                    .TotalPageCount(queryModel.DistrictId, queryModel.PropertyTypeId),
+                PropertyTypes = await this.propertyTypeData
+                    .All(),
+                Districts = await this.districtData
+                    .All(),
                 DistrictId = queryModel.DistrictId,
                 PropertyTypeId = queryModel.PropertyTypeId
             };

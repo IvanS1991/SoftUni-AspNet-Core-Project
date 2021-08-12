@@ -39,7 +39,7 @@
                 ConfigurationMock.Instance(),
                 this.propertyImageData);
 
-            propertyData.Setup(x => x.GetItemsPerPage())
+            propertyData.Setup(x => x.ItemsPerPage())
                 .Returns(2);
 
             this.propertyData = propertyData.Object;
@@ -166,11 +166,11 @@
         }
 
         [Test]
-        public async Task GetList_ShouldGetAllWithNoArguments()
+        public async Task All_ShouldGetAllWithNoArguments()
         {
             this.PopulateDb();
             
-            var result = await this.propertyData.GetList(null, null);
+            var result = await this.propertyData.All(null, null);
 
             Assert.AreEqual(this.db.Properties.Count(), result.Count());
 
@@ -181,12 +181,12 @@
         }
 
         [Test]
-        public async Task GetList_ShouldGetCorrectlyWithPagination()
+        public async Task All_ShouldGetCorrectlyWithPagination()
         {
             this.PopulateDb();
 
-            var firstResult = await this.propertyData.GetList(1, null, null);
-            var secondResult = await this.propertyData.GetList(2, null, null);
+            var firstResult = await this.propertyData.All(1, null, null);
+            var secondResult = await this.propertyData.All(2, null, null);
 
             Assert.AreNotEqual(firstResult, secondResult);
         }
@@ -207,7 +207,7 @@
         }
 
         [Test]
-        public async Task VisitProperty_ShouldIncreaseViewCountCorrectly()
+        public async Task Visit_ShouldIncreaseViewCountCorrectly()
         {
             this.PopulateDb();
 
@@ -220,7 +220,7 @@
             for (int i = 0; i < 3; i++)
             {
                 result = await this.propertyData
-                    .VisitProperty(lastProperty.Id);
+                    .Visit(lastProperty.Id);
             }
 
             Assert.AreEqual(result.VisitedCount, 3);
@@ -253,7 +253,7 @@
             this.db.Users
                 .Add(new User
                 {
-                    Id = this.userData.GetCurrentUserId(),
+                    Id = this.userData.CurrentUserId(),
                     Email = this.userEmail
                 });
 
@@ -281,7 +281,7 @@
                     Year = this.random.Next(2000, 2005),
                     Description = "test-description",
                     CreatedOn = DateTime.UtcNow,
-                    OwnerId = this.userData.GetCurrentUserId(),
+                    OwnerId = this.userData.CurrentUserId(),
                     TypeId = propertyType.Entity.Id,
                     DistrictId = district.Entity.Id,
                 });

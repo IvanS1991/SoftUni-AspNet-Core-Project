@@ -45,8 +45,8 @@
         {
             return View(new PropertyFormModel
             {
-                Types = await this.propertyTypeData.GetAll(),
-                Districts = await this.districtData.GetAll()
+                Types = await this.propertyTypeData.All(),
+                Districts = await this.districtData.All()
             });
         }
 
@@ -54,16 +54,16 @@
         [Authorize]
         public async Task<IActionResult> Create([FromForm] PropertyFormModel propertyModel)
         {
-            if (await this.propertyTypeData.Exists(propertyModel.TypeId)
-                == false)
+            if (await this.propertyTypeData
+                .Exists(propertyModel.TypeId) == false)
             {
                 this.ModelState.AddModelError(
                     nameof(Property.TypeId),
                     PropertyTypeNotFoundError);
             }
 
-            if (await this.districtData.Exists(propertyModel.DistrictId)
-                == false)
+            if (await this.districtData
+                .Exists(propertyModel.DistrictId) == false)
             {
                 this.ModelState.AddModelError(
                     nameof(Property.DistrictId),
@@ -84,7 +84,8 @@
                     UsableAreaGreaterThanAreaError);
             }
 
-            if (!this.imageData.IsValidFormImageCollection(propertyModel.Images))
+            if (!this.imageData
+                .IsValidFormImageCollection(propertyModel.Images))
             {
                 this.ModelState.AddModelError(
                     nameof(Property.Images),
@@ -94,8 +95,8 @@
 
             if (!this.ModelState.IsValid)
             {
-                propertyModel.Types = await this.propertyTypeData.GetAll();
-                propertyModel.Districts = await this.districtData.GetAll();
+                propertyModel.Types = await this.propertyTypeData.All();
+                propertyModel.Districts = await this.districtData.All();
 
                 return View(propertyModel);
             }
@@ -128,18 +129,23 @@
                 }
             }
 
-            return RedirectToAction(nameof(List));
+            return RedirectToAction(
+                nameof(List));
         }
 
         [Authorize]
         public async Task<IActionResult> Edit(string id)
         {
-            var property = await this.propertyData.Find(id);
-            var viewModel = this.mapper.Map<PropertyFormModel>(property);
+            var property = await this.propertyData
+                .Find(id);
+            var viewModel = this.mapper
+                .Map<PropertyFormModel>(property);
 
             viewModel.Id = id;
-            viewModel.Types = await this.propertyTypeData.GetAll();
-            viewModel.Districts = await this.districtData.GetAll();
+            viewModel.Types = await this.propertyTypeData
+                .All();
+            viewModel.Districts = await this.districtData
+                .All();
 
             return View(viewModel);
         }
@@ -148,22 +154,22 @@
         [Authorize]
         public async Task<IActionResult> Edit([FromForm] PropertyFormModel propertyModel)
         {
-            if (await this.propertyData.HasOwner(propertyModel.Id, this.userData.GetCurrentUserId())
-                == false)
+            if (await this.propertyData
+                .HasOwner(propertyModel.Id, this.userData.CurrentUserId()) == false)
             {
                 return Unauthorized();
             }
 
-            if (await this.propertyTypeData.Exists(propertyModel.TypeId)
-                == false)
+            if (await this.propertyTypeData
+                .Exists(propertyModel.TypeId) == false)
             {
                 this.ModelState.AddModelError(
                     nameof(Property.TypeId),
                     PropertyTypeNotFoundError);
             }
 
-            if (await this.districtData.Exists(propertyModel.DistrictId)
-                == false)
+            if (await this.districtData
+                .Exists(propertyModel.DistrictId) == false)
             {
                 this.ModelState.AddModelError(
                     nameof(Property.DistrictId),
@@ -184,7 +190,8 @@
                     UsableAreaGreaterThanAreaError);
             }
 
-            if (!this.imageData.IsValidFormImageCollection(propertyModel.Images))
+            if (!this.imageData
+                .IsValidFormImageCollection(propertyModel.Images))
             {
                 this.ModelState.AddModelError(
                     nameof(Property.Images),
@@ -194,8 +201,8 @@
 
             if (!this.ModelState.IsValid)
             {
-                propertyModel.Types = await this.propertyTypeData.GetAll();
-                propertyModel.Districts = await this.districtData.GetAll();
+                propertyModel.Types = await this.propertyTypeData.All();
+                propertyModel.Districts = await this.districtData.All();
 
                 return View(propertyModel);
             }
@@ -212,40 +219,45 @@
                propertyModel.TypeId,
                propertyModel.DistrictId);
 
-            return RedirectToAction(nameof(ListOwned));
+            return RedirectToAction(
+                nameof(ListOwned));
         }
 
         [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
-            if (await this.propertyData.HasOwner(id, this.userData.GetCurrentUserId())
-                == false)
+            if (await this.propertyData
+                .HasOwner(id, this.userData.CurrentUserId()) == false)
             {
                 return Unauthorized();
             }
 
-            await this.propertyData.Delete(id);
+            await this.propertyData
+                .Delete(id);
 
-            return RedirectToAction(nameof(ListOwned));
+            return RedirectToAction(
+                nameof(ListOwned));
         }
 
         [Authorize]
         public async Task<IActionResult> List([FromQuery] PropertyListQueryModel model)
         {
-            var properties = await this.propertyData.GetList(
+            var properties = await this.propertyData.All(
                 model.Page,
                 model.DistrictId,
                 model.PropertyTypeId);
 
             var viewModel = new PropertyListQueryModel
             {
-                Districts = await this.districtData.GetAll(),
-                PropertyTypes = await this.propertyTypeData.GetAll(),
+                Districts = await this.districtData
+                    .All(),
+                PropertyTypes = await this.propertyTypeData
+                    .All(),
                 Page = model.Page,
-                Rows = properties.Select(x => this.mapper.Map<PropertySummaryViewModel>(x)),
-                TotalPages = await this.propertyData.TotalPageCount(
-                    model.DistrictId,
-                    model.PropertyTypeId)
+                Rows = properties
+                    .Select(x => this.mapper.Map<PropertySummaryViewModel>(x)),
+                TotalPages = await this.propertyData
+                    .TotalPageCount(model.DistrictId, model.PropertyTypeId)
             };
 
             return View(viewModel);
@@ -254,12 +266,11 @@
         [Authorize]
         public async Task<IActionResult> ListOwned()
         {
-            var properties = await this.propertyData.GetList(
-                null,
-                null,
-                true);
+            var properties = await this.propertyData
+                .All(null, null, true);
 
-            var viewModel = properties.Select(x => this.mapper.Map<PropertyDetailsViewModel>(x));
+            var viewModel = properties
+                .Select(x => this.mapper.Map<PropertyDetailsViewModel>(x));
 
             return View(viewModel);
         }
@@ -268,9 +279,10 @@
         public async Task<IActionResult> Details(string id)
         {
             var property = await this.propertyData
-                .VisitProperty(id);
+                .Visit(id);
 
-            var viewModel = this.mapper.Map<PropertyDetailsViewModel>(property);
+            var viewModel = this.mapper
+                .Map<PropertyDetailsViewModel>(property);
 
             return View(viewModel);
         }
@@ -278,7 +290,8 @@
         [ResponseCache(Duration = 1000000)]
         public async Task<IActionResult> Image(string id)
         {
-            var image = await this.imageData.GetById(id);
+            var image = await this.imageData
+                .ById(id);
 
             return File(image.Bytes, MediaTypeNames.Image.Jpeg);
         }

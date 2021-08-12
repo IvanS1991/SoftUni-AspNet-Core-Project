@@ -56,7 +56,7 @@
         }
 
         [Test]
-        public async Task GetById_ShouldReturnCorrectImage()
+        public async Task ById_ShouldReturnCorrectImage()
         {
             this.PopulateProperties();
 
@@ -70,7 +70,7 @@
                await this.propertyImageData.Create(GetBytes(), fileName, property.Id);
             }
 
-            var result = await this.propertyImageData.GetById(expectedResult.Id);
+            var result = await this.propertyImageData.ById(expectedResult.Id);
 
             Assert.AreEqual(result.Id, expectedResult.Id);
             Assert.AreEqual(result.Name, expectedResult.Name);

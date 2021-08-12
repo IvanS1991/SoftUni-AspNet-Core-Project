@@ -10,7 +10,7 @@
         {
             var mock = new Mock<IUserData>();
 
-            mock.Setup(x => x.GetCurrentUserId())
+            mock.Setup(x => x.CurrentUserId())
                 .Returns(Guid.NewGuid().ToString());
 
             return mock.Object;

@@ -40,8 +40,8 @@ else
                             <span>@aggregate.District.Name - @aggregate.PropertyType.Name</span>
                         }
                     </th>
-                    <td class="col-2">@formatter.FormatCurrency(aggregate.AveragePrice)</td>
-                    <td class="col-2">@formatter.FormatCurrency(aggregate.AveragePricePerSqM)</td>
+                    <td class="col-2">@formatter.Currency(aggregate.AveragePrice)</td>
+                    <td class="col-2">@formatter.Currency(aggregate.AveragePricePerSqM)</td>
                     <td>
                         @if (!userData.IsAdmin(User))
                         {

@@ -6,13 +6,12 @@
     public interface IPropertyTypeData
     {
         Task<PropertyTypeServiceModel> Create(
-            string name,
-            int sortRank);
+            string name, int sortRank);
 
         Task<bool> Exists(string query);
 
-        Task<PropertyTypeServiceModel> GetByName(string propertyTypeName);
+        Task<PropertyTypeServiceModel> ByName(string propertyTypeName);
 
-        Task<List<PropertyTypeServiceModel>> GetAll();
+        Task<List<PropertyTypeServiceModel>> All();
     }
 }
