@@ -7,6 +7,7 @@
     using PropertyAds.WebApp.Models.Property;
     using PropertyAds.WebApp.Services.DistrictServices;
     using PropertyAds.WebApp.Services.PropertyServices;
+    using PropertyAds.WebApp.Services.UserServices;
     using System.IO;
     using System.Linq;
     using System.Net.Mime;
@@ -21,19 +22,22 @@
         private readonly IDistrictData districtData;
         private readonly IPropertyImageData imageData;
         private readonly IMapper mapper;
+        private readonly IUserData userData;
 
         public PropertiesController(
             IPropertyData propertyData,
             IPropertyTypeData propertyTypeData,
             IDistrictData districtData,
             IPropertyImageData imageData,
-            IMapper mapper)
+            IMapper mapper,
+            IUserData userData)
         {
             this.propertyData = propertyData;
             this.propertyTypeData = propertyTypeData;
             this.districtData = districtData;
             this.imageData = imageData;
             this.mapper = mapper;
+            this.userData = userData;
         }
 
         [Authorize]
@@ -69,7 +73,7 @@
             if (propertyModel.Floor > propertyModel.TotalFloors)
             {
                 this.ModelState.AddModelError(
-                    nameof(Property.DistrictId),
+                    nameof(Property.Floor),
                     FloorGreaterThanTotalError);
             }
 
@@ -110,9 +114,6 @@
 
             if (propertyModel.Images != null && propertyModel.Images.Count() > 0)
             {
-                var hasInvalidContentType = propertyModel.Images
-                    .Any(x => x.ContentType != MediaTypeNames.Image.Jpeg);
-
                 foreach (var formImage in propertyModel.Images)
                 {
                     using var memoryStream = new MemoryStream();
@@ -147,6 +148,12 @@
         [Authorize]
         public async Task<IActionResult> Edit([FromForm] PropertyFormModel propertyModel)
         {
+            if (await this.propertyData.HasOwner(propertyModel.Id, this.userData.GetCurrentUserId())
+                == false)
+            {
+                return Unauthorized();
+            }
+
             if (await this.propertyTypeData.Exists(propertyModel.TypeId)
                 == false)
             {
@@ -211,6 +218,12 @@
         [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
+            if (await this.propertyData.HasOwner(id, this.userData.GetCurrentUserId())
+                == false)
+            {
+                return Unauthorized();
+            }
+
             await this.propertyData.Delete(id);
 
             return RedirectToAction(nameof(ListOwned));

@@ -17,6 +17,10 @@
             string typeId,
             string districtId);
 
+        Task<bool> Exists(string propertyId);
+
+        Task<bool> HasOwner(string propertyId, string userId);
+
         Task<PropertyServiceModel> Find(string query);
 
         Task Update(
