@@ -143,26 +143,19 @@
             await this.propertyData.Update(
                 property.Id,
                 price,
-                area,
-                usableArea,
-                floor,
-                totalFloors,
-                year,
-                description,
-                typeId,
-                districtId);
+                description);
 
             var after = await this.propertyData.Find(property.Id);
 
             Assert.AreEqual(after.Price, price);
-            Assert.AreEqual(after.Area, area);
-            Assert.AreEqual(after.UsableArea, usableArea);
-            Assert.AreEqual(after.Floor, floor);
-            Assert.AreEqual(after.TotalFloors, totalFloors);
-            Assert.AreEqual(after.Year, year);
+            Assert.AreEqual(before.Area, after.Area);
+            Assert.AreEqual(before.UsableArea, after.UsableArea);
+            Assert.AreEqual(before.Floor, after.Floor);
+            Assert.AreEqual(before.TotalFloors, after.TotalFloors);
+            Assert.AreEqual(before.Year, after.Year);
             Assert.AreEqual(after.Description, description);
-            Assert.AreEqual(after.Type.Id, typeId);
-            Assert.AreEqual(after.District.Id, districtId);
+            Assert.AreEqual(before.Type.Id, after.Type.Id);
+            Assert.AreEqual(before.District.Id, after.District.Id);
         }
 
         [Test]

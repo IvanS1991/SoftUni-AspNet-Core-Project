@@ -1,10 +1,14 @@
 ﻿@model IEnumerable<ConversationServiceModel>
 
+@{
+    ViewData["Title"] = "Дискусии";
+}
+
 @if (Model.Count() == 0)
 {
     <div class="row">
         <div class="col-md-12 text-center alert alert-info">
-            Няма намерени съобщения
+            Няма намерени искусии
         </div>
     </div>
 }
@@ -22,28 +26,28 @@ else
         <tbody>
             @foreach (var conversation in Model)
             {
-            <tr>
-                <td scope="col">
-                    <a target="_blank"
-                       rel="noreferrer"
-                       asp-controller="Properties"
-                       asp-action="Details"
-                       asp-route-id="@conversation.Property.Id">@conversation.Property.District.Name - @conversation.Property.Type.Name</a>
-                </td>
-                <td>@conversation.Owner.Email</td>
-                <td>@conversation.Messages.Last().CreatedOn</td>
-                <td scope="col">
-                    <a class="btn pt-0 pb-0"
-                       asp-controller="Conversations"
-                       asp-action="Conversation"
-                       asp-route-id="@conversation.Id"
-                       asp-route-propertyid="@conversation.Property.Id"><i class="fas fa-search"></i></a>
-                    <a class="btn pt-0 pb-0"
-                       asp-controller="Conversations"
-                       asp-action="Delete"
-                       asp-route-id="@conversation.Id"><i class="fas fa-times"></i></a>
-                </td>
-            </tr>
+                <tr>
+                    <td scope="col">
+                        <a target="_blank"
+                           rel="noreferrer"
+                           asp-controller="Properties"
+                           asp-action="Details"
+                           asp-route-id="@conversation.Property.Id">@conversation.Property.District.Name - @conversation.Property.Type.Name</a>
+                    </td>
+                    <td>@conversation.Owner.Email</td>
+                    <td>@conversation.Messages.Last().CreatedOn</td>
+                    <td scope="col">
+                        <a class="btn pt-0 pb-0"
+                           asp-controller="Conversations"
+                           asp-action="Conversation"
+                           asp-route-id="@conversation.Id"
+                           asp-route-propertyid="@conversation.Property.Id"><i class="fas fa-search"></i></a>
+                        <a class="btn pt-0 pb-0"
+                           asp-controller="Conversations"
+                           asp-action="Delete"
+                           asp-route-id="@conversation.Id"><i class="fas fa-times"></i></a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

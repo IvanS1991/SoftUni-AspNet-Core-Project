@@ -160,44 +160,6 @@
                 return Unauthorized();
             }
 
-            if (await this.propertyTypeData
-                .Exists(propertyModel.TypeId) == false)
-            {
-                this.ModelState.AddModelError(
-                    nameof(Property.TypeId),
-                    PropertyTypeNotFoundError);
-            }
-
-            if (await this.districtData
-                .Exists(propertyModel.DistrictId) == false)
-            {
-                this.ModelState.AddModelError(
-                    nameof(Property.DistrictId),
-                    DistrictNotFoundError);
-            }
-
-            if (propertyModel.Floor > propertyModel.TotalFloors)
-            {
-                this.ModelState.AddModelError(
-                    nameof(Property.DistrictId),
-                    FloorGreaterThanTotalError);
-            }
-
-            if (propertyModel.Area < propertyModel.UsableArea)
-            {
-                this.ModelState.AddModelError(
-                    nameof(Property.UsableArea),
-                    UsableAreaGreaterThanAreaError);
-            }
-
-            if (!this.imageData
-                .IsValidFormImageCollection(propertyModel.Images))
-            {
-                this.ModelState.AddModelError(
-                    nameof(Property.Images),
-                    OnlyImagesAllowedError);
-            }
-
 
             if (!this.ModelState.IsValid)
             {
@@ -210,14 +172,7 @@
             await this.propertyData.Update(
                propertyModel.Id,
                propertyModel.Price,
-               propertyModel.Area,
-               propertyModel.UsableArea,
-               propertyModel.Floor,
-               propertyModel.TotalFloors,
-               propertyModel.Year,
-               propertyModel.Description,
-               propertyModel.TypeId,
-               propertyModel.DistrictId);
+               propertyModel.Description);
 
             return RedirectToAction(
                 nameof(ListOwned));
