@@ -11,6 +11,8 @@
 
         Task<bool> Exists(string watchlistId);
 
+        Task<bool> HasOwner(string watchlistId, string userId);
+
         Task<WatchlistServiceModel> Get(string query);
 
         Task<List<WatchlistServiceModel>> GetAll(string userId);

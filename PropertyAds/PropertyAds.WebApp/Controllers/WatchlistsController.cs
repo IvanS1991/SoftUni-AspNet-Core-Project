@@ -51,6 +51,12 @@
 
         public async Task<IActionResult> Delete(string id)
         {
+            if (await this.watchlistData.HasOwner(id, this.userData.GetCurrentUserId())
+                == false)
+            {
+                return Unauthorized();
+            }
+
             await this.watchlistData.Delete(id);
 
             return RedirectToAction(nameof(List));
@@ -67,6 +73,7 @@
 
             viewModel.Properties = viewModelProperties
                 .Select(x => this.mapper.Map<PropertyDetailsViewModel>(x))
+                .OrderBy(x => x.Price)
                 .ToList();
 
             foreach (var segment in watchlist.WatchlistPropertySegments)
@@ -90,6 +97,12 @@
             string watchlistId,
             string propertyId)
         {
+            if (await this.watchlistData.HasOwner(watchlistId, this.userData.GetCurrentUserId())
+                == false)
+            {
+                return Unauthorized();
+            }
+
             await this.watchlistData.RemoveProperty(
                 watchlistId, propertyId);
 
@@ -101,6 +114,12 @@
             string propertyTypeId,
             string districtId)
         {
+            if (await this.watchlistData.HasOwner(watchlistId, this.userData.GetCurrentUserId())
+                == false)
+            {
+                return Unauthorized();
+            }
+
             await this.watchlistData.RemoveSegment(
                 watchlistId,
                 propertyTypeId,

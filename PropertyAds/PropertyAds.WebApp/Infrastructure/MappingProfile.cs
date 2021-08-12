@@ -47,7 +47,9 @@
 
             this.CreateMap<PropertyAggregateServiceModel, PropertyAggregateViewModel>();
 
-            this.CreateMap<Watchlist, WatchlistServiceModel>();
+            this.CreateMap<Watchlist, WatchlistServiceModel>()
+                .ForMember(x => x.WatchlistPropertySegments, c => c
+                    .MapFrom(s => s.WatchlistPropertySegments.OrderBy(wps => wps.PropertyType.SortRank)));
             this.CreateMap<WatchlistProperty, WatchlistPropertyServiceModel>();
             this.CreateMap<WatchlistPropertySegment, WatchlistPropertySegmentServiceModel>();
             this.CreateMap<WatchlistServiceModel, WatchlistDetailsViewModel>();

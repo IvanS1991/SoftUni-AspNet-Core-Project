@@ -135,6 +135,13 @@
                 .ToListAsync();
         }
 
+        public async Task<bool> HasOwner(string watchlistId, string userId)
+        {
+            var watchlist = await this.Get(watchlistId);
+
+            return watchlist.OwnerId == userId;
+        }
+
         public async Task RemoveProperty(string watchlistId, string propertyId)
         {
             var watchlistProperty = await this.db.WatchlistProperties

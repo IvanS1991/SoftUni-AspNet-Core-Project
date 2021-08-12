@@ -142,8 +142,8 @@
             }
 
             return queryable
-                .TryApplyPagination(this.GetItemsPerPage(), page)
                 .OrderBy(x => x.Price)
+                .TryApplyPagination(this.GetItemsPerPage(), page)
                 .ToListAsync();
         }
 
@@ -246,6 +246,13 @@
         {
             return this.db.Properties
                 .AnyAsync(x => x.Id == propertyId);
+        }
+
+        public async Task<bool> HasOwner(string propertyId, string userId)
+        {
+            var property = await this.Find(propertyId);
+
+            return property.OwnerId == userId;
         }
     }
 }
