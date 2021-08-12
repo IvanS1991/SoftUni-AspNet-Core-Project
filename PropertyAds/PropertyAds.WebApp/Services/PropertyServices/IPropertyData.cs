@@ -16,13 +16,6 @@
             string description,
             string typeId,
             string districtId);
-
-        Task<bool> Exists(string propertyId);
-
-        Task<bool> HasOwner(string propertyId, string userId);
-
-        Task<PropertyServiceModel> Find(string query);
-
         Task Update(
             string propertyId,
             int price,
@@ -37,29 +30,35 @@
 
         Task Delete(string id);
 
-        Task<PropertyServiceModel> VisitProperty(string id);
+        Task<PropertyServiceModel> Find(string query);
 
-        Task<List<PropertyServiceModel>> GetList(
-            string districtId,
-            string propertyTypeId,
-            bool showOnlyOwned = false);
+        Task<bool> Exists(string propertyId);
 
-        Task<List<PropertyServiceModel>> GetList(
+        Task<bool> HasOwner(
+            string propertyId, string userId);
+
+        Task<PropertyServiceModel> Visit(string id);
+
+        Task<List<PropertyServiceModel>> All(
+            string districtId, string propertyTypeId, bool showOnlyOwned = false);
+
+        Task<List<PropertyServiceModel>> All(
             int page,
             string districtId,
             string propertyTypeId,
             bool showOnlyOwned = false);
 
-        Task<List<PropertyServiceModel>> GetLatest();
+        Task<List<PropertyServiceModel>> AllById(
+            IEnumerable<string> ids);
 
-        Task<List<PropertyServiceModel>> GetMultipleById(IEnumerable<string> ids);
+        Task<List<PropertyServiceModel>> Latest();
 
-        Task<List<PropertyServiceModel>> GetFlagged();
+        Task<List<PropertyServiceModel>> Flagged();
 
-        Task<int> GetCount(
-            string districtId,
-            string propertyTypeId);
+        Task<int> Count(
+            string districtId, string propertyTypeId);
 
-        Task<int> TotalPageCount(string districtId, string propertyTypeId);
+        Task<int> TotalPageCount(
+            string districtId, string propertyTypeId);
     }
 }

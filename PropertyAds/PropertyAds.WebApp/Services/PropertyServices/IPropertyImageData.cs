@@ -5,11 +5,12 @@
 
     public interface IPropertyImageData
     {
-        Task<PropertyImageServiceModel> Create(byte[] bytes, string name, string propertyId);
+        Task<PropertyImageServiceModel> Create(
+            byte[] bytes, string name, string propertyId);
 
         Task Delete(string id);
 
-        Task<PropertyImageServiceModel> GetById(string id);
+        Task<PropertyImageServiceModel> ById(string id);
 
         bool IsValidFormImageCollection(IFormFileCollection fileCollection);
     }

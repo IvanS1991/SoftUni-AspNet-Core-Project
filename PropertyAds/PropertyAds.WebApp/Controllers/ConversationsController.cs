@@ -7,7 +7,6 @@
     using PropertyAds.WebApp.Services.UserServices;
     using System.Threading.Tasks;
 
-    [Authorize]
     public class ConversationsController : Controller
     {
         private readonly IConversationData conversationData;
@@ -21,6 +20,7 @@
             this.userData = userData;
         }
 
+        [Authorize]
         public async Task<IActionResult> Conversation(
             string id,
             string propertyId)
@@ -30,7 +30,7 @@
             if (id != null)
             {
                 conversation = await this.conversationData
-                    .Get(id);
+                    .Find(id);
             }
 
             var viewModel = new MessageFormModel
@@ -43,6 +43,7 @@
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(
             string conversationId,
             string propertyId,
@@ -60,32 +61,41 @@
                     .CreateMessage(conversationId, formModel.Content);
             }
 
-            return RedirectToAction(nameof(Conversation), new { id = conversationId });
+            return RedirectToAction(
+                nameof(Conversation),
+                new { id = conversationId });
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(
             string id)
         {
             await this.conversationData.Delete(id);
 
-            return RedirectToAction(nameof(List));
+            return RedirectToAction(
+                nameof(List));
         }
 
+        [Authorize]
         public async Task<IActionResult> List()
         {
             var conversations = await this.conversationData
-                .GetByParticipation(this.userData.GetCurrentUserId());
+                .ByParticipation(this.userData.CurrentUserId());
 
             return View(conversations);
         }
 
+        [Authorize]
         public async Task<IActionResult> FlagMessage(
             string conversationId,
             string messageId)
         {
-            await this.conversationData.FlagMessage(messageId, true);
+            await this.conversationData
+                .FlagMessage(messageId, true);
 
-            return RedirectToAction(nameof(Conversation), new { id = conversationId });
+            return RedirectToAction(
+                nameof(Conversation),
+                new { id = conversationId });
         }
     }
 }

@@ -28,13 +28,15 @@
             this.mapper = mapper;
         }
 
-        public async Task<PropertyImageServiceModel> Create(byte[] bytes, string name, string propertyId)
+        public async Task<PropertyImageServiceModel> Create(
+            byte[] bytes, string name, string propertyId)
         {
             var result = await this.db.PropertyImages.AddAsync(new PropertyImage {
                 Bytes = bytes,
                 Name = name,
                 PropertyId = propertyId
             });
+
             await this.db.SaveChangesAsync();
 
             return this.mapper.Map< PropertyImageServiceModel>(result.Entity);
@@ -42,13 +44,16 @@
 
         public async Task Delete(string id)
         {
-            var image = await this.db.PropertyImages.FindAsync(id);
+            var image = await this.db.PropertyImages
+                .FindAsync(id);
 
-            this.db.PropertyImages.Remove(image);
+            this.db.PropertyImages
+                .Remove(image);
+
             await this.db.SaveChangesAsync();
         }
 
-        public async Task<PropertyImageServiceModel> GetById(string id)
+        public async Task<PropertyImageServiceModel> ById(string id)
         {
             var propertyImage = await this.db.PropertyImages
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -64,7 +69,8 @@
         public bool IsValidFormImageCollection(IFormFileCollection fileCollection)
         {
             return fileCollection
-                .All(x => this.imageContentTypes.Contains(x.ContentType) && x.Length <= 500 * 1024);
+                .All(x => this.imageContentTypes
+                    .Contains(x.ContentType) && x.Length <= 500 * 1024);
         }
     }
 }

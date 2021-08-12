@@ -57,10 +57,11 @@
                 Description = description,
                 CreatedOn = DateTime.UtcNow,
                 LastModifiedOn = DateTime.UtcNow,
-                OwnerId = this.userData.GetCurrentUserId(),
+                OwnerId = this.userData.CurrentUserId(),
                 TypeId = typeId,
                 DistrictId = districtId,
             });
+
             await this.db.SaveChangesAsync();
 
             return this.mapper.Map<PropertyServiceModel>(result.Entity);
@@ -92,31 +93,33 @@
             property.LastModifiedOn = DateTime.UtcNow;
 
             this.db.Properties.Update(property);
+
             await this.db.SaveChangesAsync();
         }
 
         public async Task Delete(string id)
         {
-            var property = await this.db.Properties.FindAsync(id);
+            var property = await this.db.Properties
+                .FindAsync(id);
 
             foreach (var image in property.Images)
             {
-                await this.propertyImageData.Delete(image.Id);
+                await this.propertyImageData
+                    .Delete(image.Id);
             }
 
             this.db.Properties.Remove(property);
+
             await this.db.SaveChangesAsync();
         }
 
-        public Task<List<PropertyServiceModel>> GetList(
-            string districtId,
-            string propertyTypeId,
-            bool showOnlyOwned = false)
+        public Task<List<PropertyServiceModel>> All(
+            string districtId, string propertyTypeId, bool showOnlyOwned = false)
         {
-            return this.GetList(0, districtId, propertyTypeId, showOnlyOwned);
+            return this.All(0, districtId, propertyTypeId, showOnlyOwned);
         }
 
-        public Task<List<PropertyServiceModel>> GetList(
+        public Task<List<PropertyServiceModel>> All(
             int page,
             string districtId,
             string propertyTypeId,
@@ -128,26 +131,29 @@
 
             if (showOnlyOwned)
             {
-                queryable = queryable.Where(x => x.OwnerId == this.userData.GetCurrentUserId());
+                queryable = queryable
+                    .Where(x => x.OwnerId == this.userData.CurrentUserId());
             }
 
             if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
             {
-                queryable = queryable.Where(x => x.District.Id == districtId);
+                queryable = queryable
+                    .Where(x => x.District.Id == districtId);
             }
 
             if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
             {
-                queryable = queryable.Where(x => x.Type.Id == propertyTypeId);
+                queryable = queryable
+                    .Where(x => x.Type.Id == propertyTypeId);
             }
 
             return queryable
                 .OrderBy(x => x.Price)
-                .TryApplyPagination(this.GetItemsPerPage(), page)
+                .TryApplyPagination(this.ItemsPerPage(), page)
                 .ToListAsync();
         }
 
-        public Task<List<PropertyServiceModel>> GetLatest()
+        public Task<List<PropertyServiceModel>> Latest()
         {
             return this.db.Properties
                 .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
@@ -157,7 +163,7 @@
                 .ToListAsync();
         }
 
-        public Task<List<PropertyServiceModel>> GetFlagged()
+        public Task<List<PropertyServiceModel>> Flagged()
         {
             return this.db.Properties
                 .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
@@ -172,7 +178,7 @@
                 .FirstOrDefaultAsync(x => x.Id == query);
         }
 
-        public async Task<PropertyServiceModel> VisitProperty(string id)
+        public async Task<PropertyServiceModel> Visit(string id)
         {
             var property = await this.db.Properties
                 .Include(x => x.Type)
@@ -189,19 +195,20 @@
             property.VisitedCount += 1;
 
             this.db.Properties.Update(property);
+
             await this.db.SaveChangesAsync();
 
             return this.mapper.Map<PropertyServiceModel>(property);
         }
 
-        public virtual int GetItemsPerPage()
+        public virtual int ItemsPerPage()
         {
             return this.config
                 .GetSection("Pagination")
                 .GetValue<int>("PropertyList");
         }
 
-        public Task<int> GetCount(
+        public Task<int> Count(
             string districtId,
             string propertyTypeId)
         {
@@ -210,12 +217,14 @@
 
             if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
             {
-                queryable = queryable.Where(x => x.District.Id == districtId);
+                queryable = queryable
+                    .Where(x => x.District.Id == districtId);
             }
 
             if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
             {
-                queryable = queryable.Where(x => x.Type.Id == propertyTypeId);
+                queryable = queryable
+                    .Where(x => x.Type.Id == propertyTypeId);
             }
 
             return queryable
@@ -227,14 +236,14 @@
             string propertyTypeId)
         {
             var propertiesCount = await this
-                .GetCount(districtId, propertyTypeId);
+                .Count(districtId, propertyTypeId);
             var itemsPerPage = this
-                .GetItemsPerPage();
+                .ItemsPerPage();
 
             return (int)Math.Ceiling(propertiesCount / (float)itemsPerPage);
         }
 
-        public Task<List<PropertyServiceModel>> GetMultipleById(IEnumerable<string> ids)
+        public Task<List<PropertyServiceModel>> AllById(IEnumerable<string> ids)
         {
             return this.db.Properties
                 .ProjectTo<PropertyServiceModel>(this.mapper.ConfigurationProvider)
@@ -250,7 +259,8 @@
 
         public async Task<bool> HasOwner(string propertyId, string userId)
         {
-            var property = await this.Find(propertyId);
+            var property = await this
+                .Find(propertyId);
 
             return property.OwnerId == userId;
         }

@@ -6,26 +6,23 @@
     public interface IConversationData
     {
         Task<ConversationServiceModel> Create(
-            string propertyId,
-            string content);
-
-        Task CreateMessage(
-            string conversationId,
-            string content);
-
-        Task FlagMessage(
-            string messageId,
-            bool isFlagged);
-
-        Task<ConversationServiceModel> Get(
-            string conversationId);
-
-        Task<List<ConversationServiceModel>> GetByParticipation(
-            string userId);
-
-        Task<List<ConversationServiceModel>> GetFlagged();
+            string propertyId,string content);
 
         Task Delete(
             string conversationId);
+
+        Task<ConversationServiceModel> Find(
+            string conversationId);
+
+        Task<List<ConversationServiceModel>> Flagged();
+
+        Task CreateMessage(
+            string conversationId, string content);
+
+        Task FlagMessage(
+            string messageId, bool isFlagged);
+
+        Task<List<ConversationServiceModel>> ByParticipation(
+            string userId);
     }
 }

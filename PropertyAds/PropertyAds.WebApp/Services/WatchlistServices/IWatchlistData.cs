@@ -15,11 +15,11 @@
 
         Task<WatchlistServiceModel> Get(string query);
 
-        Task<List<WatchlistServiceModel>> GetAll(string userId);
+        Task<List<WatchlistServiceModel>> All(string userId);
 
-        Task<List<WatchlistServiceModel>> GetForProperty(string propertyId);
+        Task<List<WatchlistServiceModel>> ForProperty(string propertyId);
 
-        Task<List<WatchlistServiceModel>> GetForSegment(string propertyTypeId, string districtId);
+        Task<List<WatchlistServiceModel>> ForSegment(string propertyTypeId, string districtId);
 
         Task AddProperty(
             string watchlistId,

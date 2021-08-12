@@ -108,25 +108,25 @@
         }
 
         [Test]
-        public async Task GetByName_ShouldReturnCorrectDistrict()
+        public async Task ByName_ShouldReturnCorrectDistrict()
         {
             var first = await this.propertyTypeData.Create("first", 0);
             await this.propertyTypeData.Create("second", 1);
             await this.propertyTypeData.Create("third", 2);
 
-            var result = await this.propertyTypeData.GetByName("first");
+            var result = await this.propertyTypeData.ByName("first");
 
             Assert.IsInstanceOf<PropertyTypeServiceModel>(result);
             Assert.AreEqual(first.Id, result.Id);
             Assert.AreEqual(first.Name, result.Name);
 
-            var nullResult = await this.propertyTypeData.GetByName("fourth");
+            var nullResult = await this.propertyTypeData.ByName("fourth");
 
             Assert.AreEqual(null, nullResult);
         }
 
         [Test]
-        public async Task GetAll_ShouldReturnAllInCorrectOrder()
+        public async Task All_ShouldReturnAllInCorrectOrder()
         {
             var districtNames = new List<string>()
             {
@@ -140,7 +140,7 @@
                 await this.propertyTypeData.Create(name, 0);
             }
 
-            var result = await this.propertyTypeData.GetAll();
+            var result = await this.propertyTypeData.All();
             var resultNames = result.Select(x => x.Name);
 
             Assert.AreEqual(orderedNames, resultNames);

@@ -20,7 +20,7 @@
             this.userManager = userManager;
         }
 
-        public string GetCurrentUserId()
+        public string CurrentUserId()
         {
             return this.userManager
                 .GetUserId(this.httpContextAccessor.HttpContext.User);

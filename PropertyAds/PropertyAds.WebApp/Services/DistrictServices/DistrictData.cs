@@ -28,7 +28,7 @@
 
         public async Task<DistrictServiceModel> Create(string name)
         {
-            var existingDistrict = await this.GetByName(name);
+            var existingDistrict = await this.ByName(name);
 
             if (await this.Exists(name))
             {
@@ -47,7 +47,7 @@
                 .AnyAsync(x => x.Name == query || x.Id == query);
         }
 
-        public async Task<DistrictServiceModel> GetByName(string districtName)
+        public async Task<DistrictServiceModel> ByName(string districtName)
         {
             var district = await this.db.Districts
                 .FirstOrDefaultAsync(x => x.Name == districtName);
@@ -60,7 +60,7 @@
             return this.mapper.Map<DistrictServiceModel>(district);
         }
 
-        public async Task<List<DistrictServiceModel>> GetAll()
+        public async Task<List<DistrictServiceModel>> All()
         {
             List<DistrictServiceModel> result;
 

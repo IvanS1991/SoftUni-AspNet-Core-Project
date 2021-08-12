@@ -38,14 +38,14 @@ else
                            asp-action="Details"
                            asp-route-id="@property.Id">@property.District - @property.Type</a>
                     </td>
-                    <td scope="col">@formatter.FormatCurrency(property.Price)</td>
+                    <td scope="col">@formatter.Currency(property.Price)</td>
                     <td scope="col">@property.Floor от @property.TotalFloors</td>
                     <td scope="col">@property.UsableArea кв.м. / @property.Area кв.м.</td>
                     <td scope="col">@property.Year</td>
                     <td scope="col">
                         @if (
                            User.Identity.IsAuthenticated
-                           && property.OwnerId == this.userData.GetCurrentUserId()
+                           && property.OwnerId == this.userData.CurrentUserId()
                            && !isWatchlistDetailsPage)
                         {
                             <div class="button-group">

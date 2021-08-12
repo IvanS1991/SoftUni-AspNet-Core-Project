@@ -17,7 +17,7 @@
         public async Task<IActionResult> Flagged()
         {
             var flaggedConversations = await this.conversationData
-                .GetFlagged();
+                .Flagged();
 
             return View(flaggedConversations);
         }

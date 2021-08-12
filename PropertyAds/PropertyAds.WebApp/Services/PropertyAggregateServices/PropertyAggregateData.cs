@@ -65,14 +65,15 @@
 
             if (result == null)
             {
-                result = (await this.db.PropertyAggregates.AddAsync(new PropertyAggregate
-                    {
-                        DistrictId = districtId,
-                        PropertyTypeId = propertyTypeId,
-                        AveragePrice = averagePrice,
-                        AveragePricePerSqM = averagePricePerSqM
-                    }))
-                    .Entity;
+                var addResult = await this.db.PropertyAggregates.AddAsync(new PropertyAggregate
+                {
+                    DistrictId = districtId,
+                    PropertyTypeId = propertyTypeId,
+                    AveragePrice = averagePrice,
+                    AveragePricePerSqM = averagePricePerSqM
+                });
+                
+                result = addResult.Entity;
             }
             else
             {
@@ -122,7 +123,7 @@
             return timer;
         }
 
-        public Task<List<PropertyAggregateServiceModel>> GetAll(
+        public Task<List<PropertyAggregateServiceModel>> All(
             int page = 0,
             string districtId = null,
             string propertyTypeId = null)
@@ -134,27 +135,30 @@
 
             if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
             {
-                queryable = queryable.Where(x => x.District.Id == districtId);
+                queryable = queryable
+                    .Where(x => x.District.Id == districtId);
             }
 
             if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
             {
-                queryable = queryable.Where(x => x.PropertyType.Id == propertyTypeId);
+                queryable = queryable
+                    .Where(x => x.PropertyType.Id == propertyTypeId);
             }
 
             return queryable
-                .TryApplyPagination(this.GetItemsPerPage(), page)
+                .TryApplyPagination(this
+                    .ItemsPerPage(), page)
                 .ToListAsync();
         }
 
-        public virtual int GetItemsPerPage()
+        public virtual int ItemsPerPage()
         {
             return this.config
                 .GetSection("Pagination")
                 .GetValue<int>("PropertyAggregatesList");
         }
 
-        public Task<int> GetCount(
+        public Task<int> Count(
             string districtId,
             string propertyTypeId)
         {
@@ -163,12 +167,14 @@
 
             if (!string.IsNullOrWhiteSpace(districtId) && districtId.Length > 0)
             {
-                queryable = queryable.Where(x => x.District.Id == districtId);
+                queryable = queryable
+                    .Where(x => x.District.Id == districtId);
             }
 
             if (!string.IsNullOrWhiteSpace(propertyTypeId) && propertyTypeId.Length > 0)
             {
-                queryable = queryable.Where(x => x.PropertyType.Id == propertyTypeId);
+                queryable = queryable
+                    .Where(x => x.PropertyType.Id == propertyTypeId);
             }
 
             return queryable
@@ -180,9 +186,9 @@
             string propertyTypeId)
         {
             var aggregatesCount = await this
-                .GetCount(districtId, propertyTypeId);
+                .Count(districtId, propertyTypeId);
             var itemsPerPage = this
-                .GetItemsPerPage();
+                .ItemsPerPage();
 
             return (int)Math.Ceiling(aggregatesCount / (float)itemsPerPage);
         }

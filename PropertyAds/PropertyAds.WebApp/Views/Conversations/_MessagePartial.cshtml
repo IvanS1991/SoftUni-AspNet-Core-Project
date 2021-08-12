@@ -2,14 +2,14 @@
 @inject IUserData userData
 
 @{
-    var isAuthor = Model.Author.Id == userData.GetCurrentUserId();
+    var isAuthor = Model.Author.Id == userData.CurrentUserId();
 }
 
 
 <div class="card col-md-8 @(isAuthor ? "offset-md-4" : "")">
     <strong>@Model.Author.Email - @Model.CreatedOn</strong>
     <p>@Model.Content</p>
-    @if (userData.GetCurrentUserId() != @Model.Author.Id)
+    @if (userData.CurrentUserId() != @Model.Author.Id)
     {
         <div>
             <a class="btn"

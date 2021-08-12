@@ -33,7 +33,7 @@
                 <tr>
                     <th class="col-6" scope="row">Действия</th>
                     <td class="col-6 row">
-                        @if (Model.OwnerId != userData.GetCurrentUserId())
+                        @if (Model.OwnerId != userData.CurrentUserId())
                         {
                             <a class="btn pt-0 pb-0"
                                asp-controller="Conversations"
@@ -48,7 +48,7 @@
     </section>
     <section class="col-md-6">
         <div class="row">
-            <h2 class="col-md-12 text-center mb-2">@formatter.FormatCurrency(Model.Price)</h2>
+            <h2 class="col-md-12 text-center mb-2">@formatter.Currency(Model.Price)</h2>
             <hr />
             <p class="col-md-12">@Model.Description</p>
         </div>
