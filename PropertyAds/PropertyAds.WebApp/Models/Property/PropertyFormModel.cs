@@ -66,13 +66,9 @@
             ErrorMessage = StringLengthError)]
         public string Description { get; set; }
 
-        [Required(
-            ErrorMessage = RequiredError)]
         [Display(Name = "Вид на имота")]
         public string TypeId { get; set; }
 
-        [Required(
-            ErrorMessage = RequiredError)]
         [Display(Name = "Квартал")]
         public string DistrictId { get; set; }
 

@@ -19,14 +19,7 @@
         Task Update(
             string propertyId,
             int price,
-            decimal area,
-            decimal usableArea,
-            int floor,
-            int totalFloors,
-            int year,
-            string description,
-            string typeId,
-            string districtId);
+            string description);
 
         Task Delete(string id);
 

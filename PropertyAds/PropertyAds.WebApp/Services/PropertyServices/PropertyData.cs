@@ -70,26 +70,12 @@
         public async Task Update(
             string propertyId,
             int price,
-            decimal area,
-            decimal usableArea,
-            int floor,
-            int totalFloors,
-            int year,
-            string description,
-            string typeId,
-            string districtId)
+            string description)
         {
             var property = await this.db.Properties.FindAsync(propertyId);
 
             property.Price = price;
-            property.Area = area;
-            property.UsableArea = usableArea;
-            property.Floor = floor;
-            property.TotalFloors = totalFloors;
-            property.Year = year;
             property.Description = description;
-            property.TypeId = typeId;
-            property.DistrictId = districtId;
             property.LastModifiedOn = DateTime.UtcNow;
 
             this.db.Properties.Update(property);

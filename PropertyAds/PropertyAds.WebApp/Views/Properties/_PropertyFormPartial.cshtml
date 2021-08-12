@@ -35,12 +35,12 @@
     <div class="form-row hidden">
         <div class="form-group col-md-4">
             <label asp-for="Area"></label>
-            <input asp-for="Area" class="form-control" disabled="@isEditing"/>
+            <input asp-for="Area" class="form-control" readonly="@isEditing"/>
             <span asp-validation-for="Area" class="small text-danger"></span>
         </div>
         <div class="form-group col-md-4">
             <label asp-for="UsableArea"></label>
-            <input asp-for="UsableArea" class="form-control" disabled="@isEditing"/>
+            <input asp-for="UsableArea" class="form-control" readonly="@isEditing"/>
             <span asp-validation-for="UsableArea" class="small text-danger"></span>
         </div>
         <div class="form-group col-md-4">
@@ -54,17 +54,17 @@
     <div class="form-row hidden">
         <div class="form-group col-md-4">
             <label asp-for="Floor"></label>
-            <input asp-for="Floor" class="form-control" disabled="@isEditing" />
+            <input asp-for="Floor" class="form-control" readonly="@isEditing" />
             <span asp-validation-for="Floor" class="small text-danger"></span>
         </div>
         <div class="form-group col-md-4">
             <label asp-for="TotalFloors"></label>
-            <input asp-for="TotalFloors" class="form-control" disabled="@isEditing" />
+            <input asp-for="TotalFloors" class="form-control" readonly="@isEditing" />
             <span asp-validation-for="TotalFloors" class="small text-danger"></span>
         </div>
         <div class="form-group col-md-4">
             <label asp-for="Year"></label>
-            <input asp-for="Year" class="form-control" disabled="@isEditing" />
+            <input asp-for="Year" class="form-control" readonly="@isEditing" />
             <span asp-validation-for="Year" class="small text-danger"></span>
         </div>
     </div>
@@ -86,5 +86,8 @@
         </div>
         <div class="form-row image-preview hidden"></div>
     }
-    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5 hidden">Създай</button>
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-5 hidden">@(isEditing ? "Редактирай" : "Създай")</button>
 </form>
