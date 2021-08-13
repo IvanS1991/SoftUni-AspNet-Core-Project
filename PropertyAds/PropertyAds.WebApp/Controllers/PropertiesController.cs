@@ -175,7 +175,8 @@
                propertyModel.Description);
 
             return RedirectToAction(
-                nameof(ListOwned));
+                nameof(Details),
+                new { id = propertyModel.Id });
         }
 
         [Authorize]

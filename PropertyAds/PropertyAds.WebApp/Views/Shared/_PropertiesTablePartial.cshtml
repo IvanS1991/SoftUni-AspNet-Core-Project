@@ -1,10 +1,5 @@
 ﻿@model IEnumerable<PropertyDetailsViewModel>
 @inject IDataFormatter formatter
-@inject IUserData userData
-
-@{ 
-    bool isWatchlistDetailsPage = ViewBag.WatchlistId != null;
-}
 
 @if (Model.Count() == 0)
 {
@@ -43,32 +38,7 @@ else
                     <td scope="col">@property.UsableArea кв.м. / @property.Area кв.м.</td>
                     <td scope="col">@property.Year</td>
                     <td scope="col">
-                        @if (
-                           User.Identity.IsAuthenticated
-                           && property.OwnerId == this.userData.CurrentUserId()
-                           && !isWatchlistDetailsPage)
-                        {
-                            <div class="button-group">
-                                <a class="btn pt-0 pb-0"
-                                   asp-controller="Properties"
-                                   asp-action="Edit"
-                                   asp-route-id="@property.Id"><i class="fas fa-pencil-alt"></i></a>
-                                <a class="btn pt-0 pb-0"
-                                   asp-controller="Properties"
-                                   asp-action="Delete"
-                                   asp-route-id="@property.Id"><i class="fas fa-times"></i></a>
-                            </div>
-                        }
-                        else if (isWatchlistDetailsPage)
-                        {
-                            <div class="button-group property-watchlist-controls">
-                                <a class="btn pt-0 pb-0"
-                                   asp-controller="Watchlists"
-                                   asp-action="RemoveProperty"
-                                   asp-route-watchlistid="@ViewBag.WatchlistId"
-                                   asp-route-propertyid="@property.Id"><i class="fas fa-times"></i></a>
-                            </div>
-                        }
+                        <partial name="_PropertyActionButtons" model="@property"/>
                     </td>
                 </tr>
             }
