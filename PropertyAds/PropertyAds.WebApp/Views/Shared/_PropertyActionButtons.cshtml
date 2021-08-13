@@ -1,0 +1,33 @@
+﻿@model PropertyDetailsViewModel
+@inject IUserData userData
+
+@{
+    bool isWatchlistDetailsPage = ViewBag.WatchlistId != null;
+}
+
+@if (
+ User.Identity.IsAuthenticated
+ && Model.OwnerId == this.userData.CurrentUserId()
+ && !isWatchlistDetailsPage)
+{
+    <div class="button-group">
+        <a class="btn pt-0 pb-0"
+           asp-controller="Properties"
+           asp-action="Edit"
+           asp-route-id="@Model.Id"><i class="fas fa-pencil-alt"></i></a>
+        <a class="btn pt-0 pb-0"
+           asp-controller="Properties"
+           asp-action="Delete"
+           asp-route-id="@Model.Id"><i class="fas fa-times"></i></a>
+    </div>
+}
+else if (isWatchlistDetailsPage)
+{
+    <div class="button-group property-watchlist-controls">
+        <a class="btn pt-0 pb-0"
+           asp-controller="Watchlists"
+           asp-action="RemoveProperty"
+           asp-route-watchlistid="@ViewBag.WatchlistId"
+           asp-route-propertyid="@Model.Id"><i class="fas fa-times"></i></a>
+    </div>
+}

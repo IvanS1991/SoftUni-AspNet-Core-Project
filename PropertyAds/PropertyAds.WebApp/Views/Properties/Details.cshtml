@@ -41,6 +41,10 @@
                                asp-action="Conversation"
                                asp-route-propertyid="@Model.Id"><i class="fas fa-envelope"></i></a>
                         }
+                        else
+                        {
+                            <partial name="_PropertyActionButtons" model="@Model" />
+                        }
                         <partial name="_AddPropertyToWatchlistViewPartial" model="@Model" />
                     </td>
                 </tr>
