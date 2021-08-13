@@ -1,28 +1,51 @@
 ﻿@model PropertyTypeDistrictQueryModel
 
-<form class="col-sm-12 col-lg-8 offset-lg-2">
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label asp-for="DistrictId"></label>
-            <select class="form-control" asp-for="DistrictId">
-                <option value="">Всички</option>
-                @foreach (var district in Model.Districts)
-                {
-                    <option value="@district.Id">@district.Name</option>
-                }
-            </select>
-        </div>
-        <div class="form-group col-md-6">
-            <label asp-for="PropertyTypeId"></label>
-            <select class="form-control" asp-for="PropertyTypeId">
-                <option value="">Всички</option>
-                @foreach (var propertyType in Model.PropertyTypes)
-                {
-                    <option value="@propertyType.Id">@propertyType.Name</option>
-                }
-            </select>
+@{ 
+    var d = Model.Districts.FirstOrDefault(x => x.Id == Model.DistrictId);
+    var pt = Model.PropertyTypes.FirstOrDefault(x => x.Id == Model.PropertyTypeId);
+
+    var districtName = d == null ? "Всички квартали" : d.Name;
+    var propertyTypeName = pt == null ? "Всички видове имоти" : pt.Name;
+}
+
+<div class="row mb-2 p-3 align-items-center">
+    <div class="dropdown col-md-4">
+        <button class="btn dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-filter"></i>
+        </button>
+        <div class="dropdown-menu">
+            <form class="p-2">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label asp-for="DistrictId"></label>
+                        <select class="form-control" asp-for="DistrictId">
+                            <option value="">Всички</option>
+                            @foreach (var district in Model.Districts)
+                            {
+                                <option value="@district.Id">@district.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="PropertyTypeId"></label>
+                        <select class="form-control" asp-for="PropertyTypeId">
+                            <option value="">Всички</option>
+                            @foreach (var propertyType in Model.PropertyTypes)
+                            {
+                                <option value="@propertyType.Id">@propertyType.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="Page" value="1" />
+                <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-2 mb-3">Филтрирай</button>
+            </form>
         </div>
     </div>
-    <input type="hidden" asp-for="Page" value="1" />
-    <button type="submit" class="btn btn-primary col-md-8 offset-md-2 mt-2 mb-3">Филтрирай</button>
-</form>
+    <h4>@propertyTypeName в @districtName</h4>
+
+    @if (Model.DistrictId != null || Model.PropertyTypeId != null)
+    {
+        <a class="btn" asp-route-districtid="" asp-route-propertytypeid=""><i class="fas fa-times"></i></a>
+    }
+</div>
