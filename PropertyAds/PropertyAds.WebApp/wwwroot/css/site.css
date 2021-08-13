@@ -59,7 +59,7 @@ html {
 }
 
 body {
-    background-color: lightgrey;
+    background-color: wheat;
 }
 .footer {
   position: absolute;
@@ -91,4 +91,20 @@ body {
 
 .fa-envelope {
     color: dodgerblue;
+}
+
+.fa-filter {
+    color: crimson;
+}
+
+i.fas {
+    font-size: 20px;
+}
+
+table.table {
+    background-color: honeydew;
+}
+
+table.table > thead {
+    background-color: silver;
 }

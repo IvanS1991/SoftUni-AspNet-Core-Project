@@ -64,6 +64,7 @@
             return this.db.Conversations
                 .ProjectTo<ConversationServiceModel>(this.mapper.ConfigurationProvider)
                 .Where(x => x.Owner.Id == userId || x.Recipient.Id == userId)
+                .OrderByDescending(x => x.Messages.Last().CreatedOn)
                 .ToListAsync();
         }
 

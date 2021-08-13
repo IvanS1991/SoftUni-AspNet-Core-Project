@@ -3,26 +3,55 @@
 @{
     ViewBag.WatchlistId = Model.Id;
     ViewData["Title"] = Model.Name;
+
+    var hasProperties = Model.Properties.Count > 0;
 }
 
-<h2 class="text-center mb-3">Наблюдавани имоти</h2>
-<partial name="_PropertiesTablePartial" model="@Model.Properties" />
-<hr />
-<h2 class="text-center mb-3">Наблюдавани сегменти</h2>
-<div class="segment-properties">
-    @foreach (var segment in Model.Segments)
-    {
-        <h3 class="text-center mb-3">
-            <span>@segment.Name</span>
-            <a class="btn"
-               asp-controller="Watchlists"
-               asp-action="RemoveSegment"
-               asp-route-watchlistid="@ViewBag.WatchlistId"
-               asp-route-propertytypeid="@segment.PropertyTypeId"
-               asp-route-districtid="@segment.DistrictId"><i class="fas fa-times"></i></a>
-        </h3>
-        <partial name="_PropertiesTablePartial" model="@segment.Properties" />
-    }
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0 text-center ">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <h2 class="mb-3">Наблюдавани имоти</h2>
+                </button>
+            </h5>
+        </div>
+
+        <div id="collapseOne" class="collapse @(hasProperties ? "show" : "")" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <partial name="_PropertiesTablePartial" model="@Model.Properties" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" id="headingTwo">
+            <h5 class="mb-0 text-center ">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <h2 class="mb-3">Наблюдавани сегменти</h2>
+                </button>
+            </h5>
+        </div>
+        <div id="collapseTwo" class="collapse @(hasProperties ? "" : "show")" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body">
+                <div class="segment-properties">
+                    @foreach (var segment in Model.Segments)
+                    {
+                        <h3 class="text-center mb-3">
+                            <span>@segment.Name</span>
+                            <a class="btn"
+                               asp-controller="Watchlists"
+                               asp-action="RemoveSegment"
+                               asp-route-watchlistid="@ViewBag.WatchlistId"
+                               asp-route-propertytypeid="@segment.PropertyTypeId"
+                               asp-route-districtid="@segment.DistrictId"><i class="fas fa-times"></i></a>
+                        </h3>
+                        <partial name="_PropertiesTablePartial" model="@segment.Properties" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

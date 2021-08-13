@@ -204,6 +204,8 @@
 
             var viewModel = new PropertyListQueryModel
             {
+                PropertyTypeId = model.PropertyTypeId,
+                DistrictId = model.DistrictId,
                 Districts = await this.districtData
                     .All(),
                 PropertyTypes = await this.propertyTypeData
