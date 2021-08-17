@@ -43,7 +43,7 @@ else
                     <td class="col-2">@formatter.Currency(aggregate.AveragePrice)</td>
                     <td class="col-2">@formatter.Currency(aggregate.AveragePricePerSqM)</td>
                     <td>
-                        @if (!userData.IsAdmin(User))
+                        @if (User.Identity.IsAuthenticated && !userData.IsAdmin(User))
                         {
                             <div class="dropdown">
                                 <button class="btn dropdown-toggle add-watchlist-toggle pt-0 pb-0"
